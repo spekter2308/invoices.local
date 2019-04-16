@@ -8,39 +8,57 @@
                     <thead class="bg-primary text-white">
                     <tr>
                         <th scope="col">
-                            <select>
-                                <option></option>
-                            </select>
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                </div>
+
+                            </div>
                         </th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
-                        <th scope="col">Handle</th>
-                        <th scope="col">Handle</th>
-                        <th scope="col">Handle</th>
-                        <th scope="col">Handle</th>
-                        <th scope="col">Handle</th>
-                        <th scope="col">Handle</th>
+                        <th scope="col">
+                            Invoices
+                        </th>
+                        <th scope="col">Customer</th>
+                        <th scope="col">Company</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Days</th>
+                        <th scope="col">Toral</th>
+                        <th scope="col">Balance</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Mark Paid</th>
                     </tr>
                     </thead>
                     <tbody>
                     <tr>
-                        <th scope="row">1</th>
+                        <th>
+                            <div class="form-group row">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="gridCheck1">
+                                    </div>
+                            </div>
+                        </th>
+                        <th scope="row">
+                            <div class="dropdown">
+                                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                </button>
+                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <a class="dropdown-item" href="#">Action</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                </div>
+                                Name
+                            </div>
+                        </th>
                         <td>Mark</td>
                         <td>Otto</td>
-                        <td>@mdo</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">2</th>
-                        <td>Jacob</td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">3</th>
-                        <td>Larry</td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
+                        <td>test</td>
+                        <td>test</td>
+                        <td>test</td>
+                        <td>test</td>
+                        <td>test</td>
+                        <td>test</td>
                     </tr>
                     </tbody>
                 </table>
