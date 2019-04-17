@@ -16,24 +16,25 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->integer('bulk_action');
-            $table->unsignedInteger('customer_id');
-            $table->unsignedInteger('company_id');
+            $table->unsignedInteger('number');
+            $table->integer('customer_id')->unsigned();
+            $table->integer('company_id')->unsigned();
+
+            $table->float('amount_paid');
             $table->float('total');
             $table->float('balance');
-            $table->string('status');
-            $table->date('due_date');
-            $table->string('item');
-            $table->string('description');
-            $table->integer('unit_price');
-            $table->integer('quantity');
-            $table->string('invoice_notes')->nullable();
             $table->string('currency');
-            $table->float('second_tax');
 
-
+            $table->unsignedInteger('items_count')->default(0);
+            $table->timestamp('invoice_date')->nullable();
+            $table->timestamp('due_date')->nullable();
+            
+            $table->string('status');
 
             $table->timestamps();
+
+            //$table->foreign('customer_id')->references('id')->on('customers');
+            //$table->foreign('company_id')->references('id')->on('companies');
         });
     }
 

@@ -20,10 +20,10 @@
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
     <style>
-        .top-header {
-
-        }
         .level { display: flex; align-items: center; }
+        .flex { flex: 1; }
+        .pd-1 { padding-right: 1em; }
+        .pdl-1 { padding-left: 1em }
     </style>
 </head>
 <body>

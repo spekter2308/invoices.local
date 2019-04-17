@@ -20,3 +20,4 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('invoices', 'InvoiceController@index');
+Route::get('invoices/create', 'InvoiceController@create');
