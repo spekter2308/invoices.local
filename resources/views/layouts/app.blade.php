@@ -22,6 +22,7 @@
     <style>
         .level { display: flex; align-items: center; }
         .flex { flex: 1; }
+        .m-r { margin-right: 1em; }
         .pd-1 { padding-right: 1em; }
         .pdl-1 { padding-left: 1em }
     </style>

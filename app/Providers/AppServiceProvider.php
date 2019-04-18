@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Company;
+use App\Customer;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
@@ -14,7 +16,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        if ($this->app->isLocal()) {
+            $this->app->register(\Barryvdh\Debugbar\ServiceProvider::class);
+        }
     }
 
     /**
@@ -25,5 +29,18 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        \View::composer('*', function ($view) {
+            $companies = \Cache::rememberForever('companies', function () {
+                return Company::get();
+            });
+            $customers = \Cache::rememberForever('customers', function () {
+                return Customer::get();
+            });
+            $view->with([
+                'companies' => $companies,
+                'customers' => $customers
+            ]);
+        });
     }
 }

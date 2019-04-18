@@ -2,6 +2,10 @@
 
 @section('content')
 
+    @php
+    	/** @var \App\Company $company */
+    @endphp
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
@@ -36,45 +40,82 @@
 
                 <div class="card-header mt-3">
 
-                        <form method="POST" action="/threads">
-                            @csrf
+                    <div class="wrapper-invoice-create">
+                        <div class="invoice-box invoice-from-to-customer-box">
+                            <div class="container">
+                                <div class="row justify-content">
+                                    <div class="col-md-8">
 
-                            <div class="form-group">
-                                <label for="channel_id">Choose a Channel:</label>
-                                <select name="channel_id" id="channel_id"
-                                        class="form-control {{ $errors->has('channel_id') ? 'is-invalid' : '' }}" required>
-                                    <option value="">Choose One...</option>
-                                   {{-- @foreach ($channels as $channel)
-                                        <option value="{{ $channel->id }}"
-                                                {{ old('channel_id') == $channel->id ? 'selected' : '' }}>{{
-                                        $channel->name }}</option>
-                                    @endforeach--}}
-                                </select>
+                                        <company-select :companies="{{ $companies }}">
+                                        </company-select>
+
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row justify-content">
+                                    <div class="col-md-8">
+
+                                        <customer-select :customers="{{ $customers }}"></customer-select>
+                                    </div>
+                                </div>
                             </div>
+                        </div>
+                        <div class="invoice-box invoice-logo-box">
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1">Example file input</label>
+                                    <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="invoice-box invoice-num-date-box">
 
-                            <div class="form-group">
-                                <label for="title">Title:</label>
-                                <input type="text" name="title" id="title"
-                                       class="form-control  {{ $errors->has('title') ? 'is-invalid' : '' }}" value="{{ old('title') }}" required>
+                           <div class="row level">
+                               <div class="col-md-4">
+                                   <h5>Invoice #</h5>
+                               </div>
+                               <div class="col-md-8">
+                                   <div class="form-group">
+                                       <input name="invoice_number" id="invoice_number" class="form-control">
+                                   </div>
+                               </div>
+                           </div>
+                            <div class="row level">
+                                <div class="col-md-4">
+                                    <h5>Invoice Date</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <input name="invoice_number" id="invoice_number" class="form-control">
+                                    </div>
+                                </div>
                             </div>
-
-                            <div class="form-group">
-                                <label for="body">Body:</label>
-                                <textarea name="body" id="body" rows="8"
-                                          class="form-control {{ $errors->has('body') ? 'is-invalid' : '' }}" required>
-                                    {{ old('body') }}
-                                </textarea>
+                            <div class="row level">
+                                <div class="col-md-4">
+                                    <h5>Due Date</h5>
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <input name="invoice_number" id="invoice_number" class="form-control">
+                                    </div>
+                                </div>
                             </div>
+                        </div>
 
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Publish</button>
-                            </div>
+                        <div class="invoice-box invoice-item-box">
 
-                            {{--@include('layouts.errors')--}}
-                        </form>
+                        </div>
+                        <div class="invoice-box invoice-notes-box">
+
+                        </div>
+                        <div class="invoice-box invoice-total-box">
+
+                        </div>
 
 
                     </div>
+
+
                 </div>
 
             </div>
