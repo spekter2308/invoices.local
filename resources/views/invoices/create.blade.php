@@ -4,6 +4,7 @@
 
     @php
     	/** @var \App\Company $company */
+    	/** @var \App\Customer $customer */
     @endphp
 
     <div class="container">
@@ -24,6 +25,7 @@
                     </div>
                 </div>
 
+                    {{--Top buttons--}}
                     <div class="level mt-2">
                         <div class="flex">
                             <button class="btn btn-outline-secondary">View</button>
@@ -41,25 +43,60 @@
                 <div class="card-header mt-3">
 
                     <div class="wrapper-invoice-create">
+
+                        {{--Company and Customer part--}}
                         <div class="invoice-box invoice-from-to-customer-box">
                             <div class="container">
                                 <div class="row justify-content">
                                     <div class="col-md-8">
-
-                                        <company-select :companies="{{ $companies }}">
-                                        </company-select>
+    
+                                        <h4>From</h4>
+                                        <select class="custom-select company-select">
+                                            <option selected disabled>Choose company ...</option>
+                                            @foreach ($companies as $company)
+                                                <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <br><br>
+                                        <div class="form-group">
+                                            <textarea name="company_address"
+                                                      id="company_address"
+                                                      class="form-control"
+                                                     disabled>
+                                            </textarea>
+                                        </div>
 
                                     </div>
                                 </div>
                                 <br>
                                 <div class="row justify-content">
                                     <div class="col-md-8">
-
-                                        <customer-select :customers="{{ $customers }}"></customer-select>
+    
+                                        <h4>To</h4>
+                                        <select class="custom-select" >
+                                            <option selected value="">New Customer ...</option>
+                                            @foreach ($customers as $customer)
+                                                <option value="{{ $company->id }}">{{ $company->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        <br><br>
+                                        <div class="form-group">
+                                            <input name="customer_name" id="customer_name" class="form-control">
+                                        </div>
+    
+                                        <div class="form-group">
+                                            <textarea name="customer_address"
+                                                      id="customer_address"
+                                                      class="form-control"
+                                                     >
+                                            </textarea>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        {{--Logo part--}}
                         <div class="invoice-box invoice-logo-box">
                             <form>
                                 <div class="form-group">
@@ -68,57 +105,90 @@
                                 </div>
                             </form>
                         </div>
+
+                        {{--Date and Nubmer part--}}
                         <div class="invoice-box invoice-num-date-box">
 
                            <div class="row level">
                                <div class="col-md-4">
-                                   <h5>Invoice #</h5>
+                                   <h6 class="font-weight-bold">Invoice #</h6>
                                </div>
                                <div class="col-md-8">
                                    <div class="form-group">
-                                       <input name="invoice_number" id="invoice_number" class="form-control">
+                                       <input type="number" name="invoice_number" id="invoice_number"
+                                              class="form-control" value="{{ $invoiceNumber }}">
                                    </div>
                                </div>
                            </div>
                             <div class="row level">
                                 <div class="col-md-4">
-                                    <h5>Invoice Date</h5>
+                                    <h6 class="font-weight-bold">Invoice Date</h6>
                                 </div>
                                 <div class="col-md-8">
                                     <div class="form-group">
-                                        <input name="invoice_number" id="invoice_number" class="form-control">
+                                        <input type="date" name="invoice_date" id="invoice_date"
+                                               class="form-control"
+                                               value="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
                                     </div>
                                 </div>
                             </div>
                             <div class="row level">
                                 <div class="col-md-4">
-                                    <h5>Due Date</h5>
+                                    <h6 class="font-weight-bold">Due Date</h6>
                                 </div>
                                 <div class="col-md-8">
                                     <div class="form-group">
-                                        <input name="invoice_number" id="invoice_number" class="form-control">
+                                        <input type="date" name="due_date" id="due_date"
+                                               class="form-control"
+                                               value="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
                                     </div>
                                 </div>
                             </div>
                         </div>
 
+                        {{--Items part--}}
                         <div class="invoice-box invoice-item-box">
+
+                            @include('invoices.items_table')
 
                         </div>
                         <div class="invoice-box invoice-notes-box">
-
+                            <div class="form-group">
+                                <label for="invoice_notes">Invoice Notes</label>
+                                <textarea name="invoice-notes"
+                                          id="invoice-notes"
+                                          class="form-control"
+                                          rows="6">
+                                </textarea>
+                            </div>
                         </div>
                         <div class="invoice-box invoice-total-box">
-
+                            <div class="border-top pb-2"></div>
+                            <div class="level">
+                                <h5 class="flex" >Subtotal</h5>
+                                <span>0.00</span>
+                            </div>
+                            <div class="border-top pb-2"></div>
+                            <div class="level">
+                                <h5 class="flex" >Total</h5>
+                                <span>0.00</span>
+                            </div>
+                            <div class="border-top pb-2"></div>
+                            <div class="level">
+                                <h5 class="flex" >Amount Paid</h5>
+                                <span>0.00</span>
+                            </div>
+                            <div class="border-top pb-2"></div>
+                            <div class="level">
+                                <h5 class="flex" >Balance Due</h5>
+                                <span>0.00</span>
+                            </div>
+                            <div class="border-top"></div>
                         </div>
-
-
                     </div>
-
-
                 </div>
-
             </div>
         </div>
     </div>
+    
 @endsection

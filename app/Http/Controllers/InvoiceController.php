@@ -16,6 +16,8 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        return view('invoices.create');
+        $invoiceNumber = Invoice::all()->last()->number + 1;
+
+        return view('invoices.create', compact('invoiceNumber'));
     }
 }

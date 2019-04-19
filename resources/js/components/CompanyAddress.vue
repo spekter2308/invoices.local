@@ -10,12 +10,12 @@
 
 <script>
     export default {
-        props: ['address'],
+        props: ['data'],
 
 
         data() {
             return {
-
+                address: this.data.address
             }
         }
     }

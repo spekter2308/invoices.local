@@ -10685,10 +10685,28 @@ a.text-dark:focus {
 
 .invoice-num-date-box {
   grid-area: invoice-box-3;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
 }
 
 .invoice-item-box {
   grid-area: invoice-box-4;
+}
+
+.invoice-item-box .items-table-header,
+.invoice-item-box .items-table-row {
+  display: grid;
+  grid-template-columns: 1.5fr 3fr 1fr 1fr 1fr;
+}
+
+.invoice-item-box .items-table-header {
+  background-color: #54A0E7;
+  color: #eee;
+}
+
+.invoice-item-box .items-table-header > div {
+  padding: 3px 14px;
 }
 
 .invoice-notes-box {
@@ -10697,6 +10715,8 @@ a.text-dark:focus {
 
 .invoice-total-box {
   grid-area: invoice-box-6;
+  margin-top: 30px;
+  margin-left: 30px;
 }
 
 .navbar-laravel {

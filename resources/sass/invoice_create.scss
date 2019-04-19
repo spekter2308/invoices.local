@@ -26,10 +26,30 @@
 
 .invoice-num-date-box{
   grid-area: invoice-box-3;
+  margin-top: 100px;
+  display: flex;
+  flex-direction: column;
+
 }
 
 .invoice-item-box{
   grid-area: invoice-box-4;
+  .items-table-header, .items-table-row{
+    display: grid;
+    grid-template-columns: 1.5fr 3fr 1fr 1fr 1fr;
+    //grid-auto-rows: minmax(100px, auto);
+  }
+  .items-table-header{
+    background-color: #54A0E7;
+    color: #eee;
+    > div {
+      padding: 3px 14px;
+    }
+  }
+  .items-table-row{
+
+  }
+
 }
 
 .invoice-notes-box{
@@ -38,4 +58,6 @@
 
 .invoice-total-box{
   grid-area: invoice-box-6;
+  margin-top: 30px;
+  margin-left: 30px;
 }
