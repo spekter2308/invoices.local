@@ -49,8 +49,10 @@
                             <div class="container">
                                 <div class="row justify-content">
                                     <div class="col-md-8">
-    
-                                        <h4>From</h4>
+
+                                        <company-select :companies="{{ $companies }}"
+                                                        v-on:invoicenotes="getInvoiceNotes"></company-select>
+                                        {{--<h4>From</h4>
                                         <select class="custom-select company-select">
                                             <option selected disabled>Choose company ...</option>
                                             @foreach ($companies as $company)
@@ -64,7 +66,7 @@
                                                       class="form-control"
                                                      disabled>
                                             </textarea>
-                                        </div>
+                                        </div>--}}
 
                                     </div>
                                 </div>
@@ -72,25 +74,8 @@
                                 <div class="row justify-content">
                                     <div class="col-md-8">
     
-                                        <h4>To</h4>
-                                        <select class="custom-select" >
-                                            <option selected value="">New Customer ...</option>
-                                            @foreach ($customers as $customer)
-                                                <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <br><br>
-                                        <div class="form-group">
-                                            <input name="customer_name" id="customer_name" class="form-control">
-                                        </div>
-    
-                                        <div class="form-group">
-                                            <textarea name="customer_address"
-                                                      id="customer_address"
-                                                      class="form-control"
-                                                     >
-                                            </textarea>
-                                        </div>
+                                        <customer-select :customers="{{ $customers }}"></customer-select>
+
                                     </div>
                                 </div>
                             </div>
@@ -152,16 +137,28 @@
                             @include('invoices.items_table')
 
                         </div>
+
+
+
+
+
+
+
+
                         <div class="invoice-box invoice-notes-box">
                             <div class="form-group">
-                                <label for="invoice_notes">Invoice Notes</label>
-                                <textarea name="invoice-notes"
-                                          id="invoice-notes"
-                                          class="form-control"
-                                          rows="6">
-                                </textarea>
+                               <invoice-notes :notes="notes"></invoice-notes>
                             </div>
                         </div>
+
+
+
+
+
+
+
+
+
                         <div class="invoice-box invoice-total-box">
                             <div class="border-top pb-2"></div>
                             <div class="level">

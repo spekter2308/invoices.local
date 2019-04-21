@@ -1,35 +1,40 @@
 <template>
     <div>
         <h4>From</h4>
-        <select class="custom-select" v-model="selected">
-            <option selected value="null" disabled>Choose company ...</option>
-            <option v-for="(company, index) of companies" :key="company.id">{{ company.name }}</option>
+        <select class="custom-select" v-model="selected" @change="selectCompany">
+            <option value="" selected disabled>Choose company ...</option>
+            <option v-for="company of companies" v-bind:value="company">{{ company.name }}</option>
         </select>
         <br><br>
-       <company-address :data="company"></company-address>
+        <div class="form-group">
+            <textarea name="company_address"
+                      id="company_address"
+                      class="form-control"
+                      v-text="address" disabled>
+            </textarea>
+        </div>
     </div>
 </template>
 
 
 <script>
-    import CompanyAddress from './CompanyAddress'
 
     export default {
-        components: {
-            'company-address': CompanyAddress
-        },
+        props: ['companies'],
 
         data() {
             return {
-                companies: [],
-                selected: null,
+                selected: '',
+                address: '',
             };
         },
 
         methods: {
-            fetch(page){
-                axios.get(this.url(page)).then(this.refresh);
-            }
+            selectCompany() {
+                this.address = this.selected.address;
+                //this.invoiceNotes = this.selected.invoice_notes;
+                this.$emit('invoicenotes', this.selected.invoice_notes);
+            },
         }
     }
 </script>

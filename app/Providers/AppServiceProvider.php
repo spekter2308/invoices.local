@@ -31,12 +31,19 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
 
         \View::composer('*', function ($view) {
-            $companies = \Cache::rememberForever('companies', function () {
+            /*$companies = \Cache::rememberForever('companies', function () {
                 return Company::get();
             });
             $customers = \Cache::rememberForever('customers', function () {
                 return Customer::get();
+            });*/
+            $companies = \Session('companies', function () {
+                return Company::get();
             });
+            $customers = \Session('customers', function () {
+                return Customer::get();
+            });
+
             $view->with([
                 'companies' => $companies,
                 'customers' => $customers
