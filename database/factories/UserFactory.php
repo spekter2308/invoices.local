@@ -39,6 +39,7 @@ $factory->define(\App\Invoice::class, function (Faker $faker){
             return factory(\App\Company::class)->create()->id;
         },
         'amount_paid' => $amountPaid,
+        'subtotal' => $total,
         'total' => $total,
         'balance' => $balance,
         'currency' => $faker->currencyCode(),
@@ -62,7 +63,7 @@ $factory->define(\App\Company::class, function(Faker $faker){
         'name' => $faker->company,
         'short_name' => $faker->word,
         'address' => $faker->address,
-        'invoice_notes' => $faker->sentence(rand(5, 10), true),
+        'invoice_notes' => $faker->sentence(rand(15, 30), true),
         'logo_img' => 'no_image.jpg'
     ];
 });

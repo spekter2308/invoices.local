@@ -7,14 +7,16 @@
     	/** @var \App\Customer $customer */
     @endphp
 
-    <div class="container">
+    <div class="container" v-cloak>
         <div class="row justify-content-center">
             <div class="col-md-12">
 
                 <div class="card">
                     <div class="card-header">
+                        
                         <div class="level">
                            <span class="flex">
+                               <a href="/invoices" class="btn btn-primary">Back</a>
                                <h1>New Invoice</h1>
                                <button class="btn btn-link">
                                    Show Customization Options
@@ -37,7 +39,8 @@
                             <button class="btn btn-outline-secondary">Duplicate</button>
                         </div>
 
-                        <button class="btn btn-primary">Save</button>
+                        <button class="btn btn-primary mr-2">Save</button>
+                        <a href="/invoices" class="btn btn-light">Cancel</a>
                     </div>
 
                 <div class="card-header mt-3">
@@ -47,37 +50,11 @@
                         {{--Company and Customer part--}}
                         <div class="invoice-box invoice-from-to-customer-box">
                             <div class="container">
-                                <div class="row justify-content">
-                                    <div class="col-md-8">
-
-                                        <company-select :companies="{{ $companies }}"
-                                                        v-on:invoicenotes="getInvoiceNotes"></company-select>
-                                        {{--<h4>From</h4>
-                                        <select class="custom-select company-select">
-                                            <option selected disabled>Choose company ...</option>
-                                            @foreach ($companies as $company)
-                                                <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <br><br>
-                                        <div class="form-group">
-                                            <textarea name="company_address"
-                                                      id="company_address"
-                                                      class="form-control"
-                                                     disabled>
-                                            </textarea>
-                                        </div>--}}
-
-                                    </div>
-                                </div>
+                                <company-select :companies="{{ $companies }}" v-on:invoicenotes="getInvoiceNotes"></company-select>
                                 <br>
-                                <div class="row justify-content">
-                                    <div class="col-md-8">
-    
-                                        <customer-select :customers="{{ $customers }}"></customer-select>
+                                <customer-select :customers="{{ $customers }}"></customer-select>
 
-                                    </div>
-                                </div>
+                                    
                             </div>
                         </div>
 
@@ -138,26 +115,11 @@
 
                         </div>
 
-
-
-
-
-
-
-
                         <div class="invoice-box invoice-notes-box">
                             <div class="form-group">
                                <invoice-notes :notes="notes"></invoice-notes>
                             </div>
                         </div>
-
-
-
-
-
-
-
-
 
                         <div class="invoice-box invoice-total-box">
                             <div class="border-top pb-2"></div>

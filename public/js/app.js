@@ -1782,6 +1782,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['companies'],
   data: function data() {
@@ -1810,6 +1812,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -1873,6 +1876,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -37176,63 +37182,69 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h4", [_vm._v("From")]),
-    _vm._v(" "),
-    _c(
-      "select",
-      {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.selected,
-            expression: "selected"
+  return _c("div", { staticClass: "row justify-content" }, [
+    _c("div", { staticClass: "col-md-8" }, [
+      _c("h4", [_vm._v("From")]),
+      _vm._v(" "),
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.selected,
+              expression: "selected"
+            }
+          ],
+          staticClass: "custom-select",
+          on: {
+            change: [
+              function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.selected = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
+              },
+              _vm.selectCompany
+            ]
           }
+        },
+        [
+          _c("option", { attrs: { value: "", selected: "", disabled: "" } }, [
+            _vm._v("Choose company ...")
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.companies, function(company) {
+            return _c("option", { domProps: { value: company } }, [
+              _vm._v(_vm._s(company.name))
+            ])
+          })
         ],
-        staticClass: "custom-select",
-        on: {
-          change: [
-            function($event) {
-              var $$selectedVal = Array.prototype.filter
-                .call($event.target.options, function(o) {
-                  return o.selected
-                })
-                .map(function(o) {
-                  var val = "_value" in o ? o._value : o.value
-                  return val
-                })
-              _vm.selected = $event.target.multiple
-                ? $$selectedVal
-                : $$selectedVal[0]
-            },
-            _vm.selectCompany
-          ]
-        }
-      },
-      [
-        _c("option", { attrs: { value: "", selected: "", disabled: "" } }, [
-          _vm._v("Choose company ...")
-        ]),
-        _vm._v(" "),
-        _vm._l(_vm.companies, function(company) {
-          return _c("option", { domProps: { value: company } }, [
-            _vm._v(_vm._s(company.name))
-          ])
+        2
+      ),
+      _vm._v(" "),
+      _c("br"),
+      _c("br"),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("textarea", {
+          staticClass: "form-control",
+          attrs: {
+            name: "company_address",
+            id: "company_address",
+            disabled: ""
+          },
+          domProps: { textContent: _vm._s(_vm.address) }
         })
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("br"),
-    _c("br"),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("textarea", {
-        staticClass: "form-control",
-        attrs: { name: "company_address", id: "company_address", disabled: "" },
-        domProps: { textContent: _vm._s(_vm.address) }
-      })
+      ])
     ])
   ])
 }
@@ -37258,72 +37270,74 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("h4", [_vm._v("To")]),
-    _vm._v(" "),
-    _c(
-      "select",
-      {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.selected,
-            expression: "selected"
+  return _c("div", { staticClass: "row justify-content" }, [
+    _c("div", { staticClass: "col-md-8" }, [
+      _c("h4", [_vm._v("To")]),
+      _vm._v(" "),
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.selected,
+              expression: "selected"
+            }
+          ],
+          staticClass: "custom-select",
+          on: {
+            change: [
+              function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.selected = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
+              },
+              _vm.selectCustomer
+            ]
           }
-        ],
-        staticClass: "custom-select",
-        on: {
-          change: [
-            function($event) {
-              var $$selectedVal = Array.prototype.filter
-                .call($event.target.options, function(o) {
-                  return o.selected
-                })
-                .map(function(o) {
-                  var val = "_value" in o ? o._value : o.value
-                  return val
-                })
-              _vm.selected = $event.target.multiple
-                ? $$selectedVal
-                : $$selectedVal[0]
-            },
-            _vm.selectCustomer
-          ]
-        }
-      },
-      [
-        _c("option", { attrs: { selected: "", value: "" } }, [
-          _vm._v("New Customer ...")
-        ]),
-        _vm._v(" "),
-        _vm._l(_vm.customers, function(customer) {
-          return _c("option", { domProps: { value: customer } }, [
-            _vm._v(_vm._s(customer.name))
-          ])
-        })
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("br"),
-    _c("br"),
-    _vm._v(" "),
-    _vm.editing
-      ? _c("div", { staticClass: "form-group" }, [
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { name: "customer_name", id: "customer_name" }
+        },
+        [
+          _c("option", { attrs: { selected: "", value: "" } }, [
+            _vm._v("New Customer ...")
+          ]),
+          _vm._v(" "),
+          _vm._l(_vm.customers, function(customer) {
+            return _c("option", { domProps: { value: customer } }, [
+              _vm._v(_vm._s(customer.name))
+            ])
           })
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("textarea", {
-        staticClass: "form-control",
-        attrs: { name: "customer_address", id: "customer_address" },
-        domProps: { textContent: _vm._s(_vm.address) }
-      })
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("br"),
+      _c("br"),
+      _vm._v(" "),
+      _vm.editing
+        ? _c("div", { staticClass: "form-group" }, [
+            _c("input", {
+              staticClass: "form-control",
+              attrs: { name: "customer_name", id: "customer_name" }
+            })
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("textarea", {
+          staticClass: "form-control",
+          attrs: { name: "customer_address", id: "customer_address" },
+          domProps: { textContent: _vm._s(_vm.address) }
+        })
+      ])
     ])
   ])
 }
@@ -37349,10 +37363,14 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("textarea", {
-    attrs: { name: "", id: "", cols: "30", rows: "10" },
-    domProps: { textContent: _vm._s(_vm.notes) }
-  })
+  return _c("div", [
+    _c("h5", [_vm._v("Invoice Notes")]),
+    _vm._v(" "),
+    _c("textarea", {
+      attrs: { name: "invoiceNotes", id: "", cols: "80", rows: "8" },
+      domProps: { textContent: _vm._s(_vm.notes) }
+    })
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -49535,7 +49553,9 @@ var app = new Vue({
   el: '#app',
   data: function data() {
     return {
-      notes: ''
+      notes: '',
+      form: {},
+      errors: {}
     };
   },
   methods: {
@@ -49830,8 +49850,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -18,8 +18,8 @@ class CreateCompaniesTable extends Migration
 
             $table->string('name');
             $table->string('short_name');
-            $table->string('address');
-            $table->string('invoice_notes');
+            $table->text('address');
+            $table->text('invoice_notes');
             $table->string('logo_img');
 
             $table->timestamps();

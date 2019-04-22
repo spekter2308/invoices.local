@@ -35,7 +35,9 @@ const app = new Vue({
 
     data() {
        return {
-           notes: ''
+           notes: '',
+           form: {},
+           errors: {}
        }
     },
 

@@ -1,24 +1,25 @@
 <template>
-    <div>
-        <h4>To</h4>
-        <select class="custom-select" v-model="selected" @change="selectCustomer">
-            <option selected value="">New Customer ...</option>
-            <option v-for="customer of customers" v-bind:value="customer">{{ customer.name }}</option>
-        </select>
-        <br><br>
-        <div class="form-group" v-if="editing">
-            <input name="customer_name" id="customer_name" class="form-control">
-        </div>
+        <div class="row justify-content">
+            <div class="col-md-8">
+                <h4>To</h4>
+                <select class="custom-select" v-model="selected" @change="selectCustomer">
+                    <option selected value="">New Customer ...</option>
+                    <option v-for="customer of customers" v-bind:value="customer">{{ customer.name }}</option>
+                </select>
+                <br><br>
+                <div class="form-group" v-if="editing">
+                    <input name="customer_name" id="customer_name" class="form-control">
+                </div>
 
-        <div class="form-group">
-            <textarea name="customer_address"
-                      id="customer_address"
-                      class="form-control"
-                      v-text="address">
-            </textarea>
+                <div class="form-group">
+                    <textarea name="customer_address"
+                              id="customer_address"
+                              class="form-control"
+                              v-text="address">
+                    </textarea>
+                </div>
+            </div>
         </div>
-
-    </div>
 </template>
 
 

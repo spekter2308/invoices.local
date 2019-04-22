@@ -35,47 +35,12 @@
                         <a href="" class="pd-1 pdl-1 border-right">Partial</a>
                         <a href="" class="pd-1 pdl-1 border-right">Archived</a>
                     </div>
-                    <table class="table">
-                        <thead class="bg-primary text-white">
-                        <tr>
-                            <th scope="col">
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                    </div>
-
-                                </div>
-                            </th>
-                            <th scope="col">
-                                Invoices
-                            </th>
-                            <th scope="col">Customer</th>
-                            <th scope="col">Company</th>
-                            <th scope="col">Date</th>
-                            <th scope="col">Days</th>
-                            <th scope="col">Toral</th>
-                            <th scope="col">Balance</th>
-                            <th scope="col">Status</th>
-                            {{--<th scope="col">Mark Paid</th>--}}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach ($invoices as $invoice)
-
+                    
+                    @if ($invoices->count())
+                        <table class="table">
+                            <thead class="bg-primary text-white">
                             <tr>
-
-                                <td>
-                                    <div class="form-group row">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="check-{{ $invoice->id }}">
-                                        </div>
-                                    </div>
-                                </td>
-
-                                <td scope="row">
+                                <th scope="col">
                                     <div class="dropdown">
                                         <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         </button>
@@ -83,36 +48,85 @@
                                             <a class="dropdown-item" href="#">Action</a>
                                             <a class="dropdown-item" href="#">Another action</a>
                                         </div>
-                                        {{ str_pad($invoice->number, 7, "0", STR_PAD_LEFT) }}
-                                    </div>
-                                </td>
 
-                                <td>{{ $invoice->customer_id }}</td>
-                                <td>{{ $invoice->company_id }}</td>
-                                <td>{{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}</td>
-                                <td
-                                        @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))
-                                        style="color: green;"
-                                        @else
-                                        style="color: red";
-                                        @endif
-                                >{{
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    Invoices
+                                </th>
+                                <th scope="col">Customer</th>
+                                <th scope="col">Company</th>
+                                <th scope="col">Date</th>
+                                <th scope="col">Days</th>
+                                <th scope="col">Toral</th>
+                                <th scope="col">Balance</th>
+                                <th scope="col">Status</th>
+                                {{--<th scope="col">Mark Paid</th>--}}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach ($invoices as $invoice)
+
+                                <tr>
+
+                                    <td>
+                                        <div class="form-group row">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="check-{{ $invoice->id }}">
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                    <td scope="row">
+                                        <div class="dropdown">
+                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a class="dropdown-item" href="#">Action</a>
+                                                <a class="dropdown-item" href="#">Another action</a>
+                                            </div>
+                                            {{ str_pad($invoice->number, 7, "0", STR_PAD_LEFT) }}
+                                        </div>
+                                    </td>
+
+                                    <td>{{ $invoice->customer_id }}</td>
+                                    <td>{{ $invoice->company_id }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}</td>
+                                    <td
+                                            @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))
+                                            style="color: green;"
+                                            @else
+                                            style="color: red";
+                                            @endif
+                                    >{{
                                      \Carbon\Carbon::parse($invoice->due_date)->diffInDays(\Carbon\Carbon::now())
                                      }}
-                                </td>
-                                <td>{{ $invoice->total }}</td>
-                                <td>{{ $invoice->balance }}</td>
-                                <td>{{ $invoice->status }}</td>
-                                <td>
-                                    <button>
-                                        mark paid
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
+                                    </td>
+                                    <td>{{ $invoice->total }}</td>
+                                    <td>{{ $invoice->balance }}</td>
+                                    <td>{{ $invoice->status }}</td>
+                                    <td>
+                                        <button>
+                                            mark paid
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
 
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                        
+                    @else
+                        
+                        <div class="invoice-empty">
+                            <p class="invoice-empty-title">
+                                No invoices were created.
+                                <a href="/invoices/create">Create Now</a>
+                            </p>
+                        </div>
+                        
+                    @endif
+                    
                 </div>
 
             </div>

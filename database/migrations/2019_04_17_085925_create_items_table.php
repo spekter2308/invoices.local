@@ -20,9 +20,9 @@ class CreateItemsTable extends Migration
             $table->string('name');
             $table->string('description');
             $table->float('unit_price');
-            $table->float('quantity');
+            $table->integer('quantity');
+            $table->double('tax')->default(0);
             $table->float('amount');
-
             $table->timestamps();
         });
     }

@@ -1,19 +1,21 @@
 <template>
-    <div>
-        <h4>From</h4>
-        <select class="custom-select" v-model="selected" @change="selectCompany">
-            <option value="" selected disabled>Choose company ...</option>
-            <option v-for="company of companies" v-bind:value="company">{{ company.name }}</option>
-        </select>
-        <br><br>
-        <div class="form-group">
-            <textarea name="company_address"
-                      id="company_address"
-                      class="form-control"
-                      v-text="address" disabled>
-            </textarea>
+        <div class="row justify-content">
+            <div class="col-md-8">
+                <h4>From</h4>
+                <select class="custom-select" v-model="selected" @change="selectCompany">
+                    <option value="" selected disabled>Choose company ...</option>
+                    <option v-for="company of companies" v-bind:value="company">{{ company.name }}</option>
+                </select>
+                <br><br>
+                <div class="form-group">
+                    <textarea name="company_address"
+                              id="company_address"
+                              class="form-control"
+                              v-text="address" disabled>
+                    </textarea>
+                </div>
+            </div>
         </div>
-    </div>
 </template>
 
 

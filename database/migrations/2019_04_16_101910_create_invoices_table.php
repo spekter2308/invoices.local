@@ -16,16 +16,16 @@ class CreateInvoicesTable extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->bigIncrements('id');
 
-            $table->unsignedInteger('number');
+            $table->unsignedInteger('number')->unique();
             $table->integer('customer_id')->unsigned();
             $table->integer('company_id')->unsigned();
 
-            $table->float('amount_paid');
-            $table->float('total');
-            $table->float('balance');
-            $table->string('currency');
+            $table->double('amount_paid');
+            $table->double('balance');
+            $table->double('subtotal');
+            $table->double('total');
+            $table->string('currency')->default('usd');
 
-            $table->unsignedInteger('items_count')->default(0);
             $table->timestamp('invoice_date')->nullable();
             $table->timestamp('due_date')->nullable();
             
