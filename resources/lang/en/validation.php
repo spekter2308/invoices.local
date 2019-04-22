@@ -144,6 +144,9 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'item.*.unit_price' => 'unit_price',
+        'item.*.quantity' => 'quantity'
+    ],
 
 ];

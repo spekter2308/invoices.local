@@ -3,10 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Helper\HasManyRelation;
 
 class Invoice extends Model
 {
+    use HasManyRelation;
+
     protected $guarded = [];
+
 
     public function items()
     {

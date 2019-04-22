@@ -19,8 +19,7 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('invoices', 'InvoiceController@index');
-Route::get('invoices/create', 'InvoiceController@create');
+Route::resource('/api/invoices', 'InvoiceController');
 
 
 Route::get('/api/customers', 'CustomerController@search');
