@@ -9,7 +9,7 @@ class InvoiceController extends Controller
 {
     public function index(Invoice $invoice)
     {
-        $invoices = $invoice->latest()->get();
+        $invoices = $invoice->latest()->with(['company', 'customer'])->get();
 
         return view('invoices.index', compact('invoices'));
     }
@@ -19,5 +19,12 @@ class InvoiceController extends Controller
         $invoiceNumber = Invoice::all()->last()->number + 1;
 
         return view('invoices.create', compact('invoiceNumber'));
+    }
+
+    public function store(Request $request)
+    {
+        $data = $request->input();
+        dd($data);
+
     }
 }

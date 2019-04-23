@@ -1,7 +1,7 @@
 <template>
     <div>
         <h4>From</h4>
-        <select class="custom-select" v-model="selected" @change="selectCompany">
+        <select name="company_selected" class="custom-select" v-model="selected" @change="selectCompany">
             <option value="" selected disabled>Choose company ...</option>
             <option v-for="company of companies" v-bind:value="company">{{ company.name }}</option>
         </select>
@@ -10,7 +10,7 @@
             <textarea name="company_address"
                       id="company_address"
                       class="form-control"
-                      v-text="address" disabled>
+                      v-text="address">
             </textarea>
         </div>
     </div>

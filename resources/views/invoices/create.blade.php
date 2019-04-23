@@ -10,7 +10,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-
+                
                 <div class="card">
                     <div class="card-header">
                         <div class="level">
@@ -24,165 +24,132 @@
                         </div>
                     </div>
                 </div>
-
-                    {{--Top buttons--}}
-                    <div class="level mt-2">
-                        <div class="flex">
-                            <button class="btn btn-outline-secondary">View</button>
-                            <button class="btn btn-outline-secondary">Print</button>
-                            <button class="btn btn-outline-secondary">PDF</button>
-                            <button class="btn btn-outline-secondary">Send</button>
-                            <button class="btn btn-outline-secondary">Mark as Paid</button>
-                            <button class="btn btn-outline-secondary">Record Payment</button>
-                            <button class="btn btn-outline-secondary">Duplicate</button>
-                        </div>
-
-                        <button class="btn btn-primary">Save</button>
+                {{--Top buttons--}}
+                <div class="level mt-2">
+                    <div class="flex">
+                        <button class="btn btn-outline-secondary">View</button>
+                        <button class="btn btn-outline-secondary">Print</button>
+                        <button class="btn btn-outline-secondary">PDF</button>
+                        <button class="btn btn-outline-secondary">Send</button>
+                        <button class="btn btn-outline-secondary">Mark as Paid</button>
+                        <button class="btn btn-outline-secondary">Record Payment</button>
+                        <button class="btn btn-outline-secondary">Duplicate</button>
                     </div>
+                        <button form="createInvoice" class="btn btn-primary" type="submit">Save</button>
+                </div>
 
                 <div class="card-header mt-3">
 
-                    <div class="wrapper-invoice-create">
-
-                        {{--Company and Customer part--}}
-                        <div class="invoice-box invoice-from-to-customer-box">
-                            <div class="container">
-                                <div class="row justify-content">
-                                    <div class="col-md-8">
-
-                                        <company-select :companies="{{ $companies }}"
-                                                        v-on:invoicenotes="getInvoiceNotes"></company-select>
-                                        {{--<h4>From</h4>
-                                        <select class="custom-select company-select">
-                                            <option selected disabled>Choose company ...</option>
-                                            @foreach ($companies as $company)
-                                                <option value="{{ $company->id }}">{{ $company->name }}</option>
-                                            @endforeach
-                                        </select>
-                                        <br><br>
-                                        <div class="form-group">
-                                            <textarea name="company_address"
-                                                      id="company_address"
-                                                      class="form-control"
-                                                     disabled>
-                                            </textarea>
-                                        </div>--}}
-
+                    <form id="createInvoice" method="POST" action="/invoices">
+                    	@csrf
+                        <div class="wrapper-invoice-create">
+                            {{--Company and Customer part--}}
+                            <div class="invoice-box invoice-from-to-customer-box">
+                                <div class="container">
+                                    <div class="row justify-content">
+                                        <div class="col-md-8">
+                                            <company-select :companies="{{ $companies }}"
+                                                            v-on:invoicenotes="getInvoiceNotes">
+                                            </company-select>
+                                        </div>
                                     </div>
-                                </div>
-                                <br>
-                                <div class="row justify-content">
-                                    <div class="col-md-8">
-    
-                                        <customer-select :customers="{{ $customers }}"></customer-select>
-
+                                    <br>
+                                    <div class="row justify-content">
+                                        <div class="col-md-8">
+                                            <customer-select :customers="{{ $customers }}">
+                                            </customer-select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        {{--Logo part--}}
-                        <div class="invoice-box invoice-logo-box">
-                            <form>
-                                <div class="form-group">
-                                    <label for="exampleFormControlFile1">Example file input</label>
-                                    <input type="file" class="form-control-file" id="exampleFormControlFile1">
-                                </div>
-                            </form>
-                        </div>
-
-                        {{--Date and Nubmer part--}}
-                        <div class="invoice-box invoice-num-date-box">
-
-                           <div class="row level">
-                               <div class="col-md-4">
-                                   <h6 class="font-weight-bold">Invoice #</h6>
-                               </div>
-                               <div class="col-md-8">
-                                   <div class="form-group">
-                                       <input type="number" name="invoice_number" id="invoice_number"
-                                              class="form-control" value="{{ $invoiceNumber }}">
+    
+                            {{--Logo part--}}
+                            <div class="invoice-box invoice-logo-box">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="exampleFormControlFile1">Example file input</label>
+                                        <input type="file" class="form-control-file" id="exampleFormControlFile1">
+                                    </div>
+                                </form>
+                            </div>
+    
+                            {{--Date and Nubmer part--}}
+                            <div class="invoice-box invoice-num-date-box">
+                               <div class="row level">
+                                   <div class="col-md-4">
+                                       <h6 class="font-weight-bold">Invoice #</h6>
+                                   </div>
+                                   <div class="col-md-8">
+                                       <div class="form-group">
+                                           <input type="number" name="invoice_number" id="invoice_number"
+                                                  class="form-control" value="{{ $invoiceNumber }}">
+                                       </div>
                                    </div>
                                </div>
-                           </div>
-                            <div class="row level">
-                                <div class="col-md-4">
-                                    <h6 class="font-weight-bold">Invoice Date</h6>
+                                <div class="row level">
+                                    <div class="col-md-4">
+                                        <h6 class="font-weight-bold">Invoice Date</h6>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <input type="date" name="invoice_date" id="invoice_date"
+                                                   class="form-control"
+                                                   value="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <input type="date" name="invoice_date" id="invoice_date"
-                                               class="form-control"
-                                               value="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
+                                <div class="row level">
+                                    <div class="col-md-4">
+                                        <h6 class="font-weight-bold">Due Date</h6>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <input type="date" name="due_date" id="due_date"
+                                                   class="form-control"
+                                                   value="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="row level">
-                                <div class="col-md-4">
-                                    <h6 class="font-weight-bold">Due Date</h6>
+                            {{--Items part--}}
+                            <div class="invoice-box invoice-item-box">
+                                {{--@include('invoices.items_table')--}}
+                                <items-table></items-table>
+                            </div>
+    
+                            <div class="invoice-box invoice-notes-box">
+                                <div class="form-group">
+                                   <invoice-notes :notes="notes"></invoice-notes>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="form-group">
-                                        <input type="date" name="due_date" id="due_date"
-                                               class="form-control"
-                                               value="{{ \Carbon\Carbon::today()->format('Y-m-d') }}">
-                                    </div>
+                            </div>
+    
+                            <div class="invoice-box invoice-total-box">
+                                <div class="border-top pb-2"></div>
+                                <div class="level">
+                                    <h5 class="flex" >Subtotal</h5>
+                                    <span>0.00</span>
                                 </div>
+                                <div class="border-top pb-2"></div>
+                                <div class="level">
+                                    <h5 class="flex" >Total</h5>
+                                    <span>0.00</span>
+                                </div>
+                                <div class="border-top pb-2"></div>
+                                <div class="level">
+                                    <h5 class="flex" >Amount Paid</h5>
+                                    <span>0.00</span>
+                                </div>
+                                <div class="border-top pb-2"></div>
+                                <div class="level">
+                                    <h5 class="flex" >Balance Due</h5>
+                                    <span>0.00</span>
+                                </div>
+                                <div class="border-top"></div>
                             </div>
                         </div>
+                        
+                    </form>
 
-                        {{--Items part--}}
-                        <div class="invoice-box invoice-item-box">
-
-                            @include('invoices.items_table')
-
-                        </div>
-
-
-
-
-
-
-
-
-                        <div class="invoice-box invoice-notes-box">
-                            <div class="form-group">
-                               <invoice-notes :notes="notes"></invoice-notes>
-                            </div>
-                        </div>
-
-
-
-
-
-
-
-
-
-                        <div class="invoice-box invoice-total-box">
-                            <div class="border-top pb-2"></div>
-                            <div class="level">
-                                <h5 class="flex" >Subtotal</h5>
-                                <span>0.00</span>
-                            </div>
-                            <div class="border-top pb-2"></div>
-                            <div class="level">
-                                <h5 class="flex" >Total</h5>
-                                <span>0.00</span>
-                            </div>
-                            <div class="border-top pb-2"></div>
-                            <div class="level">
-                                <h5 class="flex" >Amount Paid</h5>
-                                <span>0.00</span>
-                            </div>
-                            <div class="border-top pb-2"></div>
-                            <div class="level">
-                                <h5 class="flex" >Balance Due</h5>
-                                <span>0.00</span>
-                            </div>
-                            <div class="border-top"></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

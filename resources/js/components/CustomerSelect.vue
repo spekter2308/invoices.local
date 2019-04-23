@@ -1,7 +1,7 @@
 <template>
     <div>
         <h4>To</h4>
-        <select class="custom-select" v-model="selected" @change="selectCustomer">
+        <select name="customer_selected" class="custom-select" v-model="selected" @change="selectCustomer">
             <option selected value="">New Customer ...</option>
             <option v-for="customer of customers" v-bind:value="customer">{{ customer.name }}</option>
         </select>

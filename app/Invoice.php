@@ -8,6 +8,8 @@ class Invoice extends Model
 {
     protected $guarded = [];
 
+    protected $with = ['customer', 'company'];
+
     public function items()
     {
         return $this->hasMany(Item::class);

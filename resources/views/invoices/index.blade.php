@@ -87,8 +87,8 @@
                                     </div>
                                 </td>
 
-                                <td>{{ $invoice->customer_id }}</td>
-                                <td>{{ $invoice->company_id }}</td>
+                                <td><a href="#">{{ $invoice->customer->name }}</a></td>
+                                <td><a href="#">{{ $invoice->company->name }}</a></td>
                                 <td>{{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}</td>
                                 <td
                                         @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))

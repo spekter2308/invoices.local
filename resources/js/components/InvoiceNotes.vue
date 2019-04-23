@@ -1,5 +1,5 @@
 <template>
-    <textarea name="" id="" cols="80" rows="6" v-text="notes"></textarea>
+    <textarea name="invoice_notes" id="invoice_notes" cols="80" rows="6" v-text="notes"></textarea>
 </template>
 
 <script>
