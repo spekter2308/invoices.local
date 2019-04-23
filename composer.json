@@ -45,7 +45,12 @@
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"
-        }
+        },
+        "classmap": [
+            "database/seeds/InvoiceTableSeeder.php",
+            "database/seeds/CustomerTableSeeder.php",
+            "database/seeds/CompanyTableSeeder.php"
+        ]
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
