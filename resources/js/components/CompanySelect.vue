@@ -1,9 +1,9 @@
 <template>
     <div>
         <h4>From</h4>
-        <select name="company_selected" class="custom-select" v-model="selected" @change="selectCompany">
+        <select class="custom-select" :value="value" @change="onSelect">
             <option value="" selected disabled>Choose company ...</option>
-            <option v-for="company of companies" v-bind:value="company">{{ company.name }}</option>
+            <option v-for="company of companies" :value="company">{{ company.name }}</option>
         </select>
         <br><br>
         <div class="form-group">
@@ -20,20 +20,28 @@
 <script>
 
     export default {
-        props: ['companies'],
-
-        data() {
-            return {
-                selected: '',
-                address: '',
-            };
+        props: {
+            companies: {
+                type: Array,
+                required: true
+            },
+            value: {
+                type: Object,
+                required: true
+            }
         },
 
+        computed: {
+            address() {
+                return this.value.address && this.value
+                    ? this.value.address
+                    : ''
+            }
+        },
         methods: {
-            selectCompany() {
-                this.address = this.selected.address;
-                //this.invoiceNotes = this.selected.invoice_notes;
-                this.$emit('invoicenotes', this.selected.invoice_notes);
+            onSelect(e) {
+                //this.$emit('input', e.target.value.invoice_notes);
+                this.$emit('input', e.target.value);
             },
         }
     }

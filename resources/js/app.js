@@ -23,6 +23,7 @@ window.Vue = require('vue');
 Vue.component('company-select', require('./components/CompanySelect.vue').default);
 Vue.component('customer-select', require('./components/CustomerSelect.vue').default);
 Vue.component('invoice-notes', require('./components/InvoiceNotes.vue').default);
+Vue.component('invoice-form', require('./components/InvoiceForm.vue').default);
 Vue.component('items-table', require('./components/ItemsTable.vue').default);
 
 /**

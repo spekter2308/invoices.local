@@ -1,9 +1,9 @@
 <template>
     <div>
         <h4>To</h4>
-        <select name="customer_selected" class="custom-select" v-model="selected" @change="selectCustomer">
+        <select class="custom-select" :value="value" @change="selectCustomer">
             <option selected value="">New Customer ...</option>
-            <option v-for="customer of customers" v-bind:value="customer">{{ customer.name }}</option>
+            <option v-for="customer of customers" :value="customer">{{ customer.name }}</option>
         </select>
         <br><br>
         <div class="form-group" v-if="editing">
@@ -20,35 +20,31 @@
 
     </div>
 </template>
-
-
 <script>
     export default {
-        props: ['customers'],
-
-        data() {
-            return {
-                selected: '',
-                address: '',
-                editing: true,
-            };
+        props: {
+            customers: {
+                type: Array,
+                required: true
+            },
+            value: {
+                type: Object,
+                required: true
+            }
         },
-
+        computed: {
+            editing() {
+                return this.value !== ''
+            },
+            address() {
+                return this.editing && this.value
+                    ? this.value.address
+                    : ''
+            }
+        },
         methods: {
-            selectCustomer() {
-                if(this.selected == '') {
-                    this.address = '';
-                    this.hide();
-                } else {
-                    this.address = this.selected.address;
-                    this.show();
-                }
-            },
-            hide() {
-                this.editing = true;
-            },
-            show() {
-                this.editing = false;
+            selectCustomer(e) {
+                this.$emit('input', e.target.value)
             }
         }
     }

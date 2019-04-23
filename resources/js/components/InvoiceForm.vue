@@ -1,6 +1,7 @@
 <template>
-    <form id="createInvoice" method="POST" action="/invoices" @submit="onSubmit">
+    <form id="createInvoice" method="POST" action="/invoices" @submit.prevent="onSubmit">
         <!-- @csrf -->
+        <slot></slot>
         <div class="wrapper-invoice-create">
             <!-- {{--Company and Customer part--}} -->
             <div class="invoice-box invoice-from-to-customer-box">
@@ -9,7 +10,7 @@
                         <div class="col-md-8">
                             <company-select
                                     :companies="companies"
-                                    v-model="selectedCompany"
+                                    v-model="invoice.selectedCompany"
                             >
                             </company-select>
                         </div>
@@ -19,7 +20,7 @@
                         <div class="col-md-8">
                             <customer-select
                                     :customers="customers"
-                                    v-model="selectedCustomer">
+                                    v-model="invoice.selectedCustomer">
                             </customer-select>
                         </div>
                     </div>
@@ -33,9 +34,10 @@
                         <label for="exampleFormControlFile1">Example file input</label>
                         <input
                                 type="file"
+                                @change="f => invoice.selectedFile=f"
                                 class="form-control-file"
                                 id="exampleFormControlFile1"
-                                v-model="selectedFile"
+
                         >
                     </div>
                 </form>
@@ -51,7 +53,7 @@
                         <div class="form-group">
                             <input type="number" name="invoice_number" id="invoice_number"
                                    class="form-control"
-                                   v-model="selectedInvoiceNumber"
+                                   v-model="invoice.selectedInvoiceNumber"
                             >
                         </div>
                     </div>
@@ -65,66 +67,67 @@
                             <input type="date" name="invoice_date" id="invoice_date"
                                    class="form-control"
                                    :value="currentDate"
-                                   @input="selectedDateFrom=$event.target.value
-                        >
+                                   @input="invoice.selectedDateFrom=$event.target.value"
+                            >
+                        </div>
+                    </div>
+                </div>
+                <div class="row level">
+                    <div class="col-md-4">
+                        <h6 class="font-weight-bold">Due Date</h6>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <input type="date" name="due_date" id="due_date"
+                                   class="form-control"
+                                   :value="currentDate"
+                                   @input="invoice.selectedDateTo=$event.target.value"
+                            >
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="row level">
-                            <div class="col-md-4">
-                                <h6 class="font-weight-bold">Due Date</h6>
-                            </div>
-                            <div class="col-md-8">
-                                <div class="form-group">
-                                    <input type="date" name="due_date" id="due_date"
-                                           class="form-control"
-                                           :value="currentDate"
-                                           @input="selectedDateTo=$event.target.value"
-                                    >
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- {{--Items part--}} -->
+            <!-- {{--Items part--}} -->
 
-                    <!--  <div class="invoice-box invoice-item-box">
-                              @include('invoices.items_table')
-                          </div>
+            <!--  <div class="invoice-box invoice-item-box">
+                      @include('invoices.items_table')
+                  </div>
 
-                          <div class="invoice-box invoice-notes-box">
-                              <div class="form-group">
-                                 <invoice-notes :notes="notes"></invoice-notes>
-                              </div>
-                          </div>        -->
+                  <div class="invoice-box invoice-notes-box">
+                      <div class="form-group">
+                         <invoice-notes :notes="notes"></invoice-notes>
+                      </div>
+                  </div>        -->
 
-                    <div class="invoice-box invoice-total-box">
-                        <div class="border-top pb-2"></div>
-                        <div class="level">
-                            <h5 class="flex" >Subtotal</h5>
-                            <span>0.00</span>
-                        </div>
-                        <div class="border-top pb-2"></div>
-                        <div class="level">
-                            <h5 class="flex" >Total</h5>
-                            <span>0.00</span>
-                        </div>
-                        <div class="border-top pb-2"></div>
-                        <div class="level">
-                            <h5 class="flex" >Amount Paid</h5>
-                            <span>0.00</span>
-                        </div>
-                        <div class="border-top pb-2"></div>
-                        <div class="level">
-                            <h5 class="flex" >Balance Due</h5>
-                            <span>0.00</span>
-                        </div>
-                        <div class="border-top"></div>
-                    </div>
+            <div class="invoice-box invoice-total-box">
+                <div class="border-top pb-2"></div>
+                <div class="level">
+                    <h5 class="flex" >Subtotal</h5>
+                    <span>0.00</span>
                 </div>
+                <div class="border-top pb-2"></div>
+                <div class="level">
+                    <h5 class="flex" >Total</h5>
+                    <span>0.00</span>
+                </div>
+                <div class="border-top pb-2"></div>
+                <div class="level">
+                    <h5 class="flex" >Amount Paid</h5>
+                    <span>0.00</span>
+                </div>
+                <div class="border-top pb-2"></div>
+                <div class="level">
+                    <h5 class="flex" >Balance Due</h5>
+                    <span>0.00</span>
+                </div>
+                <div class="border-top"></div>
+            </div>
+        </div>
     </form>
 </template>
 
 <script>
+    import axios from 'axios'
     export default {
         props: {
             invoiceNumber: {
@@ -142,28 +145,24 @@
         },
         data() {
             return {
-                selectedCompany: null,
-                selectedCustomer: null,
-                selectedFile: null,
-                selectedDateFrom: null,
-                selectedDateTo: null,
-                selectedInvoiceNumber: this.invoiceNumber
+                invoice: {
+                    selectedCompany: this.companies[0],
+                    selectedCustomer: this.customers[0],
+                    selectedFile: null,
+                    selectedDateFrom: null,
+                    selectedDateTo: null,
+                    selectedInvoiceNumber: this.invoiceNumber,
+                }
             }
         },
         methods: {
             onSubmit() {
-                console.log({
-                    selectedCompany: this.selectedCompany,
-                    selectedCustomer: this.selectedCustomer,
-                    selectedFile: this.selectedFile,
-                    selectedDateFrom: this.selectedDateFrom,
-                    selectedDateTo: this.selectedDateTo,
-                    selectedInvoiceNumber: this.selectedInvoiceNumber:
-            })
+                console.log({ invoice: this.invoice });
+                axios.post('/invoices', this.invoice);
             }
         },
         computed: {
-            getCurrentData() {
+            currentDate() {
                 return new Date().toISOString().slice(0,10);
             }
         }
