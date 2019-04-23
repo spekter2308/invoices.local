@@ -1793,15 +1793,32 @@ __webpack_require__.r(__webpack_exports__);
       required: true
     }
   },
+  data: function data() {
+    return {
+      company: this.value,
+      address: '',
+      emptyObject: new Object()
+    };
+  },
   computed: {
-    address: function address() {
-      return this.value.address && this.value ? this.value.address : '';
-    }
+    /*address() {
+        return this.value.address && this.value
+            ? this.value.address
+            : ''
+    }*/
+  },
+  created: function created() {
+    /*console.log(this.companies)*/
   },
   methods: {
-    onSelect: function onSelect(e) {
-      //this.$emit('input', e.target.value.invoice_notes);
-      this.$emit('input', e.target.value);
+    selectCompany: function selectCompany(e) {
+      if (Object.keys(this.company).length !== 0) {
+        this.address = this.company.address;
+      } else {
+        this.address = '';
+      }
+
+      this.$emit('input', this.company);
     }
   }
 });
@@ -1850,17 +1867,36 @@ __webpack_require__.r(__webpack_exports__);
       required: true
     }
   },
+  data: function data() {
+    return {
+      customer: this.value,
+      address: '',
+      editing: true,
+      emptyObject: new Object()
+    };
+  },
   computed: {
-    editing: function editing() {
-      return this.value !== '';
-    },
-    address: function address() {
-      return this.editing && this.value ? this.value.address : '';
-    }
+    /*editing() {
+        return this.value === ''
+    },*/
+
+    /*address() {
+        return this.editing && this.value
+            ? this.value.address
+            : ''
+    }*/
   },
   methods: {
     selectCustomer: function selectCustomer(e) {
-      this.$emit('input', e.target.value);
+      if (Object.keys(this.customer).length === 0) {
+        this.editing = true;
+        this.address = '';
+      } else {
+        this.editing = false;
+        this.address = this.customer.address;
+      }
+
+      this.$emit('input', this.customer);
     }
   }
 });
@@ -2025,8 +2061,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       invoice: {
-        selectedCompany: this.companies[0],
-        selectedCustomer: this.customers[0],
+        selectedCompany: {},
+        selectedCustomer: {},
         selectedFile: null,
         selectedDateFrom: null,
         selectedDateTo: null,
@@ -2036,10 +2072,10 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     onSubmit: function onSubmit() {
-      console.log({
+      console.log(JSON.stringify(this.invoice));
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/invoices', {
         invoice: this.invoice
       });
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/invoices', this.invoice);
     }
   },
   computed: {
@@ -37441,14 +37477,43 @@ var render = function() {
     _c(
       "select",
       {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.company,
+            expression: "company"
+          }
+        ],
         staticClass: "custom-select",
-        domProps: { value: _vm.value },
-        on: { change: _vm.onSelect }
+        on: {
+          change: [
+            function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.company = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            },
+            _vm.selectCompany
+          ]
+        }
       },
       [
-        _c("option", { attrs: { value: "", selected: "", disabled: "" } }, [
-          _vm._v("Choose company ...")
-        ]),
+        _c(
+          "option",
+          {
+            attrs: { selected: "", disabled: "" },
+            domProps: { value: _vm.emptyObject }
+          },
+          [_vm._v("Choose company ...")]
+        ),
         _vm._v(" "),
         _vm._l(_vm.companies, function(company) {
           return _c("option", { domProps: { value: company } }, [
@@ -37499,14 +37564,40 @@ var render = function() {
     _c(
       "select",
       {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.customer,
+            expression: "customer"
+          }
+        ],
         staticClass: "custom-select",
-        domProps: { value: _vm.value },
-        on: { change: _vm.selectCustomer }
+        on: {
+          change: [
+            function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.customer = $event.target.multiple
+                ? $$selectedVal
+                : $$selectedVal[0]
+            },
+            _vm.selectCustomer
+          ]
+        }
       },
       [
-        _c("option", { attrs: { selected: "", value: "" } }, [
-          _vm._v("New Customer ...")
-        ]),
+        _c(
+          "option",
+          { attrs: { selected: "" }, domProps: { value: _vm.emptyObject } },
+          [_vm._v("New Customer ...")]
+        ),
         _vm._v(" "),
         _vm._l(_vm.customers, function(customer) {
           return _c("option", { domProps: { value: customer } }, [
@@ -50627,8 +50718,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

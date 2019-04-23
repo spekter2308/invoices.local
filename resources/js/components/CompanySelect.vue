@@ -1,8 +1,8 @@
 <template>
     <div>
         <h4>From</h4>
-        <select class="custom-select" :value="value" @change="onSelect">
-            <option value="" selected disabled>Choose company ...</option>
+        <select class="custom-select" v-model="company" @change="selectCompany">
+            <option selected :value="emptyObject" disabled>Choose company ...</option>
             <option v-for="company of companies" :value="company">{{ company.name }}</option>
         </select>
         <br><br>
@@ -30,18 +30,31 @@
                 required: true
             }
         },
-
+        data() {
+            return {
+                company: this.value,
+                address: '',
+                emptyObject: new Object(),
+            }
+        },
         computed: {
-            address() {
+            /*address() {
                 return this.value.address && this.value
                     ? this.value.address
                     : ''
-            }
+            }*/
+        },
+        created() {
+            /*console.log(this.companies)*/
         },
         methods: {
-            onSelect(e) {
-                //this.$emit('input', e.target.value.invoice_notes);
-                this.$emit('input', e.target.value);
+            selectCompany(e) {
+                if(Object.keys(this.company).length !== 0){
+                    this.address = this.company.address;
+                } else {
+                    this.address = '';
+                }
+                this.$emit('input', this.company);
             },
         }
     }

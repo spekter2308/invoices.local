@@ -1,8 +1,8 @@
 <template>
     <div>
         <h4>To</h4>
-        <select class="custom-select" :value="value" @change="selectCustomer">
-            <option selected value="">New Customer ...</option>
+        <select class="custom-select"  v-model="customer" @change="selectCustomer">
+            <option selected :value="emptyObject">New Customer ...</option>
             <option v-for="customer of customers" :value="customer">{{ customer.name }}</option>
         </select>
         <br><br>
@@ -32,20 +32,35 @@
                 required: true
             }
         },
+        data() {
+            return {
+                customer: this.value,
+                address: '',
+                editing: true,
+                emptyObject: new Object(),
+            }
+        },
         computed: {
-            editing() {
-                return this.value !== ''
-            },
-            address() {
+            /*editing() {
+                return this.value === ''
+            },*/
+            /*address() {
                 return this.editing && this.value
                     ? this.value.address
                     : ''
-            }
+            }*/
         },
         methods: {
             selectCustomer(e) {
-                this.$emit('input', e.target.value)
-            }
+                if(Object.keys(this.customer).length === 0){
+                    this.editing = true;
+                    this.address = '';
+                } else {
+                    this.editing = false;
+                    this.address = this.customer.address;
+                }
+                this.$emit('input', this.customer)
+            },
         }
     }
 </script>

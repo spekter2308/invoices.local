@@ -4,6 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Invoice;
+use App\Customer;
+use App\Company;
+use App\Item;
+use Http\Env\Response;
+use App\Http\Controllers\Controller;
 
 class InvoiceController extends Controller
 {
@@ -24,7 +29,12 @@ class InvoiceController extends Controller
     public function store(Request $request)
     {
         $data = $request->input();
-        dd($data);
+
+        if(\request()->expectsJson()){
+            return \response()->json($data);
+        }
+
+        return back()->with('message', 'success');
 
     }
 }
