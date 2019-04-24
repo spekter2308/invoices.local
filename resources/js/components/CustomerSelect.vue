@@ -9,7 +9,7 @@
         <br><br>
 
         <div class="form-group" v-if="editing">
-            <input class="form-control" v-model="name">
+            <input class="form-control" v-model="enteredname">
         </div>
 
         <div class="form-group" v-else>
@@ -23,8 +23,6 @@
             <textarea name="" class="form-control" v-model="enteredaddress">
             </textarea>
         </div>
-
-
 
     </div>
 </template>
@@ -49,18 +47,17 @@
                 address: '',
                 editing: true,
                 emptyObj: new Object(),
-                name: '',
+                enteredname: '',
                 enteredaddress: '',
                 newUser: {  }
             }
         },
         computed: {
-            newname() {
-                this.newUser.name = this.name;
-            },
-            newaddress() {
+            newuser() {
+                this.newUser.name = this.enteredname;
                 this.newUser.address = this.enteredaddress;
-            }
+                this.newUser;
+            },
         },
 
         methods: {

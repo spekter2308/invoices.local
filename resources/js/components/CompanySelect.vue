@@ -18,7 +18,6 @@
 
 
 <script>
-
     export default {
         props: {
             companies: {
@@ -50,6 +49,7 @@
             selectCompany(e) {
                 this.address = this.company.address;
                 this.$emit('input', this.company.id);
+                this.$emit('sendinvoicenotes', this.company.invoice_notes);
             },
         }
     }

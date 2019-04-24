@@ -11,6 +11,7 @@
                             <company-select
                                     :companies="companies"
                                     v-model="invoice.selectedCompany"
+                                    @sendinvoicenotes="getInvoiceNotes"
                             >
                             </company-select>
                         </div>
@@ -91,13 +92,13 @@
 
             <!--  <div class="invoice-box invoice-item-box">
                       @include('invoices.items_table')
-                  </div>
+                  </div>        -->
 
                   <div class="invoice-box invoice-notes-box">
                       <div class="form-group">
                          <invoice-notes :notes="notes"></invoice-notes>
                       </div>
-                  </div>        -->
+                  </div>
 
             <div class="invoice-box invoice-total-box">
                 <div class="border-top pb-2"></div>
@@ -141,24 +142,29 @@
             customers: {
                 type: Array,
                 required: true
-            }
+            },
+
         },
         data() {
             return {
                 invoice: {
                     selectedCompany: NaN,
-                    selectedCustomer: { },
+                    selectedCustomer: {},
                     selectedFile: null,
                     selectedDateFrom: new Date().toISOString().slice(0,10),
                     selectedDateTo: new Date().toISOString().slice(0,10),
                     selectedInvoiceNumber: this.invoiceNumber,
-                }
+                },
+                notes: ''
             }
         },
         methods: {
             onSubmit() {
                 console.log(JSON.stringify(this.invoice));
                 axios.post('/invoices', this.invoice);
+            },
+            getInvoiceNotes(variable){
+                this.notes = variable;
             }
         },
         computed: {

@@ -32,6 +32,10 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
+
+        //$customerId = \request('selectedCustomer');
+        //$customer = Customer::findOrFail();
+
         $invoice = Invoice::create([
             'number' => \request('selectedInvoiceNumber'),
             'customer_id' => \request('selectedCustomer'),

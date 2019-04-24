@@ -37,16 +37,9 @@ const app = new Vue({
 
     data() {
        return {
-           notes: '',
-           children: []
+
        }
     },
-
-    methods: {
-        getInvoiceNotes(variable){
-            this.notes = variable;
-        }
-    }
 
 });
 

@@ -1813,6 +1813,7 @@ __webpack_require__.r(__webpack_exports__);
     selectCompany: function selectCompany(e) {
       this.address = this.company.address;
       this.$emit('input', this.company.id);
+      this.$emit('sendinvoicenotes', this.company.invoice_notes);
     }
   }
 });
@@ -1828,8 +1829,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
 //
 //
 //
@@ -1879,17 +1878,16 @@ __webpack_require__.r(__webpack_exports__);
       address: '',
       editing: true,
       emptyObj: new Object(),
-      name: '',
+      enteredname: '',
       enteredaddress: '',
       newUser: {}
     };
   },
   computed: {
-    newname: function newname() {
-      this.newUser.name = this.name;
-    },
-    newaddress: function newaddress() {
+    newuser: function newuser() {
+      this.newUser.name = this.enteredname;
       this.newUser.address = this.enteredaddress;
+      this.newUser;
     }
   },
   methods: {
@@ -2047,6 +2045,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2072,13 +2071,17 @@ __webpack_require__.r(__webpack_exports__);
         selectedDateFrom: new Date().toISOString().slice(0, 10),
         selectedDateTo: new Date().toISOString().slice(0, 10),
         selectedInvoiceNumber: this.invoiceNumber
-      }
+      },
+      notes: ''
     };
   },
   methods: {
     onSubmit: function onSubmit() {
       console.log(JSON.stringify(this.invoice));
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/invoices', this.invoice);
+    },
+    getInvoiceNotes: function getInvoiceNotes(variable) {
+      this.notes = variable;
     }
   },
   computed: {
@@ -37620,18 +37623,18 @@ var render = function() {
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.name,
-                expression: "name"
+                value: _vm.enteredname,
+                expression: "enteredname"
               }
             ],
             staticClass: "form-control",
-            domProps: { value: _vm.name },
+            domProps: { value: _vm.enteredname },
             on: {
               input: function($event) {
                 if ($event.target.composing) {
                   return
                 }
-                _vm.name = $event.target.value
+                _vm.enteredname = $event.target.value
               }
             }
           })
@@ -37717,6 +37720,7 @@ var render = function() {
                 [
                   _c("company-select", {
                     attrs: { companies: _vm.companies },
+                    on: { sendinvoicenotes: _vm.getInvoiceNotes },
                     model: {
                       value: _vm.invoice.selectedCompany,
                       callback: function($$v) {
@@ -37854,6 +37858,15 @@ var render = function() {
               ])
             ])
           ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "invoice-box invoice-notes-box" }, [
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [_c("invoice-notes", { attrs: { notes: _vm.notes } })],
+            1
+          )
         ]),
         _vm._v(" "),
         _vm._m(3)
@@ -50317,15 +50330,7 @@ Vue.component('items-table', __webpack_require__(/*! ./components/ItemsTable.vue
 var app = new Vue({
   el: '#app',
   data: function data() {
-    return {
-      notes: '',
-      children: []
-    };
-  },
-  methods: {
-    getInvoiceNotes: function getInvoiceNotes(variable) {
-      this.notes = variable;
-    }
+    return {};
   }
 });
 
