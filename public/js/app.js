@@ -1789,15 +1789,14 @@ __webpack_require__.r(__webpack_exports__);
       required: true
     },
     value: {
-      type: Object,
+      type: Number,
       required: true
     }
   },
   data: function data() {
     return {
       company: this.value,
-      address: '',
-      emptyObject: new Object()
+      address: ''
     };
   },
   computed: {
@@ -1812,13 +1811,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     selectCompany: function selectCompany(e) {
-      if (Object.keys(this.company).length !== 0) {
-        this.address = this.company.address;
-      } else {
-        this.address = '';
-      }
-
-      this.$emit('input', this.company);
+      this.address = this.company.address;
+      this.$emit('input', this.company.id);
     }
   }
 });
@@ -1856,6 +1850,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     customers: {
@@ -1863,8 +1865,12 @@ __webpack_require__.r(__webpack_exports__);
       required: true
     },
     value: {
-      type: Object,
+      type: [Object, Number],
       required: true
+      /*newname: {
+          type: String
+      }*/
+
     }
   },
   data: function data() {
@@ -1872,31 +1878,30 @@ __webpack_require__.r(__webpack_exports__);
       customer: this.value,
       address: '',
       editing: true,
-      emptyObject: new Object()
+      emptyObj: new Object(),
+      name: '',
+      enteredaddress: '',
+      newUser: {}
     };
   },
   computed: {
-    /*editing() {
-        return this.value === ''
-    },*/
-
-    /*address() {
-        return this.editing && this.value
-            ? this.value.address
-            : ''
-    }*/
+    newname: function newname() {
+      this.newUser.name = this.name;
+    },
+    newaddress: function newaddress() {
+      this.newUser.address = this.enteredaddress;
+    }
   },
   methods: {
     selectCustomer: function selectCustomer(e) {
       if (Object.keys(this.customer).length === 0) {
         this.editing = true;
-        this.address = '';
+        this.$emit('input', this.newUser);
       } else {
         this.editing = false;
         this.address = this.customer.address;
+        this.$emit('input', this.customer.id);
       }
-
-      this.$emit('input', this.customer);
     }
   }
 });
@@ -2061,11 +2066,11 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       invoice: {
-        selectedCompany: {},
+        selectedCompany: NaN,
         selectedCustomer: {},
         selectedFile: null,
-        selectedDateFrom: null,
-        selectedDateTo: null,
+        selectedDateFrom: new Date().toISOString().slice(0, 10),
+        selectedDateTo: new Date().toISOString().slice(0, 10),
         selectedInvoiceNumber: this.invoiceNumber
       }
     };
@@ -2073,9 +2078,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     onSubmit: function onSubmit() {
       console.log(JSON.stringify(this.invoice));
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/invoices', {
-        invoice: this.invoice
-      });
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/invoices', this.invoice);
     }
   },
   computed: {
@@ -37508,10 +37511,7 @@ var render = function() {
       [
         _c(
           "option",
-          {
-            attrs: { selected: "", disabled: "" },
-            domProps: { value: _vm.emptyObject }
-          },
+          { attrs: { selected: "", disabled: "" }, domProps: { value: NaN } },
           [_vm._v("Choose company ...")]
         ),
         _vm._v(" "),
@@ -37530,7 +37530,7 @@ var render = function() {
     _c("div", { staticClass: "form-group" }, [
       _c("textarea", {
         staticClass: "form-control",
-        attrs: { name: "company_address", id: "company_address" },
+        attrs: { name: "company_address", id: "company_address", disabled: "" },
         domProps: { textContent: _vm._s(_vm.address) }
       })
     ])
@@ -37595,14 +37595,16 @@ var render = function() {
       [
         _c(
           "option",
-          { attrs: { selected: "" }, domProps: { value: _vm.emptyObject } },
+          { attrs: { selected: "" }, domProps: { value: _vm.emptyObj } },
           [_vm._v("New Customer ...")]
         ),
         _vm._v(" "),
         _vm._l(_vm.customers, function(customer) {
-          return _c("option", { domProps: { value: customer } }, [
-            _vm._v(_vm._s(customer.name))
-          ])
+          return _c(
+            "option",
+            { key: customer.id, domProps: { value: customer } },
+            [_vm._v(_vm._s(customer.name))]
+          )
         })
       ],
       2
@@ -37614,19 +37616,59 @@ var render = function() {
     _vm.editing
       ? _c("div", { staticClass: "form-group" }, [
           _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.name,
+                expression: "name"
+              }
+            ],
             staticClass: "form-control",
-            attrs: { name: "customer_name", id: "customer_name" }
+            domProps: { value: _vm.name },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.name = $event.target.value
+              }
+            }
           })
         ])
-      : _vm._e(),
+      : _c("div", { staticClass: "form-group" }, [
+          _c("textarea", {
+            staticClass: "form-control",
+            attrs: { name: "", disabled: "" },
+            domProps: { textContent: _vm._s(_vm.address) }
+          })
+        ]),
     _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("textarea", {
-        staticClass: "form-control",
-        attrs: { name: "customer_address", id: "customer_address" },
-        domProps: { textContent: _vm._s(_vm.address) }
-      })
-    ])
+    _vm.editing
+      ? _c("div", { staticClass: "form-group" }, [
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.enteredaddress,
+                expression: "enteredaddress"
+              }
+            ],
+            staticClass: "form-control",
+            attrs: { name: "" },
+            domProps: { value: _vm.enteredaddress },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.enteredaddress = $event.target.value
+              }
+            }
+          })
+        ])
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
@@ -50718,8 +50760,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

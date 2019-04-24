@@ -146,11 +146,11 @@
         data() {
             return {
                 invoice: {
-                    selectedCompany: {},
-                    selectedCustomer: {},
+                    selectedCompany: NaN,
+                    selectedCustomer: { },
                     selectedFile: null,
-                    selectedDateFrom: null,
-                    selectedDateTo: null,
+                    selectedDateFrom: new Date().toISOString().slice(0,10),
+                    selectedDateTo: new Date().toISOString().slice(0,10),
                     selectedInvoiceNumber: this.invoiceNumber,
                 }
             }
@@ -158,7 +158,7 @@
         methods: {
             onSubmit() {
                 console.log(JSON.stringify(this.invoice));
-                axios.post('/invoices', { invoice: this.invoice });
+                axios.post('/invoices', this.invoice);
             }
         },
         computed: {

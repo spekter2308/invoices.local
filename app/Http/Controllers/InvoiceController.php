@@ -16,6 +16,10 @@ class InvoiceController extends Controller
     {
         $invoices = $invoice->latest()->with(['company', 'customer'])->get();
 
+        if (\request()->wantsJson()) {
+            return $invoices;
+        }
+
         return view('invoices.index', compact('invoices'));
     }
 
@@ -28,10 +32,21 @@ class InvoiceController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->input();
+        $invoice = Invoice::create([
+            'number' => \request('selectedInvoiceNumber'),
+            'customer_id' => \request('selectedCustomer'),
+            'company_id' => \request('selectedCompany'),
+            'invoice_date' => \request('selectedDateFrom'),
+            'due_date' => \request('selectedDateTo'),
+            'amount_paid' => 100,
+            'subtotal' => 100,
+            'total' => 100,
+            'balance' => 100,
+            'status' => 'Paid'
+        ]);
 
         if(\request()->expectsJson()){
-            return \response()->json($data);
+            return \response()->json($invoice);
         }
 
         return back()->with('message', 'success');

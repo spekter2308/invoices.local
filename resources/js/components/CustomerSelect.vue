@@ -2,21 +2,29 @@
     <div>
         <h4>To</h4>
         <select class="custom-select"  v-model="customer" @change="selectCustomer">
-            <option selected :value="emptyObject">New Customer ...</option>
-            <option v-for="customer of customers" :value="customer">{{ customer.name }}</option>
+            <option selected :value="emptyObj">New Customer ...</option>
+            <option v-for="customer of customers" :value="customer" :key="customer.id">{{ customer.name
+                }}</option>
         </select>
         <br><br>
+
         <div class="form-group" v-if="editing">
-            <input name="customer_name" id="customer_name" class="form-control">
+            <input class="form-control" v-model="name">
         </div>
 
-        <div class="form-group">
-            <textarea name="customer_address"
-                      id="customer_address"
+        <div class="form-group" v-else>
+            <textarea name=""
                       class="form-control"
-                      v-text="address">
+                      v-text="address" disabled>
             </textarea>
         </div>
+
+        <div class="form-group" v-if="editing">
+            <textarea name="" class="form-control" v-model="enteredaddress">
+            </textarea>
+        </div>
+
+
 
     </div>
 </template>
@@ -28,39 +36,44 @@
                 required: true
             },
             value: {
-                type: Object,
+                type: [Object, Number],
                 required: true
             }
+            /*newname: {
+                type: String
+            }*/
         },
         data() {
             return {
                 customer: this.value,
                 address: '',
                 editing: true,
-                emptyObject: new Object(),
+                emptyObj: new Object(),
+                name: '',
+                enteredaddress: '',
+                newUser: {  }
             }
         },
         computed: {
-            /*editing() {
-                return this.value === ''
-            },*/
-            /*address() {
-                return this.editing && this.value
-                    ? this.value.address
-                    : ''
-            }*/
+            newname() {
+                this.newUser.name = this.name;
+            },
+            newaddress() {
+                this.newUser.address = this.enteredaddress;
+            }
         },
+
         methods: {
             selectCustomer(e) {
                 if(Object.keys(this.customer).length === 0){
                     this.editing = true;
-                    this.address = '';
+                    this.$emit('input', this.newUser)
                 } else {
                     this.editing = false;
                     this.address = this.customer.address;
+                    this.$emit('input', this.customer.id)
                 }
-                this.$emit('input', this.customer)
-            },
+            }
         }
     }
 </script>

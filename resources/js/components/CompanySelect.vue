@@ -2,7 +2,7 @@
     <div>
         <h4>From</h4>
         <select class="custom-select" v-model="company" @change="selectCompany">
-            <option selected :value="emptyObject" disabled>Choose company ...</option>
+            <option selected :value="NaN" disabled>Choose company ...</option>
             <option v-for="company of companies" :value="company">{{ company.name }}</option>
         </select>
         <br><br>
@@ -10,7 +10,7 @@
             <textarea name="company_address"
                       id="company_address"
                       class="form-control"
-                      v-text="address">
+                      v-text="address" disabled>
             </textarea>
         </div>
     </div>
@@ -26,7 +26,7 @@
                 required: true
             },
             value: {
-                type: Object,
+                type: Number,
                 required: true
             }
         },
@@ -34,7 +34,6 @@
             return {
                 company: this.value,
                 address: '',
-                emptyObject: new Object(),
             }
         },
         computed: {
@@ -49,12 +48,8 @@
         },
         methods: {
             selectCompany(e) {
-                if(Object.keys(this.company).length !== 0){
-                    this.address = this.company.address;
-                } else {
-                    this.address = '';
-                }
-                this.$emit('input', this.company);
+                this.address = this.company.address;
+                this.$emit('input', this.company.id);
             },
         }
     }
