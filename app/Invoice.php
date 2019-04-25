@@ -8,7 +8,7 @@ class Invoice extends Model
 {
     protected $guarded = [];
 
-    protected $with = ['customer', 'company'];
+    //protected $with = ['customer', 'company'];
 
     public function items()
     {

@@ -94,11 +94,13 @@
                       @include('invoices.items_table')
                   </div>        -->
 
-                  <div class="invoice-box invoice-notes-box">
-                      <div class="form-group">
-                         <invoice-notes :notes="notes"></invoice-notes>
-                      </div>
-                  </div>
+                <div class="invoice-box invoice-item-box">
+                    <items-table></items-table>
+                </div>
+
+                <div class="invoice-box invoice-notes-box">
+                      <invoice-notes :notes="notes"></invoice-notes>
+                </div>
 
             <div class="invoice-box invoice-total-box">
                 <div class="border-top pb-2"></div>

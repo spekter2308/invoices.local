@@ -1,9 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    @php
-    	/** @var \App\Invoice $invoice */
-    @endphp
     
     <div class="container">
         <div class="row justify-content-center">
@@ -27,13 +24,13 @@
                 <div class="card-body">
                     <div class="level">
                         <h5 class="mr-3">Status:</h5>
-                        <a href="" class="pd-1 border-right">All</a>
-                        <a href="" class="pd-1 pdl-1 border-right">Draft</a>
-                        <a href="" class="pd-1 pdl-1 border-right">Sent</a>
-                        <a href="" class="pd-1 pdl-1 border-right">Late</a>
-                        <a href="" class="pd-1 pdl-1 border-right">Paid</a>
-                        <a href="" class="pd-1 pdl-1 border-right">Partial</a>
-                        <a href="" class="pd-1 pdl-1 border-right">Archived</a>
+                        <a href="#" class="pd-1 border-right">All</a>
+                        <a href="#" class="pd-1 pdl-1 border-right">Draft</a>
+                        <a href="#" class="pd-1 pdl-1 border-right">Sent</a>
+                        <a href="#" class="pd-1 pdl-1 border-right">Late</a>
+                        <a href="#" class="pd-1 pdl-1 border-right">Paid</a>
+                        <a href="#" class="pd-1 pdl-1 border-right">Partial</a>
+                        <a href="#" class="pd-1 pdl-1 border-right">Archived</a>
                     </div>
                     <table class="table">
                         <thead class="bg-primary text-white">
@@ -64,7 +61,9 @@
                         </thead>
                         <tbody>
                         @foreach ($invoices as $invoice)
-
+                            @php
+                                /** @var \App\Invoice $invoice */
+                            @endphp
                             <tr>
 
                                 <td>

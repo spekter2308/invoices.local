@@ -2046,6 +2046,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2102,6 +2104,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -37860,14 +37865,19 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "invoice-box invoice-notes-box" }, [
-          _c(
-            "div",
-            { staticClass: "form-group" },
-            [_c("invoice-notes", { attrs: { notes: _vm.notes } })],
-            1
-          )
-        ]),
+        _c(
+          "div",
+          { staticClass: "invoice-box invoice-item-box" },
+          [_c("items-table")],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "invoice-box invoice-notes-box" },
+          [_c("invoice-notes", { attrs: { notes: _vm.notes } })],
+          1
+        ),
         _vm._v(" "),
         _vm._m(3)
       ])
@@ -37962,15 +37972,15 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("textarea", {
-    attrs: {
-      name: "invoice_notes",
-      id: "invoice_notes",
-      cols: "80",
-      rows: "6"
-    },
-    domProps: { textContent: _vm._s(_vm.notes) }
-  })
+  return _c("div", { staticClass: "form-group" }, [
+    _c("label", { attrs: { for: "invoiceNotes" } }, [_vm._v("Invoice Notes")]),
+    _vm._v(" "),
+    _c("textarea", {
+      staticClass: "form-control",
+      attrs: { id: "invoiceNotes", rows: "5" },
+      domProps: { textContent: _vm._s(_vm.notes) }
+    })
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -50305,6 +50315,8 @@ module.exports = function(module) {
  */
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
+__webpack_require__(/*! ./main */ "./resources/js/main.js");
+
 window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
 /**
  * The following block of code may be used to automatically register your
@@ -50371,6 +50383,8 @@ Vue.prototype.authorize = function (handler) {
  */
 
 
+window.$ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+window.jQuery = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 /**
@@ -50744,6 +50758,24 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemsTable_vue_vue_type_template_id_6f584199_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/main.js":
+/*!******************************!*\
+  !*** ./resources/js/main.js ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+$('#customreTabs a[href="#finance-info"]').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+});
+$('#customreTabs a[href="#contact-info"]').click(function (e) {
+  e.preventDefault();
+  $(this).tab('show');
+});
 
 /***/ }),
 
