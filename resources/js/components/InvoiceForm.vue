@@ -95,6 +95,7 @@
                   </div>        -->
 
                 <div class="invoice-box invoice-item-box">
+
                     <items-table></items-table>
                 </div>
 

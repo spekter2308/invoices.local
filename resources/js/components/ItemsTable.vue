@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <div class="items-table-row" id="items-row" item-list>
+        <!--<div class="items-table-row" id="items-row" item-list>
             <div class="item-name">
                 <select class="form-control" name="item-name[]">
                     <option></option>
@@ -51,8 +51,15 @@
                     <input type="number" class="form-control" name="item-total[]" placeholder="0.00" disabled>
                 </div>
             </div>
-            <button class="btn btn-primary" @click="add()">New Line</button>
-        </div>
+
+        </div>-->
+
+        <template v-for="(child, index) in children">
+            <component :is="child" :key="child.name"></component>
+        </template>
+
+        <button class="btn btn-primary" @click="add()">New Line</button>
+
 
     </div>
 </template>

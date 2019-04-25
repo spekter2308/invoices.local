@@ -2048,6 +2048,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+<<<<<<< HEAD
+=======
+//
+//
+//
+//
+>>>>>>> ed6da3b819a932f037117f33ccbd4c657457fa69
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2130,6 +2137,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -37872,12 +37886,23 @@ var render = function() {
           1
         ),
         _vm._v(" "),
+<<<<<<< HEAD
         _c(
           "div",
           { staticClass: "invoice-box invoice-notes-box" },
           [_c("invoice-notes", { attrs: { notes: _vm.notes } })],
           1
         ),
+=======
+        _c("div", { staticClass: "invoice-box invoice-notes-box" }, [
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [_c("invoice-notes", { attrs: { notes: _vm.notes } })],
+            1
+          )
+        ]),
+>>>>>>> ed6da3b819a932f037117f33ccbd4c657457fa69
         _vm._v(" "),
         _vm._m(3)
       ])
@@ -37972,6 +37997,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+<<<<<<< HEAD
   return _c("div", { staticClass: "form-group" }, [
     _c("label", { attrs: { for: "invoiceNotes" } }, [_vm._v("Invoice Notes")]),
     _vm._v(" "),
@@ -37981,6 +38007,17 @@ var render = function() {
       domProps: { textContent: _vm._s(_vm.notes) }
     })
   ])
+=======
+  return _c("textarea", {
+    attrs: {
+      name: "invoice_notes",
+      id: "invoice_notes",
+      cols: "50",
+      rows: "6"
+    },
+    domProps: { textContent: _vm._s(_vm.notes) }
+  })
+>>>>>>> ed6da3b819a932f037117f33ccbd4c657457fa69
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -38004,41 +38041,31 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "items-wrapper" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass: "items-table-row",
-        attrs: { id: "items-row", "item-list": "" }
-      },
-      [
-        _vm._m(1),
-        _vm._v(" "),
-        _vm._m(2),
-        _vm._v(" "),
-        _vm._m(3),
-        _vm._v(" "),
-        _vm._m(4),
-        _vm._v(" "),
-        _vm._m(5),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary",
-            on: {
-              click: function($event) {
-                return _vm.add()
-              }
+  return _c(
+    "div",
+    { staticClass: "items-wrapper" },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _vm._l(_vm.children, function(child, index) {
+        return [_c(child, { key: child.name, tag: "component" })]
+      }),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          on: {
+            click: function($event) {
+              return _vm.add()
             }
-          },
-          [_vm._v("New Line")]
-        )
-      ]
-    )
-  ])
+          }
+        },
+        [_vm._v("New Line")]
+      )
+    ],
+    2
+  )
 }
 var staticRenderFns = [
   function() {
@@ -38064,97 +38091,6 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("div", { staticClass: "item-amount" }, [
         _vm._v("\n            Amount\n        ")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "item-name" }, [
-      _c(
-        "select",
-        { staticClass: "form-control", attrs: { name: "item-name[]" } },
-        [
-          _c("option"),
-          _vm._v(" "),
-          _c("option", [_vm._v("Days")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("Hours")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("Product")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("Service")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("Expense")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("Discount")])
-        ]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "item-description" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("textarea", {
-          staticClass: "form-control",
-          attrs: { rows: "1", name: "item-description[]" }
-        })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "item-unit-price" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "number",
-            name: "item-unit-price[]",
-            placeholder: "0.00"
-          }
-        })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "item-quantity" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "number",
-            name: "item-quantity[]",
-            placeholder: "0.00"
-          }
-        })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "item-total" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "number",
-            name: "item-total[]",
-            placeholder: "0.00",
-            disabled: ""
-          }
-        })
       ])
     ])
   }
@@ -50797,8 +50733,8 @@ $('#customreTabs a[href="#contact-info"]').click(function (e) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
