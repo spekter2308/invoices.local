@@ -49,7 +49,6 @@
                         {{ csrf_field() }}
 
                     </invoice-form>
-                
                 </div>
             </div>
         </div>

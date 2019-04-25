@@ -2046,6 +2046,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -2125,6 +2131,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -37860,6 +37873,13 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "invoice-box invoice-item-box" },
+          [_c("items-table")],
+          1
+        ),
+        _vm._v(" "),
         _c("div", { staticClass: "invoice-box invoice-notes-box" }, [
           _c(
             "div",
@@ -37966,7 +37986,7 @@ var render = function() {
     attrs: {
       name: "invoice_notes",
       id: "invoice_notes",
-      cols: "80",
+      cols: "50",
       rows: "6"
     },
     domProps: { textContent: _vm._s(_vm.notes) }
@@ -37994,41 +38014,31 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "items-wrapper" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c(
-      "div",
-      {
-        staticClass: "items-table-row",
-        attrs: { id: "items-row", "item-list": "" }
-      },
-      [
-        _vm._m(1),
-        _vm._v(" "),
-        _vm._m(2),
-        _vm._v(" "),
-        _vm._m(3),
-        _vm._v(" "),
-        _vm._m(4),
-        _vm._v(" "),
-        _vm._m(5),
-        _vm._v(" "),
-        _c(
-          "button",
-          {
-            staticClass: "btn btn-primary",
-            on: {
-              click: function($event) {
-                return _vm.add()
-              }
+  return _c(
+    "div",
+    { staticClass: "items-wrapper" },
+    [
+      _vm._m(0),
+      _vm._v(" "),
+      _vm._l(_vm.children, function(child, index) {
+        return [_c(child, { key: child.name, tag: "component" })]
+      }),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          on: {
+            click: function($event) {
+              return _vm.add()
             }
-          },
-          [_vm._v("New Line")]
-        )
-      ]
-    )
-  ])
+          }
+        },
+        [_vm._v("New Line")]
+      )
+    ],
+    2
+  )
 }
 var staticRenderFns = [
   function() {
@@ -38054,97 +38064,6 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("div", { staticClass: "item-amount" }, [
         _vm._v("\n            Amount\n        ")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "item-name" }, [
-      _c(
-        "select",
-        { staticClass: "form-control", attrs: { name: "item-name[]" } },
-        [
-          _c("option"),
-          _vm._v(" "),
-          _c("option", [_vm._v("Days")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("Hours")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("Product")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("Service")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("Expense")]),
-          _vm._v(" "),
-          _c("option", [_vm._v("Discount")])
-        ]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "item-description" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("textarea", {
-          staticClass: "form-control",
-          attrs: { rows: "1", name: "item-description[]" }
-        })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "item-unit-price" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "number",
-            name: "item-unit-price[]",
-            placeholder: "0.00"
-          }
-        })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "item-quantity" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "number",
-            name: "item-quantity[]",
-            placeholder: "0.00"
-          }
-        })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "item-total" }, [
-      _c("div", { staticClass: "form-group" }, [
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "number",
-            name: "item-total[]",
-            placeholder: "0.00",
-            disabled: ""
-          }
-        })
       ])
     ])
   }
@@ -50765,8 +50684,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
