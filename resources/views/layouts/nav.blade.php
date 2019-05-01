@@ -12,7 +12,7 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
                     <div class="container">
-                        <a class="navbar-brand" href="#">
+                        <a class="navbar-brand" href="/invoices">
                             <img src="http://placehold.it/150x50?text=Logo" alt="">
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,8 +53,8 @@
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Customers</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#">New Customer</a>
-                                        <a class="dropdown-item" href="#">List of Customers</a>
+                                        <a class="dropdown-item" href="/customers/create">New Customer</a>
+                                        <a class="dropdown-item" href="/customers">List of Customers</a>
                                     </div>
                                 </li>
                             </ul>

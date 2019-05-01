@@ -30,14 +30,14 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-        \View::composer('*', function ($view) {
+        //\View::composer('*', function ($view) {
             /*$companies = \Cache::rememberForever('companies', function () {
                 return Company::get();
             });
             $customers = \Cache::rememberForever('customers', function () {
                 return Customer::get();
             });*/
-            $companies = \Session('companies', function () {
+            /*$companies = \Session('companies', function () {
                 return Company::get();
             });
             $customers = \Session('customers', function () {
@@ -48,6 +48,6 @@ class AppServiceProvider extends ServiceProvider
                 'companies' => $companies,
                 'customers' => $customers
             ]);
-        });
+        });*/
     }
 }

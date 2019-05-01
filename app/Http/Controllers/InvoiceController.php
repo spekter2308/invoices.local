@@ -26,8 +26,14 @@ class InvoiceController extends Controller
     public function create()
     {
         $invoiceNumber = Invoice::all()->last()->number + 1;
+        $customers = Customer::latest()->get();
+        $companies = Company::latest()->get();
 
-        return view('invoices.create', compact('invoiceNumber'));
+        return view('invoices.create', [
+            'invoiceNumber' => $invoiceNumber,
+            'customers' => $customers,
+            'companies' => $companies
+        ]);
     }
 
     public function store(Request $request)

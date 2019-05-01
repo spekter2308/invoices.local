@@ -10711,6 +10711,8 @@ a.text-dark:focus {
 
 .invoice-notes-box {
   grid-area: invoice-box-5;
+  display: flex;
+  flex-direction: column;
 }
 
 .invoice-total-box {

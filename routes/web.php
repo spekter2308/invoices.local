@@ -19,6 +19,16 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+//invoice part
 Route::get('invoices', 'InvoiceController@index');
 Route::get('invoices/create', 'InvoiceController@create');
 Route::post('invoices', 'InvoiceController@store');
+
+//customers part
+Route::get('customers', 'CustomerController@index');
+Route::get('customers/create', 'CustomerController@create');
+Route::post('customers', 'CustomerController@store');
+Route::get('customers/{customer}/edit', 'CustomerController@edit');
+Route::patch('customers/{customer}', 'CustomerController@update');
+
+//companies part

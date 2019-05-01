@@ -1,5 +1,10 @@
 <template>
-    <textarea name="invoice_notes" id="invoice_notes" cols="50" rows="6" v-text="notes"></textarea>
+
+    <div class="form-group">
+        <label for="invoiceNotes">Invoice Notes</label>
+        <textarea class="form-control" id="invoiceNotes" rows="5" v-text="notes"></textarea>
+    </div>
+
 </template>
 
 <script>
