@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <!--<div class="items-table-row" id="items-row" item-list>
+        <div class="items-table-row" id="items-row" item-list>
             <div class="item-name">
                 <select class="form-control" name="item-name[]">
                     <option></option>
@@ -52,13 +52,13 @@
                 </div>
             </div>
 
-        </div>-->
+        </div>
 
-        <template v-for="(child, index) in children">
+       <!-- <template v-for="(child, index) in children">
             <component :is="child" :key="child.name"></component>
-        </template>
+        </template>-->
 
-        <button class="btn btn-primary" @click="add()">New Line</button>
+        <button type="button" class="btn btn-primary"> <!--@click="addNewLine()"-->New Line</button>
 
 
     </div>

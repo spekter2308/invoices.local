@@ -11,9 +11,15 @@
                             <company-select
                                     :companies="companies"
                                     v-model="invoice.selectedCompany"
+                                    @blur="$v.invoice.selectedCompany.$touch()"
                                     @sendinvoicenotes="getInvoiceNotes"
                             >
                             </company-select>
+                           <template v-if="$v.invoice.selectedCompany.$error">
+                               <small v-if="$v.invoice.selectedCompany.required"
+                               >Please select company</small>
+                               <small v-if="$v.invoice.selectedCompany.integer">Company does not exist</small>
+                           </template>
                         </div>
                     </div>
                     <br>
@@ -21,8 +27,15 @@
                         <div class="col-md-8">
                             <customer-select
                                     :customers="customers"
+                                    @blur="$v.invoice.selectedCustomer.$touch()"
                                     v-model="invoice.selectedCustomer">
                             </customer-select>
+                            <template v-if="$v.invoice.selectedCustomer.$error">
+                                <small v-if="$v.invoice.selectedCustomer.required"
+                                >Please select customer</small>
+                                <small v-if="$v.invoice.selectedCustomer.isCorrectType">Sorry but you have choosen
+                                    wrong data</small>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -36,10 +49,15 @@
                         <input
                                 type="file"
                                 @change="f => invoice.selectedFile=f"
+                                @blur="$v.invoice.selectedFile.$touch()"
                                 class="form-control-file"
                                 id="exampleFormControlFile1"
 
                         >
+                        <template v-if="$v.invoice.selectedFile.$error">
+                            <small v-if="$v.invoice.selectedFile.isCorrectType">Sorry but you have choosen
+                                wrong data</small>
+                        </template>
                     </div>
                 </form>
             </div>
@@ -54,8 +72,14 @@
                         <div class="form-group">
                             <input type="number" name="invoice_number" id="invoice_number"
                                    class="form-control"
+                                   @blur="$v.invoice.selectedInvoiceNumber.$touch()"
                                    v-model="invoice.selectedInvoiceNumber"
                             >
+                            <template v-if="$v.invoice.selectedInvoiceNumber.$error">
+                                <small v-if="$v.invoice.selectedInvoiceNumber.required"
+                                >You must fill number field</small>
+                                <small v-if="$v.invoice.selectedInvoiceNumber.integer">It should be numeric type</small>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -68,8 +92,13 @@
                             <input type="date" name="invoice_date" id="invoice_date"
                                    class="form-control"
                                    :value="currentDate"
+                                   @blur="$v.invoice.selectedDateFrom.$touch()"
                                    @input="invoice.selectedDateFrom=$event.target.value"
                             >
+                            <template v-if="$v.invoice.selectedDateFrom.$error">
+                                <small v-if="$v.invoice.selectedDateFrom.required"
+                                >Please fill the date field</small>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -81,9 +110,14 @@
                         <div class="form-group">
                             <input type="date" name="due_date" id="due_date"
                                    class="form-control"
+                                   @blur="$v.invoice.selectedDateTo.$touch()"
                                    :value="currentDate"
                                    @input="invoice.selectedDateTo=$event.target.value"
                             >
+                            <template v-if="$v.invoice.selectedDateTo.$error">
+                                <small v-if="$v.invoice.selectedDateTo.required"
+                                >Please fill the date field</small>
+                            </template>
                         </div>
                     </div>
                 </div>
@@ -135,7 +169,14 @@
 
 <script>
     import axios from 'axios'
+    import { required, integer } from 'vuelidate/lib/validators'
+    /*import Items from './ItemsTable.vue'*/
+
     export default {
+       /* comments: {
+            'items-table': Items
+        },*/
+
         props: {
             invoiceNumber: {
                 type: Number,
@@ -164,10 +205,42 @@
                 notes: ''
             }
         },
+        validations: {
+            invoice: {
+                selectedCompany: {
+                    required,
+                    integer
+                },
+                selectedCustomer: {
+                    required,
+                    isCorrectType(v) {
+                        return integer(v) || typeof yourVariable === 'object' && yourVariable !== null
+                    }
+                },
+                selectedFile: {
+                    isCorrectType(v) {
+                        return integer(v) || typeof yourVariable === 'object' && yourVariable !== null
+                    }
+                },
+                selectedDateFrom:{
+                    required
+                },
+                selectedDateTo:{
+                    required
+                },
+                selectedInvoiceNumber: {
+                    required,
+                    integer
+                }
+            }
+        },
         methods: {
             onSubmit() {
-                console.log(JSON.stringify(this.invoice));
-                axios.post('/invoices', this.invoice);
+                this.$v.$touch();
+                if (!this.$v.$error) {
+                    console.log(JSON.stringify(this.invoice));
+                    axios.post('/invoices', this.invoice);
+                }
             },
             getInvoiceNotes(variable){
                 this.notes = variable;

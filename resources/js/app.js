@@ -32,6 +32,11 @@ Vue.component('items-table', require('./components/ItemsTable.vue').default);
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+
+/*import Vue from 'vue'*/
+import Vuelidate from 'vuelidate'
+Vue.use(Vuelidate)
+
 const app = new Vue({
     el: '#app',
 

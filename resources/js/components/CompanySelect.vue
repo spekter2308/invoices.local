@@ -1,7 +1,7 @@
 <template>
     <div>
         <h4>From</h4>
-        <select class="custom-select" v-model="company" @change="selectCompany">
+        <select class="custom-select" v-model="company" v-on="$listeners" @change="selectCompany">
             <option selected :value="NaN" disabled>Choose company ...</option>
             <option v-for="company of companies" :value="company">{{ company.name }}</option>
         </select>
@@ -19,6 +19,7 @@
 
 <script>
     export default {
+        inheritProps: false,
         props: {
             companies: {
                 type: Array,
