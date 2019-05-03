@@ -116,7 +116,7 @@
                                 </div>
                             <br>
                                 
-                                <button class="btn btn-danger" form="deleteCustomer" type="submit">Delete</button>
+                                пше
                                 
                                 
                         @endif
