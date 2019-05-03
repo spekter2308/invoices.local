@@ -11,16 +11,15 @@
     @if ($customer->exists)
         <form method="POST" action="/customer/{{ $customer->id }}/edit">
             @method('PATCH')
-            @else
-                <form method="POST" action="/customers">
-            @endif
+    @else
+        <form method="POST" action="/customers">
+    @endif
                     
                 @csrf
                 <div class="container">
                     <div class="row">
                     	<div class="col-md-7">
                     		
-                           
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home"
@@ -34,7 +33,8 @@
                                     <div class="form-group">
                                         <label for="name" class="font-weight-bold">Customer Name</label>
                                         <input type="text" name="name" class="form-control"
-                                               placeholder="Customer name...">
+                                               placeholder="Customer name..."
+                                               value="{{ $customer->name }}">
                                     </div>
     
                                     <div class="form-group">
