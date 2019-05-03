@@ -74,7 +74,7 @@ class CustomerController extends Controller
         return \request()->validate([
             'name' => 'required|min:3|max:50',
             'address' => 'nullable|min:3|max:100',
-            'email' => 'nullable|email|unique:customers,email|max:50',
+            'email' => 'nullable|email|max:50',
             'phone' => 'nullable|numeric',
             'first_name' => 'nullable|min:3|max:30',
             'last_name' => 'nullable|min:3|max:30',

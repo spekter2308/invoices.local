@@ -115,17 +115,19 @@
                                            value="{{ $customer->updated_at }}">
                                 </div>
                             <br>
-                                <form method="POST" action="/customers/{{ $customer->id }}">
-                                	@csrf
-                                	@method('DELETE')
-    
-                                    <button class="btn btn-danger" type="submit">Delete</button>
-                                </form>
+                                
+                                <button class="btn btn-danger" form="deleteCustomer" type="submit">Delete</button>
+                                
                                 
                         @endif
                 </div>
             </div>
                 </div>
                    
+            </form>
+
+            <form method="POST" id="deleteCustomer" action="/customers/{{ $customer->id }}">
+            @csrf
+            @method('DELETE')
             </form>
 @endsection
