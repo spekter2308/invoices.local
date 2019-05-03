@@ -8,7 +8,7 @@
             <div class="item-description">
                 Description
             </div>
-            <div class="item-unit-price">
+            <div class="item-unit-price" style="white-space: nowrap">
                 Unit Price
             </div>
             <div class="item-quantity">
@@ -19,57 +19,37 @@
             </div>
         </div>
 
-        <div class="items-table-row" id="items-row" item-list>
-            <div class="item-name">
-                <select class="form-control" name="item-name[]">
-                    <option></option>
-                    <option>Days</option>
-                    <option>Hours</option>
-                    <option>Product</option>
-                    <option>Service</option>
-                    <option>Expense</option>
-                    <option>Discount</option>
-                </select>
-            </div>
-            <div class="item-description">
-                <div class="form-group">
-                    <textarea class="form-control" rows="1" name="item-description[]"></textarea>
-                </div>
-            </div>
-            <div class="item-unit-price">
-                <div class="form-group">
-                    <input type="number" class="form-control" name="item-unit-price[]" placeholder="0.00">
-                </div>
-            </div>
-            <div class="item-quantity">
-                <div class="form-group">
-                    <input type="number" class="form-control" name="item-quantity[]" placeholder="0.00">
-                </div>
-            </div>
-            <div class="item-total">
-                <div class="form-group">
-                    <input type="number" class="form-control" name="item-total[]" placeholder="0.00" disabled>
-                </div>
-            </div>
+            <template v-for="(child, index) of children">
+                <component :is="child" :key="child.index"></component>
+            </template>
 
-        </div>
-
-       <!-- <template v-for="(child, index) in children">
-            <component :is="child" :key="child.name"></component>
-        </template>-->
-
-        <button type="button" class="btn btn-primary"> <!--@click="addNewLine()"-->New Line</button>
+        <br>
+        <button type="button" class="btn btn-primary" @click="addNewLine()">New Line</button>
 
 
     </div>
 </template>
 
 <script>
-    export default {
+    import Item from './Item.vue';
 
+    export default {
+        data() {
+            return {
+                children: [Item],
+            }
+        },
+
+        methods: {
+            addNewLine() {
+                this.children.push(Item);
+            }
+        }
     }
 </script>
 
 <style scoped>
-
+    button {
+        width: 100px;
+    }
 </style>

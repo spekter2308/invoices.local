@@ -17,8 +17,8 @@
                             </company-select>
                            <template v-if="$v.invoice.selectedCompany.$error">
                                <small v-if="$v.invoice.selectedCompany.required"
-                               >Please select company</small>
-                               <small v-if="$v.invoice.selectedCompany.integer">Company does not exist</small>
+                           >Please select company</small>
+                               <small v-if="!$v.invoice.selectedCompany.integer">Company does not exist</small>
                            </template>
                         </div>
                     </div>
@@ -31,10 +31,14 @@
                                     v-model="invoice.selectedCustomer">
                             </customer-select>
                             <template v-if="$v.invoice.selectedCustomer.$error">
-                                <small v-if="$v.invoice.selectedCustomer.required"
+
+                                <small v-if="$v.invoice.selectedCustomer.allInputsFilled">
+                                    Please fill all inputs
+                                </small>
+                                <small v-else-if="!$v.invoice.selectedCustomer.isCorrectType">Sorry but you have
+                                    choosen wrong data</small>
+                                <small v-else-if="!$v.invoice.selectedCustomer.required"
                                 >Please select customer</small>
-                                <small v-if="$v.invoice.selectedCustomer.isCorrectType">Sorry but you have choosen
-                                    wrong data</small>
                             </template>
                         </div>
                     </div>
@@ -55,7 +59,7 @@
 
                         >
                         <template v-if="$v.invoice.selectedFile.$error">
-                            <small v-if="$v.invoice.selectedFile.isCorrectType">Sorry but you have choosen
+                            <small v-if="!$v.invoice.selectedFile.isCorrectType">Sorry but you have choosen
                                 wrong data</small>
                         </template>
                     </div>
@@ -76,9 +80,10 @@
                                    v-model="invoice.selectedInvoiceNumber"
                             >
                             <template v-if="$v.invoice.selectedInvoiceNumber.$error">
-                                <small v-if="$v.invoice.selectedInvoiceNumber.required"
+                                <small v-if="!$v.invoice.selectedInvoiceNumber.required"
                                 >You must fill number field</small>
-                                <small v-if="$v.invoice.selectedInvoiceNumber.integer">It should be numeric type</small>
+                                <small v-if="!$v.invoice.selectedInvoiceNumber.integer">It should be numeric
+                                    type</small>
                             </template>
                         </div>
                     </div>
@@ -96,7 +101,7 @@
                                    @input="invoice.selectedDateFrom=$event.target.value"
                             >
                             <template v-if="$v.invoice.selectedDateFrom.$error">
-                                <small v-if="$v.invoice.selectedDateFrom.required"
+                                <small v-if="!$v.invoice.selectedDateFrom.required"
                                 >Please fill the date field</small>
                             </template>
                         </div>
@@ -115,7 +120,7 @@
                                    @input="invoice.selectedDateTo=$event.target.value"
                             >
                             <template v-if="$v.invoice.selectedDateTo.$error">
-                                <small v-if="$v.invoice.selectedDateTo.required"
+                                <small v-if="!$v.invoice.selectedDateTo.required"
                                 >Please fill the date field</small>
                             </template>
                         </div>
@@ -129,7 +134,6 @@
                   </div>        -->
 
                 <div class="invoice-box invoice-item-box">
-
                     <items-table></items-table>
                 </div>
 
@@ -211,12 +215,19 @@
                 selectedCustomer: {
                     required,
                     isCorrectType(v) {
-                        return integer(v) || typeof yourVariable === 'object' && yourVariable !== null
+                        return integer(v) || isObject(v)
+                    },
+                    allInputsFilled(v) {
+                        if ( isObject(v) ) {
+                            return v.name !== null &&
+                                v.address !== null
+                        }
+                        return true
                     }
                 },
                 selectedFile: {
                     isCorrectType(v) {
-                        return integer(v) || typeof yourVariable === 'object' && yourVariable !== null
+                        return integer(v) || isObject(v)
                     }
                 },
                 selectedDateFrom:{
@@ -232,12 +243,35 @@
             }
         },
         methods: {
-            onSubmit() {
-                this.$v.$touch();
-                if (!this.$v.$error) {
-                    console.log(JSON.stringify(this.invoice));
-                    axios.post('/invoices', this.invoice);
+            async onSubmit() {
+                try {
+                    this.$v.$touch();
+                    if (!this.$v.$error) {
+                        console.log(JSON.stringify(this.invoice));
+                        await axios.post('/invoices', this.invoice)
+                            .then( () => {
+                                this.invoice.selectedCompany = NaN
+                                this.invoice.selectedCustomer = {}
+                                this.invoice.selectedFile = null
+                                this.invoice.selectedDateFrom = new Date().toISOString().slice(0, 10)
+                                this.invoice.selectedDateTo = new Date().toISOString().slice(0, 10)
+                                this.invoice.selectedInvoiceNumber = this.invoiceNumber + 1
+                            }
+                        )
+                        console.log('resetting')
+
+                    }
+                } catch(e) {
+                    this.invoice = {
+                        selectedCompany: NaN,
+                        selectedCustomer: {},
+                        selectedFile: null,
+                        selectedDateFrom: new Date().toISOString().slice(0, 10),
+                        selectedDateTo: new Date().toISOString().slice(0, 10),
+                        selectedInvoiceNumber: this.invoiceNumber + 1,
+                    }
                 }
+
             },
             getInvoiceNotes(variable){
                 this.notes = variable;
@@ -248,5 +282,8 @@
                 return new Date().toISOString().slice(0,10);
             }
         }
+    }
+    function isObject(v) {
+        return  typeof v === 'object' && v !== null
     }
 </script>

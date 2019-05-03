@@ -1,9 +1,9 @@
 <template>
     <div>
         <h4>From</h4>
-        <select class="custom-select" v-model="company" v-on="$listeners" @change="selectCompany">
+        <select class="custom-select" :value="value" v-on="listeners">
             <option selected :value="NaN" disabled>Choose company ...</option>
-            <option v-for="company of companies" :value="company">{{ company.name }}</option>
+            <option v-for="company of companies" :value="company.id">{{ company.name }}</option>
         </select>
         <br><br>
         <div class="form-group">
@@ -32,25 +32,33 @@
         },
         data() {
             return {
-                company: this.value,
                 address: '',
             }
         },
         computed: {
-            /*address() {
-                return this.value.address && this.value
-                    ? this.value.address
-                    : ''
-            }*/
+            listeners() {
+                return {
+                    ...this.$listeners,
+                    input: v => {
+                        this.$emit('input', parseInt(v.target.value))
+                    },
+                    change: this.selectCompany
+                }
+            }
         },
-        created() {
-            /*console.log(this.companies)*/
+        watch: {
+          value(v) {
+              if ( Number.isNaN(v) ) {
+                  this.address = ''
+              }
+          }
         },
         methods: {
             selectCompany(e) {
-                this.address = this.company.address;
-                this.$emit('input', this.company.id);
-                this.$emit('sendinvoicenotes', this.company.invoice_notes);
+                const id = e.target.value
+                const company = this.companies.find(el => el.id === parseInt(id))
+                this.address = company.address;
+                this.$emit('sendinvoicenotes', company.invoice_notes);
             },
         }
     }
