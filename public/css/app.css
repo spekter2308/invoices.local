@@ -10697,6 +10697,7 @@ a.text-dark:focus {
 .invoice-item-box .items-table-header,
 .invoice-item-box .items-table-row {
   display: grid;
+  height: 35px;
   grid-template-columns: 1.5fr 3fr 1fr 1fr 1fr;
 }
 

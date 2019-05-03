@@ -9,7 +9,11 @@
         <br><br>
 
         <div class="form-group" v-if="editing">
-            <input class="form-control" v-model="enteredname">
+            <input class="form-control" v-model="enteredname" @blur="$v.enteredname.$touch()">
+            <template v-if="$v.enteredname.$error">
+                <small v-if="!$v.enteredname.required"
+                >Please type name</small>
+            </template>
         </div>
 
         <div class="form-group" v-else>
@@ -20,14 +24,20 @@
         </div>
 
         <div class="form-group" v-if="editing">
-            <textarea name="" class="form-control" v-model="enteredaddress">
+            <textarea name="" class="form-control" v-model="enteredaddress" @blur="$v.enteredaddress.$touch()">
             </textarea>
+            <template v-if="$v.enteredaddress.$error">
+                <small v-if="!$v.enteredaddress.required"
+                >Please type address</small>
+            </template>
         </div>
 
     </div>
 </template>
 <script>
+    import { requiredIf, required } from 'vuelidate/lib/validators'
     export default {
+        inheritAttrs: false,
         props: {
             customers: {
                 type: Array,
@@ -47,8 +57,8 @@
                 address: '',
                 editing: true,
                 emptyObj: {},
-                enteredname: '',
-                enteredaddress: '',
+                enteredname: null,
+                enteredaddress: null,
                 newUser: {  }
             }
         },
@@ -89,6 +99,17 @@
           isEmpty() {
               return Object.keys(this.customer).length === 0
           }
+        },
+        validations: {
+            enteredname: {
+                required
+            },
+            enteredaddress: {
+        /*        required: requiredIf(function() {
+                    return this.isEmpty
+                })*/
+                required
+            }
         },
         methods: {
             toggleActive(v) {
