@@ -39,6 +39,10 @@
     export default {
         inheritAttrs: false,
         props: {
+            bus: {
+                type: Object,
+                required: true
+            },
             customers: {
                 type: Array,
                 required: true
@@ -59,7 +63,7 @@
                 emptyObj: {},
                 enteredname: null,
                 enteredaddress: null,
-                newUser: {  }
+                newUser: {}
             }
         },
         watch: {
@@ -78,17 +82,17 @@
                 this.$emit('input', user)
             },
             customer: {
-                handler:function (val) {
+                handler: function (val) {
                     if (this.editing) {
-                       // this.editing = true;
+                        // this.editing = true;
                         const user = {
                             name: this.enteredname,
                             address: this.enteredaddress,
                         }
                         this.$emit('input', user)
                     } else {
-                        //this.editing = false;
-                        this.address = this.customer.address;
+                        //const customer = this.customers.find(el => el.id === parseInt(val))
+                        this.address = this.customer.address
                         this.$emit('input', this.customer.id)
                     }
                 },
@@ -96,20 +100,26 @@
             }
         },
         computed: {
-          isEmpty() {
-              return Object.keys(this.customer).length === 0
-          }
+            isEmpty() {
+                return Object.keys(this.customer).length === 0
+            }
         },
         validations: {
             enteredname: {
                 required
             },
             enteredaddress: {
-        /*        required: requiredIf(function() {
-                    return this.isEmpty
-                })*/
+                /*        required: requiredIf(function() {
+                            return this.isEmpty
+                        })*/
                 required
             }
+        },
+        mounted() {
+            this.bus.$on('update', _ => {
+                this.editing = true;
+                this.customer = {}
+            })
         },
         methods: {
             toggleActive(v) {
@@ -117,20 +127,6 @@
                     this.editing = true
                 } else {
                     this.editing = false
-                }
-            },
-            selectCustomer(e) {
-                if(this.isEmpty ){
-                    this.editing = true;
-                    const user = {
-                        name: this.enteredname,
-                        address: this.enteredaddress,
-                    }
-                    this.$emit('input', user)
-                } else {
-                    this.editing = false;
-                    this.address = this.customer.address;
-                    this.$emit('input', this.customer.id)
                 }
             }
         }

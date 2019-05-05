@@ -35,7 +35,7 @@
                         <button class="btn btn-outline-secondary">Record Payment</button>
                         <button class="btn btn-outline-secondary">Duplicate</button>
                     </div>
-                    <button form="createInvoice" class="btn btn-primary" type="submit">Save</button>
+                    <button form="createInvoice" class="btn btn-primary send-btn" type="submit">Save</button>
                 </div>
 
                 {{ session('message') }}
