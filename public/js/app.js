@@ -2192,9 +2192,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
 
 
 /*import Items from './ItemsTable.vue'*/
@@ -2224,14 +2221,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       invoice: {
         selectedCompany: NaN,
         selectedCustomer: {},
-        selectedFile: null,
+        //selectedFile: null,
         selectedDateFrom: new Date().toISOString().slice(0, 10),
         selectedDateTo: new Date().toISOString().slice(0, 10),
         selectedInvoiceNumber: this.invoiceNumber,
         selectedItems: [{
           id: 1,
-          description: null,
           item: null,
+          description: null,
           quantity: 1,
           unitprice: 1
         }]
@@ -2258,11 +2255,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           return true;
         }
       },
-      selectedFile: {
-        isCorrectType: function isCorrectType(v) {
-          return Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["integer"])(v) || isObject(v);
-        }
-      },
+
+      /*selectedFile: {
+          isCorrectType(v) {
+              return integer(v) || isObject(v)
+          }
+      },*/
       selectedDateFrom: {
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"]
       },
@@ -2277,8 +2275,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   watch: {
     '$v.$error': function $v$error(v) {
-      debugger;
-
+      //debugger
       if (v === true) {
         this.sendButton.disabled = true;
       } else {
@@ -2303,8 +2300,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   methods: {
     resetInvoice: function resetInvoice() {
       this.invoice.selectedCompany = NaN;
-      this.invoice.selectedCustomer = {};
-      this.invoice.selectedFile = null;
+      this.invoice.selectedCustomer = {}; //this.invoice.selectedFile = null
+
       this.invoice.selectedDateFrom = new Date().toISOString().slice(0, 10);
       this.invoice.selectedDateTo = new Date().toISOString().slice(0, 10);
       this.invoice.selectedInvoiceNumber = this.invoiceNumber + 1;
@@ -2471,6 +2468,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var id = 1;
@@ -2492,6 +2498,11 @@ var id = 1;
       immediate: true
     }
   },
+  computed: {
+    showDelete: function showDelete() {
+      return this.items.length > 1;
+    }
+  },
   methods: {
     addNewLine: function addNewLine() {
       this.items.push({
@@ -2501,6 +2512,9 @@ var id = 1;
         quantity: 1,
         unitprice: 1
       });
+    },
+    removeItem: function removeItem(index) {
+      this.items.splice(index, 1);
     },
     selectedItems: function selectedItems(e) {
       var items = {
@@ -2560,6 +2574,8 @@ var id = 1;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
 //
 //
 //
@@ -39657,49 +39673,11 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "invoice-box invoice-logo-box" }, [
-          _c("form", [
-            _c(
-              "div",
-              { staticClass: "form-group" },
-              [
-                _c("label", { attrs: { for: "exampleFormControlFile1" } }, [
-                  _vm._v("Example file input")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  staticClass: "form-control-file",
-                  attrs: { type: "file", id: "exampleFormControlFile1" },
-                  on: {
-                    change: function(f) {
-                      return (_vm.invoice.selectedFile = f)
-                    },
-                    blur: function($event) {
-                      return _vm.$v.invoice.selectedFile.$touch()
-                    }
-                  }
-                }),
-                _vm._v(" "),
-                _vm.$v.invoice.selectedFile.$error
-                  ? [
-                      !_vm.$v.invoice.selectedFile.isCorrectType
-                        ? _c("small", [
-                            _vm._v(
-                              "\n                            Sorry but you have choosen wrong data\n                        "
-                            )
-                          ])
-                        : _vm._e()
-                    ]
-                  : _vm._e()
-              ],
-              2
-            )
-          ])
-        ]),
+        _vm._m(0),
         _vm._v(" "),
         _c("div", { staticClass: "invoice-box invoice-num-date-box" }, [
           _c("div", { staticClass: "row level" }, [
-            _vm._m(0),
+            _vm._m(1),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-8" }, [
               _c(
@@ -39761,7 +39739,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "row level" }, [
-            _vm._m(1),
+            _vm._m(2),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-8" }, [
               _c(
@@ -39800,7 +39778,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "row level" }, [
-            _vm._m(2),
+            _vm._m(3),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-8" }, [
               _c(
@@ -39883,7 +39861,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
-          _vm._m(3),
+          _vm._m(4),
           _vm._v(" "),
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
@@ -39901,6 +39879,26 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "invoice-box invoice-logo-box mt-3" }, [
+      _c("div", { staticClass: "company-logo" }, [
+        _c("a", { attrs: { href: "#" } }, [
+          _c("img", {
+            attrs: { src: "http://placehold.it/350x100?text=Logo", alt: "" }
+          })
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "mt-1" }, [
+        _c("button", { staticClass: "btn btn-danger ml-auto" }, [
+          _vm._v("Delete Logo")
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -39932,7 +39930,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "level" }, [
       _c("h5", { staticClass: "flex" }, [_vm._v("Amount Paid")]),
       _vm._v(" "),
-      _c("span", [_vm._v("0.00")])
+      _c("span", [_vm._v("0")])
     ])
   }
 ]
@@ -39997,10 +39995,40 @@ var render = function() {
       _vm._v(" "),
       _vm._l(_vm.$v.items.$each.$iter, function(i, index) {
         return [
-          _c("TableItem", {
-            key: index,
-            attrs: { "table-item": _vm.items[index], "validation-item": i }
-          }),
+          _c(
+            "div",
+            { staticClass: "d-flex flex-row" },
+            [
+              [
+                _vm.showDelete
+                  ? _c("div", [
+                      _c(
+                        "span",
+                        {
+                          staticClass: "remove-item-button",
+                          on: {
+                            click: function($event) {
+                              return _vm.removeItem(index)
+                            }
+                          }
+                        },
+                        [_vm._v("×")]
+                      )
+                    ])
+                  : _c("div", [
+                      _c("span", { staticClass: "empty-item-button" }, [
+                        _vm._v("×")
+                      ])
+                    ])
+              ],
+              _vm._v(" "),
+              _c("TableItem", {
+                key: index,
+                attrs: { "table-item": _vm.items[index], "validation-item": i }
+              })
+            ],
+            2
+          ),
           _vm._v(" "),
           i.$error
             ? [
@@ -54961,8 +54989,8 @@ $('#customreTabs a[href="#contact-info"]').click(function (e) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -2,6 +2,7 @@
     <div class="items-wrapper">
 
         <div class="items-table-header">
+
             <div class="item-name">
                 Item
             </div>
@@ -18,12 +19,21 @@
                 Amount
             </div>
         </div>
-
            <!-- <template v-for="(child, index) of children">
                 <component :is="child" :key="child.index" @input="selectedItems"></component>
             </template>-->
            <template v-for="(i, index) in $v.items.$each.$iter">
-               <TableItem  :key="index" :table-item="items[index]" :validation-item="i"></TableItem>
+              <div class="d-flex flex-row">
+                  <template>
+                      <div v-if="showDelete">
+                          <span class="remove-item-button" @click="removeItem(index)">&times;</span>
+                      </div>
+                      <div v-else>
+                          <span class="empty-item-button">&times;</span>
+                      </div>
+                  </template>
+                  <TableItem  :key="index" :table-item="items[index]" :validation-item="i"></TableItem>
+              </div>
                <template v-if="i.$error">
                    <h4 v-if="!i.item.required" class="error">Item name is required</h4>
                    <h4 v-if="!i.quantity.required" class="error">quantity is required</h4>
@@ -34,7 +44,6 @@
            </template>
         <br>
         <button type="button" class="btn btn-primary" @click="addNewLine()">New Line</button>
-
 
     </div>
 </template>
@@ -63,6 +72,11 @@
                 immediate: true
             }
         },
+        computed: {
+            showDelete() {
+                return this.items.length > 1;
+            }
+        },
         methods: {
             addNewLine() {
                 this.items.push(
@@ -74,6 +88,10 @@
                         unitprice: 1
                     }
                 )
+            },
+
+            removeItem(index) {
+                this.items.splice(index, 1);
             },
 
             selectedItems(e) {

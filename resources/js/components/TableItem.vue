@@ -1,4 +1,5 @@
 <template>
+
     <div class="items-table-row" id="items-row" item-list>
         <div class="item-name">
             <select class="form-control" name="item-name[]" v-model="tableItem.item"
@@ -49,6 +50,7 @@
                        :value="total">
             </div>
         </div>
+
 
     </div>
 </template>

@@ -15,11 +15,11 @@
                                     @sendinvoicenotes="getInvoiceNotes"
                             >
                             </company-select>
-                           <template v-if="$v.invoice.selectedCompany.$error">
-                               <small v-if="$v.invoice.selectedCompany.required"
-                           >Please select company</small>
-                               <small v-if="!$v.invoice.selectedCompany.integer">Company does not exist</small>
-                           </template>
+                            <template v-if="$v.invoice.selectedCompany.$error">
+                                <small v-if="$v.invoice.selectedCompany.required"
+                                >Please select company</small>
+                                <small v-if="!$v.invoice.selectedCompany.integer">Company does not exist</small>
+                            </template>
                         </div>
                     </div>
                     <br>
@@ -47,25 +47,22 @@
             </div>
 
             <!-- {{--Logo part--}} -->
-            <div class="invoice-box invoice-logo-box">
-                <form>
-                    <div class="form-group">
-                        <label for="exampleFormControlFile1">Example file input</label>
-                        <input
-                                type="file"
-                                @change="f => invoice.selectedFile=f"
-                                @blur="$v.invoice.selectedFile.$touch()"
-                                class="form-control-file"
-                                id="exampleFormControlFile1"
-
-                        >
-                        <template v-if="$v.invoice.selectedFile.$error">
-                            <small v-if="!$v.invoice.selectedFile.isCorrectType">
-                                Sorry but you have choosen wrong data
-                            </small>
-                        </template>
-                    </div>
-                </form>
+            <div class="invoice-box invoice-logo-box mt-3">
+                <div class="company-logo">
+                    <a href="#">
+                        <img src="http://placehold.it/350x100?text=Logo" alt="">
+                    </a>
+                </div>
+                <div class="mt-1">
+                    <button class="btn btn-danger ml-auto">Delete Logo</button>
+                </div>
+                    <!--@change="f => invoice.selectedFile=f"
+                    @blur="$v.invoice.selectedFile.$touch()"-->
+                   <!-- <template v-if="$v.invoice.selectedFile.$error">
+                        <small v-if="!$v.invoice.selectedFile.isCorrectType">
+                            Sorry but you have choosen wrong data
+                        </small>
+                    </template>-->
             </div>
 
             <!-- {{--Date and Nubmer part--}} -->
@@ -135,16 +132,16 @@
                       @include('invoices.items_table')
                   </div>        -->
 
-                <div class="invoice-box invoice-item-box">
-                    <items-table @validation-status-changed="v => isTableInvalid = v"
-                                 :bus="eventBus"
-                                 :items="invoice.selectedItems"></items-table>
-                    <p v-if="isTableInvalid" class="error">Please correct table data</p>
-                </div>
+            <div class="invoice-box invoice-item-box">
+                <items-table @validation-status-changed="v => isTableInvalid = v"
+                             :bus="eventBus"
+                             :items="invoice.selectedItems"></items-table>
+                <p v-if="isTableInvalid" class="error">Please correct table data</p>
+            </div>
 
-                <div class="invoice-box invoice-notes-box">
-                      <invoice-notes :notes="notes"></invoice-notes>
-                </div>
+            <div class="invoice-box invoice-notes-box">
+                <invoice-notes :notes="notes"></invoice-notes>
+            </div>
 
             <div class="invoice-box invoice-total-box">
                 <div class="border-top pb-2"></div>
@@ -160,7 +157,7 @@
                 <div class="border-top pb-2"></div>
                 <div class="level">
                     <h5 class="flex" >Amount Paid</h5>
-                    <span>0.00</span>
+                    <span>0</span>
                 </div>
                 <div class="border-top pb-2"></div>
                 <div class="level">
@@ -177,12 +174,10 @@
     import axios from 'axios'
     import { required, integer } from 'vuelidate/lib/validators'
     /*import Items from './ItemsTable.vue'*/
-
     export default {
-       /* comments: {
-            'items-table': Items
-        },*/
-
+        /* comments: {
+             'items-table': Items
+         },*/
         props: {
             invoiceNumber: {
                 type: Number,
@@ -196,7 +191,6 @@
                 type: Array,
                 required: true
             },
-
         },
         data() {
             return {
@@ -205,15 +199,15 @@
                 invoice: {
                     selectedCompany: NaN,
                     selectedCustomer: {},
-                    selectedFile: null,
+                    //selectedFile: null,
                     selectedDateFrom: new Date().toISOString().slice(0,10),
                     selectedDateTo: new Date().toISOString().slice(0,10),
                     selectedInvoiceNumber: this.invoiceNumber,
                     selectedItems: [
                         {
                             id: 1,
-                            description: null,
                             item: null,
+                            description: null,
                             quantity: 1,
                             unitprice: 1
                         }
@@ -240,11 +234,11 @@
                         return true
                     }
                 },
-                selectedFile: {
+                /*selectedFile: {
                     isCorrectType(v) {
                         return integer(v) || isObject(v)
                     }
-                },
+                },*/
                 selectedDateFrom:{
                     required
                 },
@@ -259,7 +253,7 @@
         },
         watch: {
             '$v.$error'(v) {
-                debugger
+                //debugger
                 if ( v === true) {
                     this.sendButton.disabled = true
                 } else {
@@ -279,13 +273,13 @@
             }
         },
         mounted() {
-          this.sendButton = document.querySelector('.send-btn')
+            this.sendButton = document.querySelector('.send-btn')
         },
         methods: {
             resetInvoice() {
                 this.invoice.selectedCompany = NaN
                 this.invoice.selectedCustomer = {}
-                this.invoice.selectedFile = null
+                //this.invoice.selectedFile = null
                 this.invoice.selectedDateFrom = new Date().toISOString().slice(0, 10)
                 this.invoice.selectedDateTo = new Date().toISOString().slice(0, 10)
                 this.invoice.selectedInvoiceNumber = this.invoiceNumber + 1
@@ -306,7 +300,6 @@
                     this.$v.$touch();
                     this.eventBus.$emit('touch', true)
                     this.eventBus.$emit('reset', true)
-
                     if (!this.$v.$error && !this.isTableInvalid) {
                         console.log(JSON.stringify(this.invoice));
                         await axios.post('/invoices', this.invoice)
@@ -316,10 +309,9 @@
                         console.log('resetting')
                     }
                 } catch(e) {
-                   // this.resetInvoice()
-                   // this.$v.$reset()
+                    // this.resetInvoice()
+                    // this.$v.$reset()
                 }
-
             },
             getInvoiceNotes(variable){
                 this.notes = variable;

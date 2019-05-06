@@ -1,3 +1,22 @@
+$color-primary: #3aa3e3;
+$color-success: #66bb6a;
+$color-error: #e75650;
+$color-warning: #ffc82c;
+$color-info: #9dd1f1;
+$color-grey: #f4f4f4;
+
+$text-color: #484746;
+$bg-color: #f8f8f8;
+
+$border-radius: 2px;
+
+$font-family: Helvetica, sans-serif;
+
+$box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+$border-color: #f2f2f2;
+
+
 .wrapper-invoice-create {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -22,18 +41,30 @@
 
 .invoice-logo-box{
   grid-area: invoice-box-2;
+  > div {
+    display: flex;
+    flex-direction: column;
+  }
+  .company-logo {
+    a {
+      display: block;
+    }
+    img {
+      width: 100%;
+    }
+  }
 }
 
 .invoice-num-date-box{
   grid-area: invoice-box-3;
-  margin-top: 100px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
-
 }
 
 .invoice-item-box{
   grid-area: invoice-box-4;
+  
   .items-table-header, .items-table-row{
     display: grid;
     height: 35px;
@@ -41,6 +72,7 @@
     //grid-auto-rows: minmax(100px, auto);
   }
   .items-table-header{
+    margin-left: 18px;
     background-color: #54A0E7;
     color: #eee;
     > div {
@@ -49,6 +81,23 @@
   }
   .items-table-row {
 
+  }
+  
+  .remove-item-button {
+    margin: 0;
+    padding: 2px;
+    cursor: pointer;
+    font-size: 25px;
+    line-height: 35px;
+    font-weight: bold;
+    color: $color-error;
+  }
+  .empty-item-button {
+    margin: 0;
+    padding: 2px;
+    font-size: 25px;
+    line-height: 35px;
+    opacity: 0;
   }
 
 }
