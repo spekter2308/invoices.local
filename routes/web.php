@@ -34,3 +34,8 @@ Route::patch('customers/{customer}', 'CustomerController@update');
 Route::delete('customers/{customer}', 'CustomerController@destroy');
 
 //companies part
+Route::get('company', 'CompanyController@index')->name('company-list');
+Route::get('company/create', 'CompanyController@create')->name('company-create');
+Route::get('company/update/{id}', 'CompanyController@update')->name('company-update');
+Route::post('company/create/save', 'CompanyController@createSave')->name('company-create-save');
+Route::post('company/upload/save/{id}', 'CompanyController@updateSave')->name('company-upload-save');

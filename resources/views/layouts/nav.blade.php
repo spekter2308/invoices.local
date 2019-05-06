@@ -32,7 +32,7 @@
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#">Profiles</a>
+                                        <a class="dropdown-item" href="{{route('company-list')}}">Profiles</a>
                                         <a class="dropdown-item" href="#">Users</a>
                                         <a class="dropdown-item" href="#">Invoice numbers</a>
                                         <a class="dropdown-item" href="#">Buy Premium</a>
