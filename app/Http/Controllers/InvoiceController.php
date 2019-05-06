@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\InvoiceItem;
 use Illuminate\Http\Request;
 use App\Invoice;
 use App\Customer;
@@ -55,11 +56,64 @@ class InvoiceController extends Controller
             'status' => 'Paid'
         ]);
 
-        if(\request()->expectsJson()){
+        if (\request()->expectsJson()) {
             return \response()->json($invoice);
         }
 
         return back()->with('message', 'success');
 
+    }
+
+    public function selectItem(InvoiceItem $invoiceItem)
+    {
+        $items = $invoiceItem->latest()->paginate(15);
+        return view('invoices.table-select-item')->with([
+            'items' => $items
+        ]);
+    }
+
+    public function getSelectItem(InvoiceItem $invoiceItem)
+    {
+        $items = $invoiceItem->all();
+        return \response()->json($items);
+    }
+
+    public function createSelectItem($id = false, InvoiceItem $invoiceItem)
+    {
+        $item = (!$id) ? $invoiceItem : $invoiceItem->find($id);
+
+        return view('invoices.create-select-item')->with([
+            'item' => $item
+        ]);
+    }
+
+    public function saveSelectItem($id = false, Request $request, InvoiceItem $invoiceItem)
+    {
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required|min:3|max:100',
+        ]);
+
+        if ($validator->fails())
+            return \redirect(route('create-select-item'))->withErrors($validator);
+
+        $status = (!$id) ? $invoiceItem->create($request->all()) : $invoiceItem->find($id)->update($request->all());
+
+        if (!$status) {
+            abort(500);
+        }
+
+        return redirect(route('select-item'))->with(['success' => 'Item has been save']);
+
+    }
+
+    public function deleteSelectItem($id, InvoiceItem $invoiceItem)
+    {
+        $status = $invoiceItem->destroy($id);
+
+        if (!$status) {
+            abort(500);
+        }
+
+        return redirect(route('select-item'))->with(['success' => 'Item has been delete']);
     }
 }
