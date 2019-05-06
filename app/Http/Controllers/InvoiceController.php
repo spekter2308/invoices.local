@@ -51,10 +51,9 @@ class InvoiceController extends Controller
             $customerId = $data['selectedCustomer'];
         }
 
-        $total = 0;
-        foreach ($data['selectedItems'] as $item) {
-            $total += $item['quantity'] * $item['unitprice'];
-        }
+        $total = collect($data['selectedItems'])->sum(function($item) {
+            return $item['quantity'] * $item['unitprice'];
+        });
 
         $invoice = Invoice::create([
             'number' => $data['selectedInvoiceNumber'],
@@ -68,6 +67,18 @@ class InvoiceController extends Controller
             'balance' => $total,
             'status' => 'Paid'
         ]);
+
+        /*foreach($data['selectedItems'] as $key => $items) {
+            $newItems = [];
+            foreach($items as $item) {
+                $model = $invoice->{$key}()->getModel();
+                $newItems[] = $model->create([
+                    'name' => $item['']
+                ]);
+            }
+            // save
+            $this->{$key}()->saveMany($newItems);
+        }*/
 
         if(\request()->expectsJson()){
             return \response()->json($invoice);
