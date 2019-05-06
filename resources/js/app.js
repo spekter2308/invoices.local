@@ -18,6 +18,7 @@ window.Vue = require('vue');
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
+
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
@@ -26,6 +27,7 @@ Vue.component('customer-select', require('./components/CustomerSelect.vue').defa
 Vue.component('invoice-notes', require('./components/InvoiceNotes.vue').default);
 Vue.component('invoice-form', require('./components/InvoiceForm.vue').default);
 Vue.component('items-table', require('./components/ItemsTable.vue').default);
+Vue.component('select-item', require('./components/SelectItem.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -37,6 +39,7 @@ Vue.component('items-table', require('./components/ItemsTable.vue').default);
 /*import Vue from 'vue'*/
 import Vuelidate from 'vuelidate'
 Vue.use(Vuelidate)
+
 
 const app = new Vue({
     el: '#app',

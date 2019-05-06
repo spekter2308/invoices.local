@@ -1,15 +1,7 @@
 <template>
     <div class="items-table-row" id="items-row" item-list>
         <div class="item-name">
-            <select class="form-control" name="item-name[]">
-                <option></option>
-                <option>Days</option>
-                <option>Hours</option>
-                <option>Product</option>
-                <option>Service</option>
-                <option>Expense</option>
-                <option>Discount</option>
-            </select>
+            <select-item></select-item>
         </div>
         <div class="item-description">
             <div class="form-group">
@@ -33,6 +25,7 @@
         </div>
 
     </div>
+
 </template>
 
 <script>

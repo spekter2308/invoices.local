@@ -30,7 +30,9 @@
                    <option>Discount</option>
                </select>
            </div>
-           <div class="item-description">
+
+
+        <div class="item-description">
                <div class="form-group">
                    <textarea class="form-control" rows="1" name="item-description[]"></textarea>
                </div>

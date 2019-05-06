@@ -34,7 +34,7 @@
                         <tbody>
                         @foreach ($company as $item)
                             <tr>
-                                <td><a href="{{route('company-update', ['id' => (int)$item->id])}}">{{ $item->name }}</a></td>
+                                <td><a href="{{route('company-update', ['id' => $item->id])}}">{{ $item->name }}</a></td>
                                 <td>{{ $item->short_name }}</td>
                                 <td>{{ $item->address }}</td>
                                 <td>{{ $item->invoice_notes }}</td>

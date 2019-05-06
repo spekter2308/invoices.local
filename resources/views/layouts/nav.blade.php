@@ -45,7 +45,7 @@
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="#">New Invlice</a>
                                         <a class="dropdown-item" href="#">List of Invoices</a>
-                                        <a class="dropdown-item" href="#">Items</a>
+                                        <a class="dropdown-item" href="{{route('select-item')}}">Items</a>
                                     </div>
                                 </li>
 

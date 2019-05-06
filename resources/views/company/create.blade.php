@@ -2,7 +2,8 @@
 
 @section('content')
     @if(isset($company->id))
-        <form method="POST" enctype="multipart/form-data" action="{{route('company-upload-save', ['id' => $company->id])}}">
+        <form method="POST" enctype="multipart/form-data"
+              action="{{route('company-upload-save', ['id' => $company->id])}}">
 
             @else
                 <form method="POST" enctype="multipart/form-data" action="{{route('company-create-save')}}">
@@ -85,6 +86,5 @@
                             </div>
                         </div>
                     </div>
-
                 </form>
 @endsection
