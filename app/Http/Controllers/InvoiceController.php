@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\InvoiceItemName;
+use App\Http\Requests\CreateInvoiceRequest;
 use Illuminate\Http\Request;
 use App\Invoice;
 use App\Customer;
@@ -37,26 +38,50 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function store(Request $request)
+    public function store(CreateInvoiceRequest $request)
     {
 
-        //$customerId = \request('selectedCustomer');
-        //$customer = Customer::findOrFail();
+        $data = $request->input();
+        if(is_array($data['selectedCustomer'])) {
+            $customer = (new Customer())->create([
+                'name' => $data['selectedCustomer']['name'],
+                'address' => $data['selectedCustomer']['address']
+            ]);
+            $customerId = $customer->id;
+        } else {
+            $customerId = $data['selectedCustomer'];
+        }
+
+        $total = collect($data['selectedItems'])->sum(function($item) {
+            return $item['quantity'] * $item['unitprice'];
+        });
 
         $invoice = Invoice::create([
-            'number' => \request('selectedInvoiceNumber'),
-            'customer_id' => \request('selectedCustomer'),
+            'number' => $data['selectedInvoiceNumber'],
+            'customer_id' => $customerId,
             'company_id' => \request('selectedCompany'),
             'invoice_date' => \request('selectedDateFrom'),
             'due_date' => \request('selectedDateTo'),
-            'amount_paid' => 100,
-            'subtotal' => 100,
-            'total' => 100,
-            'balance' => 100,
+            'amount_paid' => 0,
+            'subtotal' => $total,
+            'total' => $total,
+            'balance' => $total,
             'status' => 'Paid'
         ]);
 
-        if (\request()->expectsJson()) {
+        /*foreach($data['selectedItems'] as $key => $items) {
+            $newItems = [];
+            foreach($items as $item) {
+                $model = $invoice->{$key}()->getModel();
+                $newItems[] = $model->create([
+                    'name' => $item['']
+                ]);
+            }
+            // save
+            $this->{$key}()->saveMany($newItems);
+        }*/
+
+        if(\request()->expectsJson()){
             return \response()->json($invoice);
         }
 

@@ -21,7 +21,7 @@ class CreateItemsTable extends Migration
             $table->string('description');
             $table->float('unit_price');
             $table->float('quantity');
-            $table->double('tax')->default(0);
+            $table->double('tax')->default(0)->nullable();
             $table->float('amount');
 
             $table->timestamps();

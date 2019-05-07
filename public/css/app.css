@@ -10683,9 +10683,22 @@ a.text-dark:focus {
   grid-area: invoice-box-2;
 }
 
+.invoice-logo-box > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.invoice-logo-box .company-logo a {
+  display: block;
+}
+
+.invoice-logo-box .company-logo img {
+  width: 100%;
+}
+
 .invoice-num-date-box {
   grid-area: invoice-box-3;
-  margin-top: 100px;
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
 }
@@ -10702,12 +10715,31 @@ a.text-dark:focus {
 }
 
 .invoice-item-box .items-table-header {
+  margin-left: 18px;
   background-color: #54A0E7;
   color: #eee;
 }
 
 .invoice-item-box .items-table-header > div {
   padding: 3px 14px;
+}
+
+.invoice-item-box .remove-item-button {
+  margin: 0;
+  padding: 2px;
+  cursor: pointer;
+  font-size: 25px;
+  line-height: 35px;
+  font-weight: bold;
+  color: #e75650;
+}
+
+.invoice-item-box .empty-item-button {
+  margin: 0;
+  padding: 2px;
+  font-size: 25px;
+  line-height: 35px;
+  opacity: 0;
 }
 
 .invoice-notes-box {
