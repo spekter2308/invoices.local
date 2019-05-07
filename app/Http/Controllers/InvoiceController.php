@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\InvoiceItem;
+use App\InvoiceItemName;
 use Illuminate\Http\Request;
 use App\Invoice;
 use App\Customer;
@@ -64,7 +64,7 @@ class InvoiceController extends Controller
 
     }
 
-    public function selectItem(InvoiceItem $invoiceItem)
+    public function selectItem(InvoiceItemName $invoiceItem)
     {
         $items = $invoiceItem->latest()->paginate(15);
         return view('invoices.table-select-item')->with([
@@ -72,13 +72,13 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function getSelectItem(InvoiceItem $invoiceItem)
+    public function getSelectItem(InvoiceItemName $invoiceItem)
     {
         $items = $invoiceItem->all();
         return \response()->json($items);
     }
 
-    public function createSelectItem($id = false, InvoiceItem $invoiceItem)
+    public function createSelectItem($id = false, InvoiceItemName $invoiceItem)
     {
         $item = (!$id) ? $invoiceItem : $invoiceItem->find($id);
 
@@ -87,7 +87,7 @@ class InvoiceController extends Controller
         ]);
     }
 
-    public function saveSelectItem($id = false, Request $request, InvoiceItem $invoiceItem)
+    public function saveSelectItem($id = false, Request $request, InvoiceItemName $invoiceItem)
     {
         $validator = \Validator::make($request->all(), [
             'name' => 'required|min:3|max:100',
@@ -106,7 +106,7 @@ class InvoiceController extends Controller
 
     }
 
-    public function deleteSelectItem($id, InvoiceItem $invoiceItem)
+    public function deleteSelectItem($id, InvoiceItemName $invoiceItem)
     {
         $status = $invoiceItem->destroy($id);
 
