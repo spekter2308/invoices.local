@@ -34,3 +34,7 @@ Route::patch('customers/{customer}', 'CustomerController@update');
 Route::delete('customers/{customer}', 'CustomerController@destroy');
 
 //companies part
+
+
+//counter
+Route::patch('counters/{counter}');

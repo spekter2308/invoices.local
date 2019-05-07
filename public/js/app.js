@@ -2192,6 +2192,56 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /*import Items from './ItemsTable.vue'*/
@@ -2202,7 +2252,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
    },*/
   props: {
     invoiceNumber: {
-      type: Number,
+      type: String,
       required: true
     },
     companies: {
@@ -2224,7 +2274,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         //selectedFile: null,
         selectedDateFrom: new Date().toISOString().slice(0, 10),
         selectedDateTo: new Date().toISOString().slice(0, 10),
-        selectedInvoiceNumber: this.invoiceNumber,
+        selectedInvoiceNumber: this.invoiceNumber.prefix + (parseInt(this.invoiceNumber.start) + parseInt(this.invoiceNumber.increment)) + this.invoiceNumber.postfix || this.invoiceNumber,
         selectedItems: [{
           id: 1,
           item: null,
@@ -2232,6 +2282,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           quantity: 1,
           unitprice: 1
         }]
+      },
+      selectedNumber: {
+        prefix: this.invoiceNumber.prefix,
+        start: this.invoiceNumber.start,
+        postfix: this.invoiceNumber.postfix,
+        increment: this.invoiceNumber.increment
       },
       notes: ''
     };
@@ -2268,8 +2324,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"]
       },
       selectedInvoiceNumber: {
-        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"],
-        integer: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["integer"]
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"]
       }
     }
   },
@@ -2304,7 +2359,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       this.invoice.selectedDateFrom = new Date().toISOString().slice(0, 10);
       this.invoice.selectedDateTo = new Date().toISOString().slice(0, 10);
-      this.invoice.selectedInvoiceNumber = this.invoiceNumber + 1;
+      this.invoice.selectedInvoiceNumber = this.invoiceNumber + '1';
       this.invoice.selectedItems = [{
         id: 1,
         description: null,
@@ -2365,6 +2420,33 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return onSubmit;
     }(),
+    editNumber: function () {
+      var _editNumber = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                try {
+                  console.log(JSON.stringify(this.selectedNumber));
+                  this.axios.patch('/counters/' + this.invoiceNumber.id, this.selectedNumber);
+                } catch (e) {}
+
+              case 1:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function editNumber() {
+        return _editNumber.apply(this, arguments);
+      }
+
+      return editNumber;
+    }(),
     getInvoiceNotes: function getInvoiceNotes(variable) {
       this.notes = variable;
     }
@@ -2377,6 +2459,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return this.invoice.selectedItems.reduce(function (acc, curr) {
         return acc + curr.unitprice * curr.quantity;
       }, 0);
+    },
+    invoiceNum: function invoiceNum() {
+      return this.selectedNumber.prefix + (parseInt(this.selectedNumber.start) + parseInt(this.selectedNumber.increment)) + this.selectedNumber.postfix;
     }
   }
 });
@@ -39572,7 +39657,7 @@ var render = function() {
   return _c(
     "form",
     {
-      attrs: { id: "createInvoice", method: "POST", action: "/invoices" },
+      attrs: { id: "createInvoice" },
       on: {
         submit: function($event) {
           $event.preventDefault()
@@ -39682,7 +39767,7 @@ var render = function() {
             _c("div", { staticClass: "col-md-8" }, [
               _c(
                 "div",
-                { staticClass: "form-group" },
+                { staticClass: "form-group d-flex" },
                 [
                   _c("input", {
                     directives: [
@@ -39695,7 +39780,7 @@ var render = function() {
                     ],
                     staticClass: "form-control",
                     attrs: {
-                      type: "number",
+                      type: "text",
                       name: "invoice_number",
                       id: "invoice_number"
                     },
@@ -39716,6 +39801,235 @@ var render = function() {
                       }
                     }
                   }),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary",
+                      attrs: {
+                        type: "button",
+                        "data-toggle": "modal",
+                        "data-target": "#exampleModal"
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Edit\n                        "
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    {
+                      staticClass: "modal fade",
+                      attrs: {
+                        id: "exampleModal",
+                        tabindex: "-1",
+                        role: "dialog",
+                        "aria-labelledby": "exampleModalLabel",
+                        "aria-hidden": "true"
+                      }
+                    },
+                    [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "modal-dialog modal-dialog-centered",
+                          attrs: { role: "document" }
+                        },
+                        [
+                          _c(
+                            "form",
+                            {
+                              on: {
+                                submit: function($event) {
+                                  $event.preventDefault()
+                                  return _vm.editNumber($event)
+                                }
+                              }
+                            },
+                            [
+                              _c("div", { staticClass: "modal-content" }, [
+                                _vm._m(2),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "modal-body" }, [
+                                  _c("p", [
+                                    _vm._v(
+                                      "By default the invoices are numbered 00001, 00002, 00003, etc. Below you can change this. You can, of course, always manually override the system and enter any number you like when creating an invoice, though."
+                                    )
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass:
+                                        "d-flex justify-content-between"
+                                    },
+                                    [
+                                      _c("div", { staticClass: "form-group" }, [
+                                        _c(
+                                          "label",
+                                          { staticClass: "font-weight-bold" },
+                                          [_vm._v("Prefix")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.selectedNumber.prefix,
+                                              expression:
+                                                "selectedNumber.prefix"
+                                            }
+                                          ],
+                                          staticClass: "form-control",
+                                          domProps: {
+                                            value: _vm.selectedNumber.prefix
+                                          },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.selectedNumber,
+                                                "prefix",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        })
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("div", { staticClass: "form-group" }, [
+                                        _c(
+                                          "label",
+                                          { staticClass: "font-weight-bold" },
+                                          [_vm._v("Start #")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.selectedNumber.start,
+                                              expression: "selectedNumber.start"
+                                            }
+                                          ],
+                                          staticClass: "form-control",
+                                          domProps: {
+                                            value: _vm.selectedNumber.start
+                                          },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.selectedNumber,
+                                                "start",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        })
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("div", { staticClass: "form-group" }, [
+                                        _c(
+                                          "label",
+                                          { staticClass: "font-weight-bold" },
+                                          [_vm._v("Postfix")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.selectedNumber.postfix,
+                                              expression:
+                                                "selectedNumber.postfix"
+                                            }
+                                          ],
+                                          staticClass: "form-control",
+                                          domProps: {
+                                            value: _vm.selectedNumber.postfix
+                                          },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.selectedNumber,
+                                                "postfix",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        })
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("div", { staticClass: "form-group" }, [
+                                        _c(
+                                          "label",
+                                          { staticClass: "font-weight-bold" },
+                                          [_vm._v("Increment")]
+                                        ),
+                                        _vm._v(" "),
+                                        _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value:
+                                                _vm.selectedNumber.increment,
+                                              expression:
+                                                "selectedNumber.increment"
+                                            }
+                                          ],
+                                          staticClass: "form-control",
+                                          domProps: {
+                                            value: _vm.selectedNumber.increment
+                                          },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.selectedNumber,
+                                                "increment",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        })
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "h6",
+                                    { staticClass: "font-weight-bold" },
+                                    [_vm._v("Next invoice number")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c("span", [_vm._v(_vm._s(_vm.invoiceNum))])
+                                ]),
+                                _vm._v(" "),
+                                _vm._m(3)
+                              ])
+                            ]
+                          )
+                        ]
+                      )
+                    ]
+                  ),
                   _vm._v(" "),
                   _vm.$v.invoice.selectedInvoiceNumber.$error
                     ? [
@@ -39739,7 +40053,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "row level" }, [
-            _vm._m(2),
+            _vm._m(4),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-8" }, [
               _c(
@@ -39778,7 +40092,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "row level" }, [
-            _vm._m(3),
+            _vm._m(5),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-8" }, [
               _c(
@@ -39861,7 +40175,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
-          _vm._m(4),
+          _vm._m(6),
           _vm._v(" "),
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
@@ -39905,6 +40219,59 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-4" }, [
       _c("h6", { staticClass: "font-weight-bold" }, [_vm._v("Invoice #")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        {
+          staticClass: "modal-title font-weight-bold",
+          attrs: { id: "exampleModalLabel" }
+        },
+        [
+          _vm._v(
+            "Invoice Numbers\n                                            "
+          )
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Close")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+        [_vm._v("Save changes")]
+      )
     ])
   },
   function() {

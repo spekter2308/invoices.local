@@ -1,5 +1,5 @@
 <template>
-    <form id="createInvoice" method="POST" action="/invoices" @submit.prevent="onSubmit">
+    <form id="createInvoice" @submit.prevent="onSubmit">
         <!-- @csrf -->
         <slot></slot>
         <div class="wrapper-invoice-create">
@@ -72,12 +72,62 @@
                         <h6 class="font-weight-bold">Invoice #</h6>
                     </div>
                     <div class="col-md-8">
-                        <div class="form-group">
-                            <input type="number" name="invoice_number" id="invoice_number"
+                        <div class="form-group d-flex">
+                            <input type="text" name="invoice_number" id="invoice_number"
                                    class="form-control"
                                    @blur="$v.invoice.selectedInvoiceNumber.$touch()"
                                    v-model="invoice.selectedInvoiceNumber"
                             >
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                                Edit
+                            </button>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <form @submit.prevent="editNumber">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title font-weight-bold"
+                                                    id="exampleModalLabel">Invoice Numbers
+                                                </h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>By default the invoices are numbered 00001, 00002, 00003, etc. Below you can change this. You can, of course, always manually override the system and enter any number you like when creating an invoice, though.</p>
+                                                <div class="d-flex justify-content-between">
+                                                    <div class="form-group">
+                                                        <label class="font-weight-bold">Prefix</label>
+                                                        <input class="form-control" v-model="selectedNumber.prefix">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="font-weight-bold">Start #</label>
+                                                        <input class="form-control" v-model="selectedNumber.start">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="font-weight-bold">Postfix</label>
+                                                        <input class="form-control" v-model="selectedNumber.postfix">
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="font-weight-bold">Increment</label>
+                                                        <input class="form-control" v-model="selectedNumber.increment">
+                                                    </div>
+                                                </div>
+                                                <h6 class="font-weight-bold">Next invoice number</h6>
+                                                <span>{{invoiceNum}}</span>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
                             <template v-if="$v.invoice.selectedInvoiceNumber.$error">
                                 <small v-if="!$v.invoice.selectedInvoiceNumber.required"
                                 >You must fill number field</small>
@@ -180,7 +230,7 @@
          },*/
         props: {
             invoiceNumber: {
-                type: Number,
+                type: String,
                 required: true
             },
             companies: {
@@ -202,7 +252,9 @@
                     //selectedFile: null,
                     selectedDateFrom: new Date().toISOString().slice(0,10),
                     selectedDateTo: new Date().toISOString().slice(0,10),
-                    selectedInvoiceNumber: this.invoiceNumber,
+                    selectedInvoiceNumber: this.invoiceNumber.prefix +
+                                            (parseInt(this.invoiceNumber.start) + parseInt(this.invoiceNumber.increment)) +
+                                            this.invoiceNumber.postfix || this.invoiceNumber,
                     selectedItems: [
                         {
                             id: 1,
@@ -212,6 +264,12 @@
                             unitprice: 1
                         }
                     ]
+                },
+                selectedNumber: {
+                    prefix: this.invoiceNumber.prefix,
+                    start: this.invoiceNumber.start,
+                    postfix: this.invoiceNumber.postfix,
+                    increment: this.invoiceNumber.increment
                 },
                 notes: ''
             }
@@ -246,8 +304,7 @@
                     required
                 },
                 selectedInvoiceNumber: {
-                    required,
-                    integer
+                    required
                 }
             }
         },
@@ -282,7 +339,7 @@
                 //this.invoice.selectedFile = null
                 this.invoice.selectedDateFrom = new Date().toISOString().slice(0, 10)
                 this.invoice.selectedDateTo = new Date().toISOString().slice(0, 10)
-                this.invoice.selectedInvoiceNumber = this.invoiceNumber + 1
+                this.invoice.selectedInvoiceNumber = this.invoiceNumber + '1';
                 this.invoice.selectedItems = [
                     {
                         id: 1,
@@ -313,16 +370,30 @@
                     // this.$v.$reset()
                 }
             },
+            async editNumber() {
+                try {
+                    console.log(JSON.stringify(this.selectedNumber));
+                    this.axios.patch('/counters/' + this.invoiceNumber.id, this.selectedNumber);
+                } catch (e) {
+
+                }
+            },
             getInvoiceNotes(variable){
                 this.notes = variable;
             }
         },
+
         computed: {
             currentDate() {
                 return new Date().toISOString().slice(0,10);
             },
             total() {
                 return this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0)
+            },
+            invoiceNum(){
+                return this.selectedNumber.prefix +
+                    (parseInt(this.selectedNumber.start) + parseInt(this.selectedNumber.increment)) +
+                    this.selectedNumber.postfix;
             }
         }
     }
