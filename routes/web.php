@@ -26,7 +26,7 @@ Route::get('invoices/select-item', 'InvoiceController@selectItem')->name('select
 Route::get('invoices/get/select-item', 'InvoiceController@getSelectItem')->name('get-select-item');
 Route::get('invoices/create/select-item/{id?}', 'InvoiceController@createSelectItem')->name('create-select-item')->where(['id' => '[0-9]+']);
 Route::post('invoices/save/select-item/{id?}', 'InvoiceController@saveSelectItem')->name('save-select-item')->where(['id' => '[0-9]+']);
-Route::delete('invoices/delete/select-item/{id}', 'InvoiceController@deleteSelectItem')->name('delete-select-item')->where(['id' => '[0-9]+']);
+Route::delete('invoices/destroy/select-item/{id}', 'InvoiceController@deleteSelectItem')->name('delete-select-item')->where(['id' => '[0-9]+']);
 
 Route::post('invoices', 'InvoiceController@store');
 
@@ -40,8 +40,19 @@ Route::patch('customers/{customer}', 'CustomerController@update');
 Route::delete('customers/{customer}', 'CustomerController@destroy');
 
 //companies part
-Route::get('company', 'CompanyController@index')->name('company-list');
-Route::get('company/create', 'CompanyController@create')->name('company-create');
-Route::get('company/update/{id}', 'CompanyController@update')->name('company-update')->where(['id' => '[0-9]+']);
-Route::post('company/create/save', 'CompanyController@createSave')->name('company-create-save');
-Route::post('company/upload/save/{id}', 'CompanyController@updateSave')->name('company-upload-save')->where(['id' => '[0-9]+']);
+Route::prefix('company')->group(function () {
+    Route::get('', 'CompanyController@index')->name('company-list');
+    Route::get('create', 'CompanyController@create')->name('company-create');
+    Route::get('update/{id}', 'CompanyController@update')->name('company-update')->where(['id' => '[0-9]+']);
+    Route::post('create/save', 'CompanyController@createSave')->name('company-create-save');
+    Route::post('upload/save/{id}', 'CompanyController@updateSave')->name('company-upload-save')->where(['id' => '[0-9]+']);
+});
+
+//users path
+Route::prefix('user')->group(function () {
+    Route::get('', 'UserController@index')->name('users-list');
+    Route::get('create/{id?}', 'UserController@create')->name('users-create')->where(['id' => '[0-9]+']);
+    Route::post('create/save', 'UserController@createSave')->name('users-create-save');
+    Route::post('update/save/{id?}', 'UserController@updateSave')->name('users-update-save')->where(['id' => '[0-9]+']);
+    Route::delete('{id}', 'UserController@destroy')->name('user-destroy')->where(['id' => '[0-9]+']);
+});
