@@ -59,9 +59,10 @@
 
                                         <div class="form-group">
                                             <label for="role" class="font-weight-bold">Role</label>
-                                            <select class="form-control {{ $errors->has ('role') ? 'error' : '' }}" name="role">
+                                            <select class="form-control {{ $errors->has ('role') ? 'error' : '' }}"
+                                                    name="role">
                                                 @foreach($roles as $role)
-                                                    <option {{$role->user_id == $user->id ? 'selected' : ''}} value="{{$role->id}}">{{$role->name}}</option>
+                                                    <option {{$role->id == $flag ? 'selected' :'' }} value="{{$role->id}}">{{$role->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>

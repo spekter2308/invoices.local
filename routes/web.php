@@ -53,6 +53,6 @@ Route::prefix('user')->group(function () {
     Route::get('', 'UserController@index')->name('users-list');
     Route::get('create/{id?}', 'UserController@create')->name('users-create')->where(['id' => '[0-9]+']);
     Route::post('create/save', 'UserController@createSave')->name('users-create-save');
-    Route::post('update/save/{id?}', 'UserController@updateSave')->name('users-update-save')->where(['id' => '[0-9]+']);
+    Route::post('update/save/{id}', 'UserController@updateSave')->name('users-update-save')->where(['id' => '[0-9]+']);
     Route::delete('{id}', 'UserController@destroy')->name('user-destroy')->where(['id' => '[0-9]+']);
 });

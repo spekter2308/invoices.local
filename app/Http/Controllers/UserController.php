@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Role;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -18,7 +19,7 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = $this->user->latest()->paginate(15);
+        $users = $this->user->with('roles')->latest()->paginate(15);
 
         return view('users.index')->with([
             'users' => $users
@@ -27,12 +28,18 @@ class UserController extends Controller
 
     public function create($id = false, Role $role)
     {
-        $user = (!$id) ? $this->user : $this->user->find($id);;
+        $user = (!$id) ? $this->user : $this->user->with('roles')->find($id);
         $roles = $role->all();
+
+        $selectedFlag = false;
+
+        if (isset($user->roles->first()->pivot))
+            $selectedFlag = $user->roles->first()->pivot->role_id;
 
         return view('users.create')->with([
             'user' => $user,
-            'roles' => $roles
+            'roles' => $roles,
+            'flag' => $selectedFlag
         ]);
     }
 
@@ -62,7 +69,7 @@ class UserController extends Controller
         return redirect(route('users-list'))->with(['success' => 'User has been save']);
     }
 
-    public function updateSave($id = false, Request $request)
+    public function updateSave($id, Request $request)
     {
         $data = $request->all();
 
@@ -91,6 +98,8 @@ class UserController extends Controller
         if (!$status) {
             abort(500);
         }
+
+        Auth::setUser($user);
 
         return redirect(route('users-list'))->with(['success' => 'User has been save']);
     }
