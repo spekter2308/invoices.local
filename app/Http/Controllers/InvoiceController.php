@@ -135,8 +135,10 @@ class InvoiceController extends Controller
             'name' => 'required|min:3|max:100',
         ]);
 
-        if ($validator->fails())
-            return \redirect(route('create-select-item'))->withErrors($validator);
+        if ($validator->fails()){
+            $request->flash();
+            return redirect(route('create-select-item'))->withErrors($validator);
+        }
 
         $status = (!$id) ? $invoiceItem->create($request->all()) : $invoiceItem->find($id)->update($request->all());
 

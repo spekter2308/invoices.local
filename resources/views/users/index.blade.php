@@ -41,7 +41,7 @@
                             </td>
                             <td>
 
-                                <form method="POST" action="{{route('user-destroy', ['id' => $user->id])}}">
+                                <form action="{{route('user-destroy', ['id' => $user->id])}}"  method="POST" >
                                     @method('DELETE')
                                     @csrf
                                     <a class="btn btn-link"

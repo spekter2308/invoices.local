@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Company;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\File;
 
 class CompanyController extends Controller
 {
@@ -48,11 +48,15 @@ class CompanyController extends Controller
 
         $validator = $this->validateCompany($data);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
+            $request->flash();
             return \redirect(route('company-create'))->withErrors($validator);
+        }
 
-        $data['logo_img'] = $data['logo_img']->hashName();
-        $request->file('logo_img')->move(public_path(self::UPLOAD_PATH), $data['logo_img']);
+        if (!empty($data['logo_img'])) {
+            $data['logo_img'] = $data['logo_img']->hashName();
+            $request->file('logo_img')->move(public_path(self::UPLOAD_PATH), $data['logo_img']);
+        }
 
         if (!$this->company->create($data)) {
             abort(500);
@@ -65,10 +69,12 @@ class CompanyController extends Controller
     public function updateSave($id, Request $request)
     {
         $data = $request->all();
-        $validator = $this->validateCompany($data, false);
+        $validator = $this->validateCompany($data);
 
-        if ($validator->fails())
+        if ($validator->fails()) {
+            $request->flash();
             return \redirect(route('company-update', ['id' => $id]))->withErrors($validator);
+        }
 
         if (!empty($data['logo_img'])) {
             $data['logo_img'] = $data['logo_img']->hashName();
@@ -83,15 +89,32 @@ class CompanyController extends Controller
 
     }
 
-    public function validateCompany($data, $flag = true){
+    public function validateCompany($data, $flag = true)
+    {
         $validator = \Validator::make($data, [
             'name' => 'required|min:3|max:100',
-            'short_name' => 'required|min:1|max:50',
+            'short_name' => 'nullable|min:3|max:50',
             'address' => 'required|min:3|max:100',
-            'invoice_notes' => 'required|min:3|max:1000',
-            'logo_img' => ($flag) ? 'required|' : '' . 'image|max:300',
+            'invoice_notes' => 'nullable|min:3|max:1000',
+            'logo_img' => 'nullable|image|max:300',
         ]);
 
         return $validator;
+    }
+
+    public function deleteImage($id)
+    {
+        $company = $this->company->find($id);
+
+        if (!File::delete(public_path(self::UPLOAD_PATH . '/' . $company->logo_img))) {
+            abort(500);
+        }
+
+        $company->logo_img = '';
+
+        $company->save();
+
+        return redirect(route('company-update', ['id' => $id]))->with(['success' => 'Image has been delete']);
+
     }
 }

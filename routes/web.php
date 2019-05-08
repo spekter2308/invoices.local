@@ -46,6 +46,8 @@ Route::prefix('company')->group(function () {
     Route::get('update/{id}', 'CompanyController@update')->name('company-update')->where(['id' => '[0-9]+']);
     Route::post('create/save', 'CompanyController@createSave')->name('company-create-save');
     Route::post('upload/save/{id}', 'CompanyController@updateSave')->name('company-upload-save')->where(['id' => '[0-9]+']);
+    Route::get('{id}', 'CompanyController@deleteImage')->name('company-image-delete')->where(['id' => '[0-9]+']);
+
 });
 
 //users path

@@ -17,10 +17,10 @@ class CreateCompaniesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('name');
-            $table->string('short_name');
+            $table->string('short_name')->nullable();
             $table->text('address');
-            $table->text('invoice_notes');
-            $table->string('logo_img');
+            $table->text('invoice_notes')->nullable();
+            $table->string('logo_img')->nullable();
 
             $table->timestamps();
         });
