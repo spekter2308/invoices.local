@@ -75,9 +75,9 @@
                         <div class="form-group d-flex">
                             <input type="text" name="invoice_number" id="invoice_number"
                                    class="form-control"
-                                   @blur="$v.invoice.selectedInvoiceNumber.$touch()"
                                    v-model="invoice.selectedInvoiceNumber"
                             >
+                            <!--@blur="$v.invoice.selectedInvoiceNumber.$touch()"-->
                             <!-- Button trigger modal -->
                             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
                                 Edit
@@ -131,8 +131,6 @@
                             <template v-if="$v.invoice.selectedInvoiceNumber.$error">
                                 <small v-if="!$v.invoice.selectedInvoiceNumber.required"
                                 >You must fill number field</small>
-                                <small v-if="!$v.invoice.selectedInvoiceNumber.integer">It should be numeric
-                                    type</small>
                             </template>
                         </div>
                     </div>
@@ -233,6 +231,10 @@
                 type: String,
                 required: true
             },
+            formatNumber: {
+                type: Object,
+                required: false
+            },
             companies: {
                 type: Array,
                 required: true
@@ -266,10 +268,10 @@
                     ]
                 },
                 selectedNumber: {
-                    prefix: this.invoiceNumber.prefix,
-                    start: this.invoiceNumber.start,
-                    postfix: this.invoiceNumber.postfix,
-                    increment: this.invoiceNumber.increment
+                    prefix: this.formatNumber.prefix,
+                    start: this.formatNumber.start,
+                    postfix: this.formatNumber.postfix,
+                    increment: this.formatNumber.increment
                 },
                 notes: ''
             }

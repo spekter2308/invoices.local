@@ -2240,8 +2240,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
 
 
 /*import Items from './ItemsTable.vue'*/
@@ -2254,6 +2252,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     invoiceNumber: {
       type: String,
       required: true
+    },
+    formatNumber: {
+      type: Object,
+      required: false
     },
     companies: {
       type: Array,
@@ -2284,10 +2286,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }]
       },
       selectedNumber: {
-        prefix: this.invoiceNumber.prefix,
-        start: this.invoiceNumber.start,
-        postfix: this.invoiceNumber.postfix,
-        increment: this.invoiceNumber.increment
+        prefix: this.formatNumber.prefix,
+        start: this.formatNumber.start,
+        postfix: this.formatNumber.postfix,
+        increment: this.formatNumber.increment
       },
       notes: ''
     };
@@ -39786,9 +39788,6 @@ var render = function() {
                     },
                     domProps: { value: _vm.invoice.selectedInvoiceNumber },
                     on: {
-                      blur: function($event) {
-                        return _vm.$v.invoice.selectedInvoiceNumber.$touch()
-                      },
                       input: function($event) {
                         if ($event.target.composing) {
                           return
@@ -40035,14 +40034,6 @@ var render = function() {
                     ? [
                         !_vm.$v.invoice.selectedInvoiceNumber.required
                           ? _c("small", [_vm._v("You must fill number field")])
-                          : _vm._e(),
-                        _vm._v(" "),
-                        !_vm.$v.invoice.selectedInvoiceNumber.integer
-                          ? _c("small", [
-                              _vm._v(
-                                "It should be numeric\n                                type"
-                              )
-                            ])
                           : _vm._e()
                       ]
                     : _vm._e()

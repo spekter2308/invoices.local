@@ -39,13 +39,15 @@ class InvoiceController extends Controller
         $increment = $counter->increment;
         $postfix = $counter->postfix;
 
-        $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers);
+        $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
 
         $customers = Customer::latest()->get();
         $companies = Company::latest()->get();
 
         return view('invoices.create', [
             'invoiceNumber' => $invoiceNumber,
+            'invoiceFormatNumber' => $counter,
+            /*'invoiceNumbers' => $invoiceNumbers,*/
             'customers' => $customers,
             'companies' => $companies
         ]);
@@ -103,12 +105,11 @@ class InvoiceController extends Controller
 
     }
 
-    public function checkInArray($prefix, $start, $increment, $postfix, $array)
+    public function checkInArray($prefix, $start, $increment, $postfix, $array, $old_increment)
     {
         $result = $prefix . strval($start + $increment) . $postfix;
-        $newIncrement = $increment + 1;
         if (in_array($result, $array)) {
-            return $this->checkInArray($prefix, $start, $newIncrement, $postfix, $array);
+            return $this->checkInArray($prefix, $start, $increment + $old_increment, $postfix, $array, $old_increment);
         }
         return strval($result);
     }

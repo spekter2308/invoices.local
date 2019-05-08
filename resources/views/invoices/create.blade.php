@@ -37,14 +37,15 @@
                     </div>
                     <button form="createInvoice" class="btn btn-primary send-btn" type="submit">Save</button>
                 </div>
-
                 {{ session('message') }}
                 
                 <div class="card-header mt-3">
                     <invoice-form
-                            :invoice-number=" {{ $invoiceNumber  }}  "
-                            :companies="{{ $companies }}  "
-                            :customers="{{ $customers  }} "
+                            invoice-number= "{{ ($invoiceNumber)  }}"
+                            :format-number="{{ $invoiceFormatNumber }}"
+                            {{--:invoiceNumbers="{{ $invoiceNumbers }}"--}}
+                            :companies="{{ $companies }}"
+                            :customers="{{ $customers  }}"
                     >
                         {{ csrf_field() }}
 
