@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\InvoiceItemName;
 use App\Helper\HasManyRelation;
 use App\Http\Requests\CreateInvoiceRequest;
 use Illuminate\Http\Request;
@@ -39,7 +40,7 @@ class InvoiceController extends Controller
         $increment = $counter->increment;
         $postfix = $counter->postfix;
 
-        $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
+        $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers);
 
         $customers = Customer::latest()->get();
         $companies = Company::latest()->get();
@@ -57,7 +58,7 @@ class InvoiceController extends Controller
     {
 
         $data = $request->input();
-        if(is_array($data['selectedCustomer'])) {
+        if (is_array($data['selectedCustomer'])) {
             $customer = (new Customer())->create([
                 'name' => $data['selectedCustomer']['name'],
                 'address' => $data['selectedCustomer']['address']
@@ -67,7 +68,7 @@ class InvoiceController extends Controller
             $customerId = $data['selectedCustomer'];
         }
 
-        $total = collect($data['selectedItems'])->sum(function($item) {
+        $total = collect($data['selectedItems'])->sum(function ($item) {
             return $item['quantity'] * $item['unitprice'];
         });
 
@@ -84,7 +85,7 @@ class InvoiceController extends Controller
             'status' => 'Draft'
         ]);
 
-        $invoice = DB::transaction(function() use ($invoice, $request) {
+        $invoice = DB::transaction(function () use ($invoice, $request) {
             $counter = Counter::where('key', 'invoice')->first();
             dd($counter);
             $invoice->number = $counter->prefix . $counter->value;
@@ -97,12 +98,65 @@ class InvoiceController extends Controller
         });
 
 
-        if(\request()->expectsJson()){
+        if (\request()->expectsJson()) {
             return \response()->json($invoice);
         }
 
         return back()->with('message', 'success');
 
+    }
+
+    public function selectItem(InvoiceItemName $invoiceItem)
+    {
+        $items = $invoiceItem->latest()->paginate(15);
+        return view('invoices.table-select-item')->with([
+            'items' => $items
+        ]);
+    }
+
+    public function getSelectItem(InvoiceItemName $invoiceItem)
+    {
+        $items = $invoiceItem->all();
+        return \response()->json($items);
+    }
+
+    public function createSelectItem($id = false, InvoiceItemName $invoiceItem)
+    {
+        $item = (!$id) ? $invoiceItem : $invoiceItem->find($id);
+
+        return view('invoices.create-select-item')->with([
+            'item' => $item
+        ]);
+    }
+
+    public function saveSelectItem($id = false, Request $request, InvoiceItemName $invoiceItem)
+    {
+        $validator = \Validator::make($request->all(), [
+            'name' => 'required|min:3|max:100',
+        ]);
+
+        if ($validator->fails())
+            return \redirect(route('create-select-item'))->withErrors($validator);
+
+        $status = (!$id) ? $invoiceItem->create($request->all()) : $invoiceItem->find($id)->update($request->all());
+
+        if (!$status) {
+            abort(500);
+        }
+
+        return redirect(route('select-item'))->with(['success' => 'Item has been save']);
+
+    }
+
+    public function deleteSelectItem($id, InvoiceItemName $invoiceItem)
+    {
+        $status = $invoiceItem->destroy($id);
+
+        if (!$status) {
+            abort(500);
+        }
+
+        return redirect(route('select-item'))->with(['success' => 'Item has been delete']);
     }
 
     public function checkInArray($prefix, $start, $increment, $postfix, $array, $old_increment)
