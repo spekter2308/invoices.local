@@ -41,9 +41,9 @@
                 
                 <div class="card-header mt-3">
                     <invoice-form
+                            :invoice-numbers="{{ json_encode($invoiceNumbers) }}"
                             invoice-number= "{{ ($invoiceNumber)  }}"
                             :format-number="{{ $invoiceFormatNumber }}"
-                            {{--:invoiceNumbers="{{ $invoiceNumbers }}"--}}
                             :companies="{{ $companies }}"
                             :customers="{{ $customers  }}"
                     >

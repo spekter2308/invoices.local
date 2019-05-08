@@ -58,4 +58,5 @@ Route::prefix('user')->group(function () {
 });
 
 //counter
-Route::patch('counters/{counter}');
+Route::patch('counters/{invoiceNumber}', 'CounterController@update');
+Route::get('counters', 'CounterController@index');

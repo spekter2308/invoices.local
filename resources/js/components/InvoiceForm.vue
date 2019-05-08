@@ -84,7 +84,8 @@
                             </button>
 
                             <!-- Modal -->
-                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <form @submit.prevent="editNumber">
                                         <div class="modal-content">
@@ -121,7 +122,8 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                                <button type="button" class="btn btn-primary" @click="sendForm" data-dismiss="modal">Save
+                                                changes</button>
                                             </div>
                                         </div>
                                     </form>
@@ -135,6 +137,7 @@
                         </div>
                     </div>
                 </div>
+                <!--Invoice Date-->
                 <div class="row level">
                     <div class="col-md-4">
                         <h6 class="font-weight-bold">Invoice Date</h6>
@@ -154,6 +157,7 @@
                         </div>
                     </div>
                 </div>
+                <!--Due Date-->
                 <div class="row level">
                     <div class="col-md-4">
                         <h6 class="font-weight-bold">Due Date</h6>
@@ -235,6 +239,10 @@
                 type: Object,
                 required: false
             },
+            invoiceNumbers: {
+                type: Array,
+                required: true
+            },
             companies: {
                 type: Array,
                 required: true
@@ -246,6 +254,7 @@
         },
         data() {
             return {
+                nextInvoiceNumberResponse: '',
                 isTableInvalid: false,
                 eventBus: new Vue(),
                 invoice: {
@@ -254,9 +263,7 @@
                     //selectedFile: null,
                     selectedDateFrom: new Date().toISOString().slice(0,10),
                     selectedDateTo: new Date().toISOString().slice(0,10),
-                    selectedInvoiceNumber: this.invoiceNumber.prefix +
-                                            (parseInt(this.invoiceNumber.start) + parseInt(this.invoiceNumber.increment)) +
-                                            this.invoiceNumber.postfix || this.invoiceNumber,
+                    selectedInvoiceNumber: this.invoiceNumber,
                     selectedItems: [
                         {
                             id: 1,
@@ -268,10 +275,10 @@
                     ]
                 },
                 selectedNumber: {
-                    prefix: this.formatNumber.prefix,
-                    start: this.formatNumber.start,
-                    postfix: this.formatNumber.postfix,
-                    increment: this.formatNumber.increment
+                    prefix: this.formatNumber.prefix || '',
+                    start: this.formatNumber.start || 0,
+                    postfix: this.formatNumber.postfix || '',
+                    increment: this.formatNumber.increment || 1
                 },
                 notes: ''
             }
@@ -335,13 +342,16 @@
             this.sendButton = document.querySelector('.send-btn')
         },
         methods: {
+            updateNextNumber() {
+                axios.get('/counters').then(response => (this.nextInvoiceNumberResponse = response.data))
+            },
             resetInvoice() {
                 this.invoice.selectedCompany = NaN
                 this.invoice.selectedCustomer = {}
                 //this.invoice.selectedFile = null
                 this.invoice.selectedDateFrom = new Date().toISOString().slice(0, 10)
                 this.invoice.selectedDateTo = new Date().toISOString().slice(0, 10)
-                this.invoice.selectedInvoiceNumber = this.invoiceNumber + '1';
+                this.invoice.selectedInvoiceNumber = this.nextInvoiceNumberResponse;
                 this.invoice.selectedItems = [
                     {
                         id: 1,
@@ -361,8 +371,9 @@
                     this.eventBus.$emit('reset', true)
                     if (!this.$v.$error && !this.isTableInvalid) {
                         console.log(JSON.stringify(this.invoice));
-                        await axios.post('/invoices', this.invoice)
-                        this.resetInvoice()
+                        await axios.post('/invoices', this.invoice);
+                        this.updateNextNumber();
+                        this.resetInvoice();
                         this.eventBus.$emit('update', true)
                         this.$v.$reset()
                         console.log('resetting')
@@ -372,19 +383,35 @@
                     // this.$v.$reset()
                 }
             },
+            sendForm() {
+                this.editNumber();
+            },
             async editNumber() {
                 try {
                     console.log(JSON.stringify(this.selectedNumber));
-                    this.axios.patch('/counters/' + this.invoiceNumber.id, this.selectedNumber);
+                    await axios.patch('/counters/' + this.formatNumber.id, this.selectedNumber);
+                    this.invoice.selectedInvoiceNumber = this.invoiceNum;
+                    this.updateNextNumber();
                 } catch (e) {
-
+                    console.log(e)
                 }
             },
+            /*updateInvoiceNum() {
+                //axios.get('/')
+            },*/
             getInvoiceNotes(variable){
                 this.notes = variable;
-            }
-        },
+            },
+            checkInArray(prefix, start, increment, postfix, array, old_increment) {
+                let result = prefix + (parseInt(start) + parseInt(increment)) + postfix;
+                if (array.includes(result)){
+                    return this.checkInArray(prefix, start, (parseInt(increment) + parseInt(old_increment)), postfix,
+                        array, old_increment);
+                }
+                return result;
+            },
 
+        },
         computed: {
             currentDate() {
                 return new Date().toISOString().slice(0,10);
@@ -393,10 +420,10 @@
                 return this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0)
             },
             invoiceNum(){
-                return this.selectedNumber.prefix +
-                    (parseInt(this.selectedNumber.start) + parseInt(this.selectedNumber.increment)) +
-                    this.selectedNumber.postfix;
-            }
+                return this.checkInArray(this.selectedNumber.prefix, this.selectedNumber.start,
+                    this.selectedNumber.increment, this.selectedNumber.postfix, this.invoiceNumbers,
+                    this.selectedNumber.increment);
+            },
         }
     }
     function isObject(v) {

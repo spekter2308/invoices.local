@@ -40,7 +40,7 @@ class InvoiceController extends Controller
         $increment = $counter->increment;
         $postfix = $counter->postfix;
 
-        $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers);
+        $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
 
         $customers = Customer::latest()->get();
         $companies = Company::latest()->get();
@@ -48,7 +48,7 @@ class InvoiceController extends Controller
         return view('invoices.create', [
             'invoiceNumber' => $invoiceNumber,
             'invoiceFormatNumber' => $counter,
-            /*'invoiceNumbers' => $invoiceNumbers,*/
+            'invoiceNumbers' => $invoiceNumbers,
             'customers' => $customers,
             'companies' => $companies
         ]);
@@ -85,9 +85,9 @@ class InvoiceController extends Controller
             'status' => 'Draft'
         ]);
 
-        $invoice = DB::transaction(function () use ($invoice, $request) {
+        /*$invoice = DB::transaction(function () use ($invoice, $request) {
             $counter = Counter::where('key', 'invoice')->first();
-            dd($counter);
+            //dd($counter);
             $invoice->number = $counter->prefix . $counter->value;
             // custom method from app/Helper/HasManyRelation
             $invoice->storeHasMany([
@@ -95,7 +95,7 @@ class InvoiceController extends Controller
             ]);
             $counter->increment('value');
             return $invoice;
-        });
+        });*/
 
 
         if (\request()->expectsJson()) {

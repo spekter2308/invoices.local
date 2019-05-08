@@ -50,7 +50,9 @@
             "database/seeds/InvoiceTableSeeder.php",
             "database/seeds/CustomerTableSeeder.php",
             "database/seeds/CompanyTableSeeder.php",
-            "database/seeds/CounterTableSeeder.php"
+            "database/seeds/CounterTableSeeder.php",
+            "database/seeds/UserTableSeeder.php",
+            "database/seeds/RoleTableSeeder.php"
         ]
     },
     "minimum-stability": "dev",

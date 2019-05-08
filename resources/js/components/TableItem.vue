@@ -4,13 +4,7 @@
         <div class="item-name">
             <select class="form-control" name="item-name[]" v-model="tableItem.item"
                     @blur="validationItem.item.$touch()">
-                <option></option>
-                <option>Days</option>
-                <option>Hours</option>
-                <option>Product</option>
-                <option>Service</option>
-                <option>Expense</option>
-                <option>Discount</option>
+                <option v-for="item in name.data">{{item.name}}</option>
             </select>
         </div>
         <div class="item-description">
@@ -56,8 +50,15 @@
 </template>
 
 <script>
+    import axios from 'axios'
+
     export default {
         name: "TableItem",
+        data() {
+            return {
+                name: []
+            }
+        },
         props: {
             tableItem: {
                 type: Object,
@@ -67,6 +68,11 @@
                 type: Object,
                 required: true
             }
+        },
+        mounted() {
+            axios
+                .get('/invoices/get/select-item')
+                .then(response => (this.name = response));
         },
         computed: {
             total() {
