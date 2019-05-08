@@ -56,3 +56,6 @@ Route::prefix('user')->group(function () {
     Route::post('update/save/{id}', 'UserController@updateSave')->name('users-update-save')->where(['id' => '[0-9]+']);
     Route::delete('{id}', 'UserController@destroy')->name('user-destroy')->where(['id' => '[0-9]+']);
 });
+
+//counter
+Route::patch('counters/{counter}');

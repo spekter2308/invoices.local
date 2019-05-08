@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\InvoiceItemName;
+use App\Helper\HasManyRelation;
 use App\Http\Requests\CreateInvoiceRequest;
 use Illuminate\Http\Request;
 use App\Invoice;
@@ -11,9 +12,13 @@ use App\Company;
 use App\Item;
 use Http\Env\Response;
 use App\Http\Controllers\Controller;
+use App\Counter;
+use DB;
 
 class InvoiceController extends Controller
 {
+    use HasManyRelation;
+
     public function index(Invoice $invoice)
     {
         $invoices = $invoice->latest()->with(['company', 'customer'])->get();
@@ -27,7 +32,16 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        $invoiceNumber = Invoice::all()->last()->number + 1;
+        //check for unique invoice number
+        $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
+        $counter = Counter::where(['user_id' => auth()->id()])->first();
+        $prefix = $counter->prefix;
+        $start = $counter->start;
+        $increment = $counter->increment;
+        $postfix = $counter->postfix;
+
+        $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers);
+
         $customers = Customer::latest()->get();
         $companies = Company::latest()->get();
 
@@ -42,7 +56,7 @@ class InvoiceController extends Controller
     {
 
         $data = $request->input();
-        if(is_array($data['selectedCustomer'])) {
+        if (is_array($data['selectedCustomer'])) {
             $customer = (new Customer())->create([
                 'name' => $data['selectedCustomer']['name'],
                 'address' => $data['selectedCustomer']['address']
@@ -52,7 +66,7 @@ class InvoiceController extends Controller
             $customerId = $data['selectedCustomer'];
         }
 
-        $total = collect($data['selectedItems'])->sum(function($item) {
+        $total = collect($data['selectedItems'])->sum(function ($item) {
             return $item['quantity'] * $item['unitprice'];
         });
 
@@ -66,22 +80,23 @@ class InvoiceController extends Controller
             'subtotal' => $total,
             'total' => $total,
             'balance' => $total,
-            'status' => 'Paid'
+            'status' => 'Draft'
         ]);
 
-        /*foreach($data['selectedItems'] as $key => $items) {
-            $newItems = [];
-            foreach($items as $item) {
-                $model = $invoice->{$key}()->getModel();
-                $newItems[] = $model->create([
-                    'name' => $item['']
-                ]);
-            }
-            // save
-            $this->{$key}()->saveMany($newItems);
-        }*/
+        $invoice = DB::transaction(function () use ($invoice, $request) {
+            $counter = Counter::where('key', 'invoice')->first();
+            dd($counter);
+            $invoice->number = $counter->prefix . $counter->value;
+            // custom method from app/Helper/HasManyRelation
+            $invoice->storeHasMany([
+                'items' => $request->items
+            ]);
+            $counter->increment('value');
+            return $invoice;
+        });
 
-        if(\request()->expectsJson()){
+
+        if (\request()->expectsJson()) {
             return \response()->json($invoice);
         }
 
@@ -140,5 +155,15 @@ class InvoiceController extends Controller
         }
 
         return redirect(route('select-item'))->with(['success' => 'Item has been delete']);
+    }
+
+    public function checkInArray($prefix, $start, $increment, $postfix, $array)
+    {
+        $result = $prefix . strval($start + $increment) . $postfix;
+        $newIncrement = $increment + 1;
+        if (in_array($result, $array)) {
+            return $this->checkInArray($prefix, $start, $newIncrement, $postfix, $array);
+        }
+        return strval($result);
     }
 }
