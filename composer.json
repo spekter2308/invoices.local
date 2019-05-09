@@ -52,7 +52,8 @@
             "database/seeds/CompanyTableSeeder.php",
             "database/seeds/CounterTableSeeder.php",
             "database/seeds/UserTableSeeder.php",
-            "database/seeds/RoleTableSeeder.php"
+            "database/seeds/RoleTableSeeder.php",
+            "database/seeds/ItemsNameTableSeeder.php"
         ]
     },
     "minimum-stability": "dev",

@@ -16,6 +16,9 @@ $box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 
 $border-color: #f2f2f2;
 
+.invoice-create-body{
+  background-color: #fff;
+}
 
 .wrapper-invoice-create {
   display: grid;
@@ -67,7 +70,7 @@ $border-color: #f2f2f2;
   
   .items-table-header, .items-table-row{
     display: grid;
-    height: 35px;
+    //height: 35px;
     grid-template-columns: 1.5fr 3fr 1fr 1fr 1fr;
     //grid-auto-rows: minmax(100px, auto);
   }
@@ -112,4 +115,79 @@ $border-color: #f2f2f2;
   grid-area: invoice-box-6;
   margin-top: 30px;
   margin-left: 30px;
+}
+
+
+.btn {
+  border: none;
+  border-radius: $border-radius;
+  font-size: 13px;
+  line-height: 13px;
+  padding: 8px 16px;
+  display: inline-block;
+  cursor: pointer;
+  transition: background 0.2s;
+  user-select: none;
+  background: $color-grey;
+  box-shadow: 0 1px darken($color-grey, 10%);
+  &:focus {
+    outline-style: dotted;
+    outline-width: 1px;
+    outline-offset: 1px;
+  }
+  &:active {
+    box-shadow: $box-shadow;
+  }
+  &[disabled] {
+    opacity: 0.75;
+    cursor: not-allowed;
+  }
+}
+
+a.btn {
+  color: $text-color;
+  text-decoration: none;
+}
+
+a.btn-primary {
+  color: #fff;
+}
+
+.btn-primary {
+  background: $color-primary;
+  color: #fff;
+  box-shadow: 0 1px darken($color-primary, 15%);
+}
+
+.btn-danger {
+  background: $color-error;
+  color: #fff;
+  box-shadow: 0 1px darken($color-error, 15%);
+}
+
+.btn-success {
+  background: $color-success;
+  color: #fff;
+  box-shadow: 0 1px darken($color-success, 15%);
+}
+
+.btn-sm {
+  padding: 4px 8px;
+}
+
+
+.error-control {
+  display: block;
+  color: #e75650;
+  padding-left: 8px;
+}
+
+.form-group{
+  margin-bottom: 0;
+  padding: 8px;
+}
+
+.form-group-table{
+  margin-bottom: 0;
+  padding-bottom: 8px;
 }

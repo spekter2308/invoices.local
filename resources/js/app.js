@@ -39,7 +39,7 @@ Vue.component('items-table', require('./components/ItemsTable.vue').default);
 import Vuelidate from 'vuelidate'
 Vue.use(Vuelidate)
 
-
+window.eventBus = new Vue()
 const app = new Vue({
     el: '#app',
 

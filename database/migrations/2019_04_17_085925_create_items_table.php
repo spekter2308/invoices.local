@@ -17,12 +17,15 @@ class CreateItemsTable extends Migration
             $table->bigIncrements('id');
 
             $table->unsignedInteger('invoice_id');
-            $table->string('name');
-            $table->string('description');
-            $table->float('unit_price');
+            $table->string('item');
+            $table->string('description')->nullable();
+            $table->float('unitprice');
             $table->float('quantity');
             $table->double('tax')->default(0)->nullable();
-            $table->float('amount');
+
+            //for vue validation
+            $table->boolean('dirty')->nullable();
+            $table->boolean('correct')->nullable();
 
             $table->timestamps();
         });

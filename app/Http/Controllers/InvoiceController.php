@@ -56,8 +56,20 @@ class InvoiceController extends Controller
 
     public function store(CreateInvoiceRequest $request)
     {
-
         $data = $request->input();
+
+        //check for unique invoice number
+        $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
+        $counter = Counter::where(['user_id' => auth()->id()])->first();
+        $prefix = $counter->prefix;
+        $start = $counter->start;
+        $increment = $counter->increment;
+        $postfix = $counter->postfix;
+
+        if(in_array($data['selectedInvoiceNumber'], $invoiceNumbers)) {
+            $data['selectedInvoiceNumber'] = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
+        }
+
         if (is_array($data['selectedCustomer'])) {
             $customer = (new Customer())->create([
                 'name' => $data['selectedCustomer']['name'],
@@ -85,24 +97,20 @@ class InvoiceController extends Controller
             'status' => 'Draft'
         ]);
 
-        /*$invoice = DB::transaction(function () use ($invoice, $request) {
-            $counter = Counter::where('key', 'invoice')->first();
-            //dd($counter);
-            $invoice->number = $counter->prefix . $counter->value;
-            // custom method from app/Helper/HasManyRelation
+        $invoice = DB::transaction(function () use ($invoice, $request) {
             $invoice->storeHasMany([
-                'items' => $request->items
+                'items' => $request->selectedItems
             ]);
-            $counter->increment('value');
+
             return $invoice;
-        });*/
+        });
 
 
         if (\request()->expectsJson()) {
             return \response()->json($invoice);
         }
 
-        return back()->with('message', 'success');
+        return \response()->with(['saved' => true, 'invoice' => $invoice]);
 
     }
 

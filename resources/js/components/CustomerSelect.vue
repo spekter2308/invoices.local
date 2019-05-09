@@ -1,17 +1,17 @@
 <template>
     <div>
         <h4>To</h4>
-        <select class="custom-select"  v-model="customer" @change="toggleActive">
-            <option selected :value="emptyObj">New Customer ...</option>
-            <option v-for="customer of customers" :value="customer" :key="customer.id">{{ customer.name
-                }}</option>
-        </select>
-        <br><br>
-
+        <div class="form-group">
+            <select class="custom-select"  v-model="customer" @change="toggleActive">
+                <option selected :value="emptyObj">New Customer ...</option>
+                <option v-for="customer of customers" :value="customer" :key="customer.id">{{ customer.name
+                    }}</option>
+            </select>
+        </div>
         <div class="form-group" v-if="editing">
             <input class="form-control" v-model="enteredname" @blur="$v.enteredname.$touch()">
             <template v-if="$v.enteredname.$error">
-                <small v-if="!$v.enteredname.required"
+                <small class="error-control" v-if="!$v.enteredname.required"
                 >Please type name</small>
             </template>
         </div>
@@ -24,10 +24,10 @@
         </div>
 
         <div class="form-group" v-if="editing">
-            <textarea name="" class="form-control" v-model="enteredaddress" @blur="$v.enteredaddress.$touch()">
+            <textarea class="form-control" v-model="enteredaddress" @blur="$v.enteredaddress.$touch()">
             </textarea>
             <template v-if="$v.enteredaddress.$error">
-                <small v-if="!$v.enteredaddress.required"
+                <small class="error-control" v-if="!$v.enteredaddress.required"
                 >Please type address</small>
             </template>
         </div>
@@ -39,10 +39,6 @@
     export default {
         inheritAttrs: false,
         props: {
-            bus: {
-                type: Object,
-                required: true
-            },
             customers: {
                 type: Array,
                 required: true
@@ -116,7 +112,7 @@
             }
         },
         mounted() {
-            this.bus.$on('update', _ => {
+            eventBus.$on('update', _ => {
                 this.editing = true;
                 this.customer = {}
             })

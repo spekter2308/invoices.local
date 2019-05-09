@@ -23,12 +23,11 @@ class InvoiceTableSeeder extends Seeder
                 $unitPrice = $faker->numberBetween(100, 1000);
                 $quantity = $faker->numberBetween(1, 10);
                 $items->push(new Item([
-                    'name' => $faker->name,
+                    'item' => $faker->name,
                     'description' => $faker->sentence(rand(1, 5), true),
-                    'unit_price' => $unitPrice,
+                    'unitprice' => $unitPrice,
                     'quantity' => $quantity,
                     'tax' => 0,
-                    'amount' => ($unitPrice * $quantity)
                 ]));
             }
             $subTotal = $items->sum('amount');

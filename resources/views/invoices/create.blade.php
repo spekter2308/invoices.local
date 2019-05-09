@@ -39,7 +39,7 @@
                 </div>
                 {{ session('message') }}
                 
-                <div class="card-header mt-3">
+                <div class="mt-3 invoice-create-body">
                     <invoice-form
                             :invoice-numbers="{{ json_encode($invoiceNumbers) }}"
                             invoice-number= "{{ ($invoiceNumber)  }}"

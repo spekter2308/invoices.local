@@ -13,7 +13,7 @@ class CounterTableSeeder extends Seeder
     public function run()
     {
         $counter = Counter::create([
-            'user_id' => 1,
+            'user_id' => 2,
             'prefix' => '0000',
             'start' => 0,
             'increment' => 1,
