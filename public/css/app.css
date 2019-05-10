@@ -10683,6 +10683,33 @@ a.text-dark:focus {
   grid-area: invoice-box-1;
 }
 
+.invoice-from-to-customer-box .company-data-show {
+  min-height: 200px;
+  margin-top: 10px;
+}
+
+.invoice-from-to-customer-box .company-data-show span {
+  display: block;
+}
+
+.invoice-from-to-customer-box .customer-data-show {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 200px;
+  margin-top: 10px;
+}
+
+.invoice-from-to-customer-box .customer-data-show span {
+  display: block;
+}
+
+.invoice-from-to-customer-box .customer-data-show a {
+  text-decoration: none;
+  color: grey;
+  font-weight: bold;
+}
+
 .invoice-logo-box {
   grid-area: invoice-box-2;
 }
@@ -10725,6 +10752,44 @@ a.text-dark:focus {
 
 .invoice-item-box .items-table-header > div {
   padding: 3px 14px;
+}
+
+.invoice-item-box .items-table-header-show,
+.invoice-item-box .items-table-row-show {
+  display: grid;
+  grid-template-columns: 3fr 6fr 1fr 1fr 1fr;
+}
+
+.invoice-item-box .items-table-header-show {
+  margin: 0;
+  background-color: #54A0E7;
+  color: #eee;
+}
+
+.invoice-item-box .items-table-header-show > div {
+  padding: 3px 14px;
+}
+
+.invoice-item-box .items-table-row-show {
+  border: 1px solid #ced4da;
+  border-top: none;
+}
+
+.invoice-item-box .items-table-row-show > div {
+  padding: 3px 14px;
+}
+
+.invoice-item-box .invoice-notes-result {
+  display: grid;
+  grid-column-gap: 10px;
+  grid-template-columns: 3fr 2fr;
+  border: 1px solid #ced4da;
+  border-top: none;
+  padding: 3px 10px;
+}
+
+.invoice-item-box .invoice-notes-result .invoice-notes {
+  border-right: 1px solid #ced4da;
 }
 
 .invoice-item-box .remove-item-button {

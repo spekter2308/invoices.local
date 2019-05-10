@@ -200,10 +200,6 @@
             </div>
             <!-- {{--Items part--}} -->
 
-            <!--  <div class="invoice-box invoice-item-box">
-                      @include('invoices.items_table')
-                  </div>        -->
-
             <div class="invoice-box invoice-item-box">
                 <items-table :items="invoice.selectedItems"
                              :is-dirty="$v.$dirty"

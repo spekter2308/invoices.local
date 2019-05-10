@@ -20,7 +20,7 @@
                     <a class="dropdown-item" href="#">Action</a>
                     <a class="dropdown-item" href="#">Another action</a>
                 </div>
-                {{ $invoice->number }}
+                <a href="/invoices/{{ $invoice->id }}">{{ $invoice->number }}</a>
             </div>
         </td>
         

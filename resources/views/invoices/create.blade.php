@@ -37,8 +37,7 @@
                     </div>
                     <button form="createInvoice" class="btn btn-primary send-btn" type="submit">Save</button>
                 </div>
-                {{ session('message') }}
-                
+
                 <div class="mt-3 invoice-create-body">
                     <invoice-form
                             :invoice-numbers="{{ json_encode($invoiceNumbers) }}"

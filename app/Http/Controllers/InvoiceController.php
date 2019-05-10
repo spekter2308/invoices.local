@@ -109,6 +109,13 @@ class InvoiceController extends Controller
 
     }
 
+    public function show($id)
+    {
+        $invoice = Invoice::findOrFail($id);
+
+        return view('invoices.show', compact('invoice'));
+    }
+
     public function getInvoicesByCustomer($id)
     {
         $customer = Customer::findOrFail($id);
