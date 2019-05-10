@@ -27,6 +27,8 @@ Route::get('invoices/get/select-item', 'InvoiceController@getSelectItem')->name(
 Route::get('invoices/create/select-item/{id?}', 'InvoiceController@createSelectItem')->name('create-select-item')->where(['id' => '[0-9]+']);
 Route::post('invoices/save/select-item/{id?}', 'InvoiceController@saveSelectItem')->name('save-select-item')->where(['id' => '[0-9]+']);
 Route::delete('invoices/destroy/select-item/{id}', 'InvoiceController@deleteSelectItem')->name('delete-select-item')->where(['id' => '[0-9]+']);
+Route::get('invoices/customer/{customer}', 'InvoiceController@getInvoicesByCustomer')->name('customer-invoices');
+
 
 Route::post('invoices', 'InvoiceController@store');
 
@@ -38,6 +40,7 @@ Route::post('customers/{customer}', 'CustomerController@update');
 Route::get('customers/{customer}/edit', 'CustomerController@edit');
 Route::patch('customers/{customer}', 'CustomerController@update');
 Route::delete('customers/{customer}', 'CustomerController@destroy');
+
 
 //companies part
 Route::prefix('company')->group(function () {

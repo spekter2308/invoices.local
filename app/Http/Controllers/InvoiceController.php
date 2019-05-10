@@ -105,14 +105,19 @@ class InvoiceController extends Controller
             return $invoice;
         });
 
-
-        if (\request()->expectsJson()) {
-            return \response()->json($invoice);
-        }
-
-        return \response()->with(['saved' => true, 'invoice' => $invoice]);
+        return $invoice;
 
     }
+
+    public function getInvoicesByCustomer($id)
+    {
+        $customer = Customer::findOrFail($id);
+        $invoices = $customer->invoices;
+
+        return view('invoices.index', compact('invoices'));
+    }
+
+
 
     public function selectItem(InvoiceItemName $invoiceItem)
     {

@@ -9,7 +9,7 @@
                        <option v-for="item in name.data">{{item.name}}</option>
                    </select>
                    <template v-if="isDirty && tableItem.dirty">
-                       <small v-if="!itemRequired" class="error-control">Item name is required</small>
+                       <small class="error-control" v-if="!itemRequired">Item name is required</small>
                    </template>
                </div>
            </div>
@@ -20,7 +20,7 @@
                           @blur="makeDirty"
                           v-model="tableItem.description">
                 </textarea>
-               </div>
+                </div>
            </div>
            <div class="item-unit-price">
                <div class="form-group-table">
@@ -31,6 +31,10 @@
                           @keypress="checkForFloats"
                           @blur="makeDirty"
                           v-model.number="tableItem.unitprice">
+                   <template v-if="isDirty && tableItem.dirty">
+                       <small v-if="!unitPriceFloat" class="error-control">Uniprice must be floating number</small>
+                       <small v-if="!unitPriceRequired" class="error-control">Uniprice is required</small>
+                   </template>
                </div>
            </div>
            <div class="item-quantity">
@@ -42,6 +46,10 @@
                           name="item-quantity[]" placeholder="1"
                           @blur="makeDirty"
                           v-model.number="tableItem.quantity">
+                   <template v-if="isDirty && tableItem.dirty">
+                       <small v-if="!quantityRequired" class="error-control">Quantity is required</small>
+                       <small v-if="!quantityInteger" class="error-control">Quantity must be integer number</small>
+                   </template>
                </div>
            </div>
            <div class="item-total">
@@ -52,13 +60,6 @@
                </div>
            </div>
        </div>
-       <template v-if="isDirty && tableItem.dirty">
-
-           <h4 v-if="!quantityRequired" class="error">quantity is required</h4>
-           <h4 v-if="!quantityInteger" class="error">quantity must be integer number</h4>
-           <h4 v-if="!unitPriceRequired" class="error">uniprice is required</h4>
-           <h4 v-if="!unitPriceFloat" class="error">uniprice must be floating number</h4>
-       </template>
    </div>
 </template>
 

@@ -34,7 +34,6 @@
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{route('company-list')}}">Profiles</a>
                                         <a class="dropdown-item" href="{{route('users-list')}}">Users</a>
-                                        <a class="dropdown-item" href="#">Invoice numbers</a>
                                         <a class="dropdown-item" href="#">Buy Premium</a>
                                     </div>
                                 </li>

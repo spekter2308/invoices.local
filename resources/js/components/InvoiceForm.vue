@@ -208,7 +208,7 @@
                 <items-table :items="invoice.selectedItems"
                              :is-dirty="$v.$dirty"
                 ></items-table>
-                <p v-if="isTableRowsInvalid && $v.$dirty" class="error">Please correct table data</p>
+                <small v-if="isTableRowsInvalid && $v.$dirty" class="error-control-table">Please type table data</small>
             </div>
 
             <div class="invoice-box invoice-notes-box">
@@ -374,8 +374,9 @@
         methods: {
             updateNextNumber() {
                 return axios.get('/counters').then(response => {
-                    this.nextInvoiceNumberResponse = response.data
-
+                    this.nextInvoiceNumberResponse = response.data.invoiceNumber;
+                    this.invoiceNumbers = response.data.invoiceNumbers;
+                    console.log(this.invoiceNumbers)
                 })
             },
             resetSelectedNumber() {
@@ -404,6 +405,7 @@
                         correct: false
                     }
                 ]
+                this.notes = ''
                 //this.isTableInvalid = false
             },
             async onSubmit() {

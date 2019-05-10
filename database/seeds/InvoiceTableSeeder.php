@@ -14,7 +14,7 @@ class InvoiceTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Factory::create();
+        /*$faker = Factory::create();
         Invoice::truncate();
         Item::truncate();
         foreach (range(1, 20) as $i) {
@@ -48,6 +48,6 @@ class InvoiceTableSeeder extends Seeder
                 'status' => 'Partial'
             ]);
             $invoice->items()->saveMany($items);
-        }
+        }*/
     }
 }

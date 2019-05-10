@@ -2395,7 +2395,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this = this;
 
       return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/counters').then(function (response) {
-        _this.nextInvoiceNumberResponse = response.data;
+        _this.nextInvoiceNumberResponse = response.data.invoiceNumber;
+        _this.invoiceNumbers = response.data.invoiceNumbers;
+        console.log(_this.invoiceNumbers);
       });
     },
     resetSelectedNumber: function resetSelectedNumber() {
@@ -2421,7 +2423,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         unitprice: 1,
         dirty: false,
         correct: false
-      }]; //this.isTableInvalid = false
+      }];
+      this.notes = ''; //this.isTableInvalid = false
     },
     onSubmit: function () {
       var _onSubmit = _asyncToGenerator(
@@ -2669,9 +2672,9 @@ var id = 1;
   methods: {
     addNewLine: function addNewLine() {
       this.items.push({
-        id: id++,
-        description: null,
+        //id: id++,
         item: null,
+        description: null,
         quantity: 1,
         unitprice: 1,
         dirty: false
@@ -2747,6 +2750,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
+//
 //
 //
 //
@@ -40398,8 +40402,8 @@ var render = function() {
             }),
             _vm._v(" "),
             _vm.isTableRowsInvalid && _vm.$v.$dirty
-              ? _c("p", { staticClass: "error" }, [
-                  _vm._v("Please correct table data")
+              ? _c("small", { staticClass: "error-control-table" }, [
+                  _vm._v("Please type table data")
                 ])
               : _vm._e()
           ],
@@ -40708,103 +40712,104 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c(
-        "div",
-        {
-          staticClass: "items-table-row",
-          attrs: { id: "items-row", "item-list": "" }
-        },
-        [
-          _c("div", { staticClass: "item-name" }, [
-            _c(
-              "div",
-              { staticClass: "form-group-table" },
-              [
-                _c(
-                  "select",
-                  {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.tableItem.item,
-                        expression: "tableItem.item"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    on: {
-                      blur: _vm.makeDirty,
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.tableItem,
-                          "item",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
+  return _c("div", [
+    _c(
+      "div",
+      {
+        staticClass: "items-table-row",
+        attrs: { id: "items-row", "item-list": "" }
+      },
+      [
+        _c("div", { staticClass: "item-name" }, [
+          _c(
+            "div",
+            { staticClass: "form-group-table" },
+            [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.tableItem.item,
+                      expression: "tableItem.item"
                     }
-                  },
-                  _vm._l(_vm.name.data, function(item) {
-                    return _c("option", [_vm._v(_vm._s(item.name))])
-                  }),
-                  0
-                ),
-                _vm._v(" "),
-                _vm.isDirty && _vm.tableItem.dirty
-                  ? [
-                      !_vm.itemRequired
-                        ? _c("small", { staticClass: "error-control" }, [
-                            _vm._v("Item name is required")
-                          ])
-                        : _vm._e()
-                    ]
-                  : _vm._e()
-              ],
-              2
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "item-description" }, [
-            _c("div", { staticClass: "form-group-table" }, [
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.tableItem.description,
-                    expression: "tableItem.description"
-                  }
-                ],
-                staticClass: "form-control",
-                attrs: { rows: "1", name: "item-description[]" },
-                domProps: { value: _vm.tableItem.description },
-                on: {
-                  blur: _vm.makeDirty,
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+                  ],
+                  staticClass: "form-control",
+                  on: {
+                    blur: _vm.makeDirty,
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.tableItem,
+                        "item",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
                     }
-                    _vm.$set(_vm.tableItem, "description", $event.target.value)
                   }
+                },
+                _vm._l(_vm.name.data, function(item) {
+                  return _c("option", [_vm._v(_vm._s(item.name))])
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _vm.isDirty && _vm.tableItem.dirty
+                ? [
+                    !_vm.itemRequired
+                      ? _c("small", { staticClass: "error-control" }, [
+                          _vm._v("Item name is required")
+                        ])
+                      : _vm._e()
+                  ]
+                : _vm._e()
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "item-description" }, [
+          _c("div", { staticClass: "form-group-table" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.tableItem.description,
+                  expression: "tableItem.description"
                 }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "item-unit-price" }, [
-            _c("div", { staticClass: "form-group-table" }, [
+              ],
+              staticClass: "form-control",
+              attrs: { rows: "1", name: "item-description[]" },
+              domProps: { value: _vm.tableItem.description },
+              on: {
+                blur: _vm.makeDirty,
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.tableItem, "description", $event.target.value)
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "item-unit-price" }, [
+          _c(
+            "div",
+            { staticClass: "form-group-table" },
+            [
               _c("input", {
                 directives: [
                   {
@@ -40843,12 +40848,33 @@ var render = function() {
                     )
                   }
                 }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "item-quantity" }, [
-            _c("div", { staticClass: "form-group-table" }, [
+              }),
+              _vm._v(" "),
+              _vm.isDirty && _vm.tableItem.dirty
+                ? [
+                    !_vm.unitPriceFloat
+                      ? _c("small", { staticClass: "error-control" }, [
+                          _vm._v("Uniprice must be floating number")
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    !_vm.unitPriceRequired
+                      ? _c("small", { staticClass: "error-control" }, [
+                          _vm._v("Uniprice is required")
+                        ])
+                      : _vm._e()
+                  ]
+                : _vm._e()
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "item-quantity" }, [
+          _c(
+            "div",
+            { staticClass: "form-group-table" },
+            [
               _c("input", {
                 directives: [
                   {
@@ -40887,57 +40913,45 @@ var render = function() {
                     )
                   }
                 }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "item-total" }, [
-            _c("div", { staticClass: "form-group-table" }, [
-              _c("input", {
-                staticClass: "form-control",
-                attrs: {
-                  type: "number",
-                  name: "item-total[]",
-                  placeholder: "0.00",
-                  disabled: ""
-                },
-                domProps: { value: _vm.total }
-              })
-            ])
+              }),
+              _vm._v(" "),
+              _vm.isDirty && _vm.tableItem.dirty
+                ? [
+                    !_vm.quantityRequired
+                      ? _c("small", { staticClass: "error-control" }, [
+                          _vm._v("Quantity is required")
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    !_vm.quantityInteger
+                      ? _c("small", { staticClass: "error-control" }, [
+                          _vm._v("Quantity must be integer number")
+                        ])
+                      : _vm._e()
+                  ]
+                : _vm._e()
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "item-total" }, [
+          _c("div", { staticClass: "form-group-table" }, [
+            _c("input", {
+              staticClass: "form-control",
+              attrs: {
+                type: "number",
+                name: "item-total[]",
+                placeholder: "0.00",
+                disabled: ""
+              },
+              domProps: { value: _vm.total }
+            })
           ])
-        ]
-      ),
-      _vm._v(" "),
-      _vm.isDirty && _vm.tableItem.dirty
-        ? [
-            !_vm.quantityRequired
-              ? _c("h4", { staticClass: "error" }, [
-                  _vm._v("quantity is required")
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            !_vm.quantityInteger
-              ? _c("h4", { staticClass: "error" }, [
-                  _vm._v("quantity must be integer number")
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            !_vm.unitPriceRequired
-              ? _c("h4", { staticClass: "error" }, [
-                  _vm._v("uniprice is required")
-                ])
-              : _vm._e(),
-            _vm._v(" "),
-            !_vm.unitPriceFloat
-              ? _c("h4", { staticClass: "error" }, [
-                  _vm._v("uniprice must be floating number")
-                ])
-              : _vm._e()
-          ]
-        : _vm._e()
-    ],
-    2
-  )
+        ])
+      ]
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -55599,8 +55613,8 @@ $('#customreTabs a[href="#contact-info"]').click(function (e) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

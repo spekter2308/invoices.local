@@ -11,9 +11,7 @@
                        <div class="level">
                            <span class="flex">
                                <h1>List of Invoices</h1>
-                               <button class="btn btn-link">
-                                   Show filter
-                               </button>
+                               <button class="btn btn-link">Show filter</button>
                            </span>
 
                            <a href="/invoices/create" class="btn btn-primary">New Invoice</a>
@@ -37,7 +35,9 @@
                         <tr>
                             <th scope="col">
                                 <div class="dropdown">
-                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button class="btn-select dropdown-toggle bg-primary text-white" type="button"
+                                            id="dropdownMenuButton"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" href="#">Action</a>
@@ -56,59 +56,13 @@
                             <th scope="col">Toral</th>
                             <th scope="col">Balance</th>
                             <th scope="col">Status</th>
+                            <th class="bg-white"></th>
                             {{--<th scope="col">Mark Paid</th>--}}
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($invoices as $invoice)
-                            @php
-                                /** @var \App\Invoice $invoice */
-                            @endphp
-                            <tr>
-
-                                <td>
-                                    <div class="form-group row">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="check-{{ $invoice->id }}">
-                                        </div>
-                                    </div>
-                                </td>
-
-                                <td scope="row">
-                                    <div class="dropdown">
-                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                        </div>
-                                        {{ str_pad($invoice->number, 7, "0", STR_PAD_LEFT) }}
-                                    </div>
-                                </td>
-
-                                <td><a href="#">{{ $invoice->customer->name }}</a></td>
-                                <td><a href="#">{{ $invoice->company->name }}</a></td>
-                                <td>{{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}</td>
-                                <td
-                                        @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))
-                                        style="color: green;"
-                                        @else
-                                        style="color: red";
-                                        @endif
-                                >{{
-                                     \Carbon\Carbon::parse($invoice->due_date)->diffInDays(\Carbon\Carbon::now())
-                                     }}
-                                </td>
-                                <td>{{ $invoice->total }}</td>
-                                <td>{{ $invoice->balance }}</td>
-                                <td>{{ $invoice->status }}</td>
-                                <td>
-                                    <button>
-                                        mark paid
-                                    </button>
-                                </td>
-                            </tr>
-                        @endforeach
+                        
+                            @include('invoices/includes/invoice_table_body')
 
                         </tbody>
                     </table>

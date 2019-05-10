@@ -69,9 +69,9 @@
             addNewLine() {
                 this.items.push(
                     {
-                        id: id++,
-                        description: null,
+                        //id: id++,
                         item: null,
+                        description: null,
                         quantity: 1,
                         unitprice: 1,
                         dirty: false

@@ -19,7 +19,7 @@ class CounterController extends Controller
 
         $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
 
-        return \response()->json($invoiceNumber);
+        return \response()->json(['invoiceNumber' => $invoiceNumber, 'invoiceNumbers' => $invoiceNumbers]);
     }
 
     public function update($id)
