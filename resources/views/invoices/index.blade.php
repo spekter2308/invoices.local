@@ -1,26 +1,26 @@
 @extends('layouts.app')
 
 @section('content')
-    
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
 
-               <div class="card">
-                   <div class="card-header">
-                       <div class="level">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="level">
                            <span class="flex">
                                <h1>List of Invoices</h1>
-                               <button class="btn btn-link">
-                                   Show filter
-                               </button>
+                               <button class="btn btn-link js-show-invoice-filter">Show filter</button>
                            </span>
 
-                           <a href="/invoices/create" class="btn btn-primary">New Invoice</a>
-                       </div>
-                   </div>
-               </div>
-
+                            <a href="/invoices/create" class="btn btn-primary">New Invoice</a>
+                        </div>
+                        <div class="js-invoice-filter">
+                            <invoices-filter></invoices-filter>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body">
                     <div class="level">
                         <h5 class="mr-3">Status:</h5>
@@ -37,7 +37,8 @@
                         <tr>
                             <th scope="col">
                                 <div class="dropdown">
-                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                         <a class="dropdown-item" href="#">Action</a>
@@ -69,14 +70,16 @@
                                 <td>
                                     <div class="form-group row">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="check-{{ $invoice->id }}">
+                                            <input class="form-check-input" type="checkbox"
+                                                   id="check-{{ $invoice->id }}">
                                         </div>
                                     </div>
                                 </td>
 
                                 <td scope="row">
                                     <div class="dropdown">
-                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
+                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="#">Action</a>
@@ -93,7 +96,7 @@
                                         @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))
                                         style="color: green;"
                                         @else
-                                        style="color: red";
+                                        style="color: red" ;
                                         @endif
                                 >{{
                                      \Carbon\Carbon::parse($invoice->due_date)->diffInDays(\Carbon\Carbon::now())
