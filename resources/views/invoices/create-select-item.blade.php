@@ -35,7 +35,7 @@
                                             <input type="text" name="name"
                                                    class="form-control {{ $errors->has ('name') ? 'error' : '' }}"
                                                    placeholder="Item name..."
-                                                   value="{{old('name')}}">
+                                                   value="{{old('name') ?? $item->name}}">
                                         </div>
 
                                     </div>
