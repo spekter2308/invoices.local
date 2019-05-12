@@ -4,7 +4,7 @@
     @endphp
     <tr>
         <td>
-            <div class="form-check">
+            <div class="form-check-invoice">
                 <input class="form-check-input" type="checkbox" id="check-{{ $invoice->id }}">
                 <label for="check-{{ $invoice->id }}"></label>
             </div>
@@ -24,28 +24,42 @@
             </div>
         </td>
         
-        <td><a href="{{route('customer-invoices', ['id' => $invoice->customer->id])}}">{{ $invoice->customer->name
-        }}</a></td>
-        <td><a href="#">{{ $invoice->company->name }}</a></td>
+        <td>
+            <a href="/invoices?byuser={{ $invoice->customer->id }}">{{ $invoice->customer->name }}</a>
+        </td>
+        <td>
+            <a href="#">
+            @if ($invoice->company->short_name)
+                {{ $invoice->company->short_name }}
+            @else
+                {{ $invoice->company->name }}
+            @endif
+            </a>
+        </td>
         <td>{{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}</td>
         <td
-                @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))
-                style="color: green;"
-                @else
-                style="color: red";
-                @endif
-        >{{
-                                     \Carbon\Carbon::parse($invoice->due_date)->diffInDays(\Carbon\Carbon::now())
-                                     }}
+            @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))
+            style="color: green;"
+            @else
+            style="color: red";
+            @endif>
+            {{ \Carbon\Carbon::parse($invoice->due_date)->diffInDays(\Carbon\Carbon::now()) }}
         </td>
         <td>{{ $invoice->total }}</td>
         <td>{{ $invoice->balance }}</td>
-        <td>{{ $invoice->status }}</td>
+        <td
+            @if ($invoice->status == 'Paid')
+                style="color: green;"
+            @endif>
+            {{ $invoice->status }}
+        </td>
         <td>
-            <button class="btn btn-sm btn-success"
+            <a href="{{route('mark-as-paid', ['id' => $invoice->id])}}" class="btn btn-sm btn-success"
                     @if ($invoice->status == "Paid")
-                    disabled
-                    @endif>Mark Paid</button>
+                        style="display: none;"
+                    @endif>
+                Mark Paid
+            </a>
         </td>
     </tr>
 @endforeach

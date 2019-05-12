@@ -22,13 +22,14 @@
                 <div class="card-body">
                     <div class="level">
                         <h5 class="mr-3">Status:</h5>
-                        <a href="#" class="pd-1 border-right">All</a>
-                        <a href="#" class="pd-1 pdl-1 border-right">Draft</a>
-                        <a href="#" class="pd-1 pdl-1 border-right">Sent</a>
-                        <a href="#" class="pd-1 pdl-1 border-right">Late</a>
-                        <a href="#" class="pd-1 pdl-1 border-right">Paid</a>
-                        <a href="#" class="pd-1 pdl-1 border-right">Partial</a>
-                        <a href="#" class="pd-1 pdl-1 border-right">Archived</a>
+                        <a href="/invoices" class="pd-1 border-right">All</a>
+                        <a href="/invoices?status=Late" class="pd-1 pdl-1 border-right">Late</a>
+                        <a href="/invoices?status=Draft" class="pd-1 pdl-1 border-right">Draft</a>
+                        <a href="/invoices?status=Sent" class="pd-1 pdl-1 border-right">Sent</a>
+                        <a href="/invoices?status=Viewed" class="pd-1 pdl-1 border-right">Viewed</a>
+                        <a href="/invoices?status=Paid" class="pd-1 pdl-1 border-right">Paid</a>
+                        <a href="/invoices?status=Partial" class="pd-1 pdl-1 border-right">Partial</a>
+                        <a href="/invoices?status=Archived" class="pd-1 pdl-1 border-right">Archived</a>
                     </div>
                     <table class="table">
                         <thead class="bg-primary text-white">

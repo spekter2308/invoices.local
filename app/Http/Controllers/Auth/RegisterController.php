@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Counter;
 use App\Role;
 use App\User;
 use App\Http\Controllers\Controller;
@@ -71,6 +72,14 @@ class RegisterController extends Controller
         ]);
 
         $user->roles()->attach(Role::where('slug', 'user')->first()->id);
+
+        Counter::create([
+            'user_id' => $user->id,
+            'prefix' => '0000',
+            'start' => 0,
+            'increment' => 1,
+            'postfix' => ''
+        ]);
 
         return $user;
     }

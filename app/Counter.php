@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class Counter extends Model
 {
     protected $fillable = [
-        'prefix', 'start', 'postfix', 'increment'
+        'user_id', 'prefix', 'start', 'postfix', 'increment'
     ];
 }

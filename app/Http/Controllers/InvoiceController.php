@@ -14,14 +14,15 @@ use Http\Env\Response;
 use App\Http\Controllers\Controller;
 use App\Counter;
 use DB;
+use App\Filters\InvoiceFilters;
 
 class InvoiceController extends Controller
 {
     use HasManyRelation;
 
-    public function index(Invoice $invoice)
+    public function index(InvoiceFilters $filters)
     {
-        $invoices = $invoice->latest()->with(['company', 'customer'])->get();
+        $invoices = $this->getInvoices($filters);
 
         if (\request()->wantsJson()) {
             return $invoices;
@@ -30,28 +31,40 @@ class InvoiceController extends Controller
         return view('invoices.index', compact('invoices'));
     }
 
+    protected function getInvoices($filters)
+    {
+        $invoices = Invoice::latest()->filter($filters);
+
+        $invoices = $invoices->get();
+        return $invoices;
+    }
+
     public function create()
     {
-        //check for unique invoice number
-        $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
-        $counter = Counter::where(['user_id' => auth()->id()])->first();
-        $prefix = $counter->prefix;
-        $start = $counter->start;
-        $increment = $counter->increment;
-        $postfix = $counter->postfix;
+        if (auth()->check()) {
+            //check for unique invoice number
+            $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
+            $counter = Counter::where(['user_id' => auth()->id()])->first();
+            $prefix = $counter->prefix;
+            $start = $counter->start;
+            $increment = $counter->increment;
+            $postfix = $counter->postfix;
 
-        $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
+            $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
 
-        $customers = Customer::latest()->get();
-        $companies = Company::latest()->get();
+            $customers = Customer::latest()->get();
+            $companies = Company::latest()->get();
 
-        return view('invoices.create', [
-            'invoiceNumber' => $invoiceNumber,
-            'invoiceFormatNumber' => $counter,
-            'invoiceNumbers' => $invoiceNumbers,
-            'customers' => $customers,
-            'companies' => $companies
-        ]);
+            return view('invoices.create', [
+                'invoiceNumber' => $invoiceNumber,
+                'invoiceFormatNumber' => $counter,
+                'invoiceNumbers' => $invoiceNumbers,
+                'customers' => $customers,
+                'companies' => $companies
+            ]);
+        }
+
+        return view('auth.login', ['registerMessage' => 'If tou does not have account, please Register']);
     }
 
     public function store(CreateInvoiceRequest $request)
@@ -116,15 +129,18 @@ class InvoiceController extends Controller
         return view('invoices.show', compact('invoice'));
     }
 
-    public function getInvoicesByCustomer($id)
+    public function markAsPaid($id)
     {
-        $customer = Customer::findOrFail($id);
-        $invoices = $customer->invoices;
+        $invoice = Invoice::findOrFail($id);
 
-        return view('invoices.index', compact('invoices'));
+        $invoice->update([
+            'status' => 'Paid',
+            'balance' => 0,
+            'amount_paid' => $invoice->total
+        ]);
+
+        return redirect()->back();
     }
-
-
 
     public function selectItem(InvoiceItemName $invoiceItem)
     {
@@ -179,7 +195,7 @@ class InvoiceController extends Controller
         return redirect(route('select-item'))->with(['success' => 'Item has been delete']);
     }
 
-    public function checkInArray($prefix, $start, $increment, $postfix, $array, $old_increment)
+    protected function checkInArray($prefix, $start, $increment, $postfix, $array, $old_increment)
     {
         $result = $prefix . strval($start + $increment) . $postfix;
         if (in_array($result, $array)) {

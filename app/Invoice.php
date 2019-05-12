@@ -28,6 +28,11 @@ class Invoice extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function sentMails()
+    {
+        return $this->hasMany(InvoiceMail::class);
+    }
+
     public function createItems($items)
     {
         foreach ($items as $item) {
@@ -35,5 +40,10 @@ class Invoice extends Model
         }
 
         return $this;
+    }
+
+    public function scopeFilter($query, $filters)
+    {
+        return $filters->apply($query);
     }
 }

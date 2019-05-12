@@ -27,13 +27,13 @@
                 {{--Top buttons--}}
                 <div class="level mt-2">
                     <div class="flex">
-                        <button class="btn btn-outline-secondary">View</button>
-                        <button class="btn btn-outline-secondary">Print</button>
-                        <button class="btn btn-outline-secondary">PDF</button>
-                        <button class="btn btn-outline-secondary">Send</button>
-                        <button class="btn btn-outline-secondary">Mark as Paid</button>
-                        <button class="btn btn-outline-secondary">Record Payment</button>
-                        <button class="btn btn-outline-secondary">Duplicate</button>
+                        <button class="btn btn-outline-secondary" disabled>View</button>
+                        <button class="btn btn-outline-secondary" disabled>Print</button>
+                        <button class="btn btn-outline-secondary" disabled>PDF</button>
+                        <button class="btn btn-outline-secondary" disabled>Send</button>
+                        <button class="btn btn-outline-secondary" disabled>Mark as Paid</button>
+                        <button class="btn btn-outline-secondary" disabled>Record Payment</button>
+                        <button class="btn btn-outline-secondary" disabled>Duplicate</button>
                     </div>
                     <button form="createInvoice" class="btn btn-primary send-btn" type="submit">Save</button>
                 </div>

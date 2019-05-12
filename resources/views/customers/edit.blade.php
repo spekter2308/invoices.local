@@ -115,10 +115,7 @@
                                            value="{{ $customer->updated_at }}">
                                 </div>
                             <br>
-                                
-                                пше
-                                
-                                
+
                         @endif
                 </div>
             </div>
