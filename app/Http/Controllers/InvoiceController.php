@@ -212,8 +212,8 @@ class InvoiceController extends Controller
                 $response['max_date'] = Carbon::now()->endOfYear();
                 break;
             default:
-
         }
+
         return \response()->json($response);
     }
 }

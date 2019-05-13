@@ -52,7 +52,8 @@
                 selected: 1,
                 from: null,
                 to: null,
-                href: ''
+                href: '',
+                flag: true
             }
         },
         methods: {
@@ -68,9 +69,16 @@
             }
         },
         beforeMount() {
-            this.getDate();
-        }
+            var from = this.$route.query.from,
+                to = this.$route.query.to;
 
+            if (from && to) {
+                this.from = from;
+                this.to = to;
+            } else {
+                this.getDate();
+            }
+        }
     }
 </script>
 
