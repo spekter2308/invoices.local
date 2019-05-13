@@ -27,8 +27,7 @@ Route::post('invoices', 'InvoiceController@store');
 Route::get('invoices/{invoice}/edit', 'InvoiceController@edit');
 Route::get('invoices/mark-as-paid/{invoice}', 'InvoiceController@markAsPaid')->name('mark-as-paid');
 
-Route::get('invoices/select-item', 'InvoiceController@selectItem')->name('select-item');
-Route::get('invoices/get/select-item', 'InvoiceController@getSelectItem')->name('get-select-item');
+Route::get('invoices/get/select-item', 'InvoiceController@selectItem')->name('select-item');
 Route::get('invoices/create/select-item/{id?}', 'InvoiceController@createSelectItem')->name('create-select-item')->where(['id' => '[0-9]+']);
 Route::post('invoices/save/select-item/{id?}', 'InvoiceController@saveSelectItem')->name('save-select-item')->where(['id' => '[0-9]+']);
 Route::delete('invoices/destroy/select-item/{id}', 'InvoiceController@deleteSelectItem')->name('delete-select-item')->where(['id' => '[0-9]+']);

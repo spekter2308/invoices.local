@@ -39,7 +39,7 @@
                 </div>
                 
                 <div class="mt-3 invoice-create-body">
-                    <invoice-form
+                    <invoice-edit-form
                             :invoice-numbers="{{ json_encode($invoiceNumbers) }}"
                             invoice-number= "{{ ($invoiceNumber)  }}"
                             :format-number="{{ $invoiceFormatNumber }}"
@@ -48,10 +48,16 @@
                     >
                         {{ csrf_field() }}
                     
-                    </invoice-form>
+                    </invoice-edit-form>
                 </div>
             </div>
         </div>
     </div>
 
 @endsection
+<script>
+    import InvoiceEditForm from "../../js/components/InvoiceEditForm";
+    export default {
+        components: {InvoiceEditForm}
+    }
+</script>

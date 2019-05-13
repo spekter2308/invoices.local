@@ -21,7 +21,7 @@ class CompanyTableSeeder extends Seeder
                 'short_name' => $faker->word,
                 'address' => $faker->address,
                 'invoice_notes' => $faker->sentence(rand(15, 30), true),
-                'logo_img' => 'no_image.jpg'
+                'logo_img' => null
             ]);
         }
     }

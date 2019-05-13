@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\InvoiceItemName;
 use App\Helper\HasManyRelation;
 use App\Http\Requests\CreateInvoiceRequest;
 use Carbon\Carbon;
@@ -14,6 +13,7 @@ use App\Item;
 use Http\Env\Response;
 use App\Http\Controllers\Controller;
 use App\Counter;
+use App\InvoiceItemName;
 use DB;
 use App\Filters\InvoiceFilters;
 
@@ -22,19 +22,17 @@ class InvoiceController extends Controller
     use HasManyRelation;
 
 
-    public function index(Invoice $invoice, Request $request)
+    public function index(Request $request, InvoiceFilters $filters)
     {
-        $invoices = $invoice->latest()->with(['company', 'customer']);
+        $invoices = $this->getInvoices($filters);
 
         if ($request->has(['from', 'to'])) {
 
             $from = Carbon::createFromTimeString($request->from)->format('Y-m-d');
             $to = Carbon::createFromTimeString($request->to)->format('Y-m-d');
 
-            $invoices = $invoices->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+            $invoices = $invoices->where('invoice_date', '>=', $from)->where('invoice_date', '<=', $to);
         }
-
-        $invoices = $invoices->get();
 
         if (\request()->wantsJson()) {
             return $invoices;
@@ -145,21 +143,14 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
-        //check for unique invoice number
         $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
         $counter = Counter::where(['user_id' => auth()->id()])->first();
-        $prefix = $counter->prefix;
-        $start = $counter->start;
-        $increment = $counter->increment;
-        $postfix = $counter->postfix;
-
-        $invoiceNumber = $invoice->number;
 
         $customers = Customer::latest()->get();
         $companies = Company::latest()->get();
 
         return view('invoices.edit', [
-            'invoiceNumber' => $invoiceNumber,
+            'invoiceNumber' => $invoice->number,
             'invoiceFormatNumber' => $counter,
             'invoiceNumbers' => $invoiceNumbers,
             'customers' => $customers,
@@ -183,15 +174,7 @@ class InvoiceController extends Controller
     public function selectItem(InvoiceItemName $invoiceItem)
     {
         $items = $invoiceItem->latest()->paginate(15);
-        return view('invoices.table-select-item')->with([
-            'items' => $items
-        ]);
-    }
-
-    public function getSelectItem(InvoiceItemName $invoiceItem)
-    {
-        $items = $invoiceItem->all();
-        return \response()->json($items);
+        return view('invoices.table-select-item', ['items' => $items]);
     }
 
     public function createSelectItem($id = false, InvoiceItemName $invoiceItem)
