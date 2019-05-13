@@ -56566,8 +56566,8 @@ Vue.component('invoice-notes', __webpack_require__(/*! ./components/InvoiceNotes
 Vue.component('invoice-form', __webpack_require__(/*! ./components/InvoiceForm.vue */ "./resources/js/components/InvoiceForm.vue")["default"]);
 Vue.component('items-table', __webpack_require__(/*! ./components/ItemsTable.vue */ "./resources/js/components/ItemsTable.vue")["default"]);
 Vue.component('select-item', __webpack_require__(/*! ./components/SelectItem.vue */ "./resources/js/components/SelectItem.vue")["default"]);
-Vue.component('invoices-filter', __webpack_require__(/*! ./components/Invoices-filter.vue */ "./resources/js/components/Invoices-filter.vue")["default"]);
 Vue.component('datapicker', __webpack_require__(/*! vuejs-datepicker */ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js")["default"]);
+Vue.component('invoices-filter', __webpack_require__(/*! ./components/Invoices-filter.vue */ "./resources/js/components/Invoices-filter.vue")["default"]);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -57244,7 +57244,7 @@ $(function () {
   $('.js-show-invoice-filter').on('click', function (e) {
     e.preventDefault();
     var text = $(this).text();
-    $('.js-invoice-filter').toggle("slow", function () {
+    $('.js-invoice-filter').toggle("show", function () {
       $('.js-show-invoice-filter').text(text == 'Show filter' ? 'Hide filter' : 'Show filter');
     });
   });
@@ -57264,15 +57264,14 @@ $(function () {
 /***/ }),
 
 /***/ 0:
-/*!************************************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/js/main.js ./resources/sass/app.scss ***!
-  \************************************************************************************/
+/*!*************************************************************!*\
+  !*** multi ./resources/js/app.js ./resources/sass/app.scss ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! c:\Users\Alex.Sh\OSPanel\domains\invoce.loc\resources\js\app.js */"./resources/js/app.js");
-__webpack_require__(/*! c:\Users\Alex.Sh\OSPanel\domains\invoce.loc\resources\js\main.js */"./resources/js/main.js");
-module.exports = __webpack_require__(/*! c:\Users\Alex.Sh\OSPanel\domains\invoce.loc\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Sh\OSPanel\domains\invoce.loc\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Sh\OSPanel\domains\invoce.loc\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

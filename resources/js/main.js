@@ -13,7 +13,7 @@ $(function () {
         e.preventDefault();
         var text = $(this).text();
 
-        $('.js-invoice-filter').toggle("slow", function () {
+        $('.js-invoice-filter').toggle("show", function () {
             $('.js-show-invoice-filter').text((text == 'Show filter') ? 'Hide filter' : 'Show filter');
         });
     })
