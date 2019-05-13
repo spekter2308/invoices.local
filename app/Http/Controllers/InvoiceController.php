@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\InvoiceItemName;
 use App\Helper\HasManyRelation;
 use App\Http\Requests\CreateInvoiceRequest;
 use Carbon\Carbon;
@@ -14,6 +13,7 @@ use App\Item;
 use Http\Env\Response;
 use App\Http\Controllers\Controller;
 use App\Counter;
+use App\InvoiceItemName;
 use DB;
 use App\Filters\InvoiceFilters;
 
@@ -175,12 +175,6 @@ class InvoiceController extends Controller
     {
         $items = $invoiceItem->latest()->paginate(15);
         return view('invoices.table-select-item', ['items' => $items]);
-    }
-
-    public function getSelectItem(InvoiceItemName $invoiceItem)
-    {
-        $items = $invoiceItem->all();
-        return \response()->json($items);
     }
 
     public function createSelectItem($id = false, InvoiceItemName $invoiceItem)
