@@ -1,4 +1,4 @@
-@foreach ($invoices as $invoice)
+@forelse ($invoices as $invoice)
     @php
         /** @var \App\Invoice $invoice */
     @endphp
@@ -74,4 +74,8 @@
             </a>
         </td>
     </tr>
-@endforeach
+    @empty
+    <tr>
+        <td><h3>No data</h3></td>
+    </tr>
+@forelse

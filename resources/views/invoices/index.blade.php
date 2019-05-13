@@ -1,24 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-    
+
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
 
-               <div class="card">
-                   <div class="card-header">
-                       <div class="level">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="level">
                            <span class="flex">
                                <h1>List of Invoices</h1>
-                               <button class="btn btn-link">Show filter</button>
+                               <button class="btn btn-link js-show-invoice-filter">Show filter</button>
                            </span>
-
-                           <a href="/invoices/create" class="btn btn-primary">New Invoice</a>
-                       </div>
-                   </div>
-               </div>
-
+                            <a href="/invoices/create" class="btn btn-primary">New Invoice</a>
+                        </div>
+                        <div class="js-invoice-filter">
+                            <invoices-filter uri="{{route('get-date-for-filter')}}"></invoices-filter>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body">
                     <div class="level">
                         <h5 class="mr-3">Status:</h5>
@@ -36,8 +37,7 @@
                         <tr>
                             <th scope="col">
                                 <div class="dropdown">
-                                    <button class="btn-select dropdown-toggle bg-primary text-white" type="button"
-                                            id="dropdownMenuButton"
+                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
                                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -61,9 +61,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        
-                            @include('invoices/includes/invoice_table_body')
-
+                        @include('invoices/includes/invoice_table_body')
                         </tbody>
                     </table>
                 </div>

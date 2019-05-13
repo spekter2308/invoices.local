@@ -54,8 +54,10 @@ class UserController extends Controller
             'role' => 'required|numeric',
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()){
+            $request->flash();
             return \redirect(route('users-create'))->withErrors($validator);
+        }
 
         $data['password'] = Hash::make($data['password']);
 
@@ -80,8 +82,10 @@ class UserController extends Controller
             'role' => 'required|numeric',
         ]);
 
-        if ($validator->fails())
+        if ($validator->fails()){
+            $request->flash();
             return \redirect(route('users-create', ['id' => $id]))->withErrors($validator);
+        }
 
         if (empty($data['password']))
             unset($data['password']);
