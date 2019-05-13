@@ -59482,7 +59482,6 @@ Vue.component('customer-select', __webpack_require__(/*! ./components/CustomerSe
 Vue.component('invoice-notes', __webpack_require__(/*! ./components/InvoiceNotes.vue */ "./resources/js/components/InvoiceNotes.vue")["default"]);
 Vue.component('invoice-form', __webpack_require__(/*! ./components/InvoiceForm.vue */ "./resources/js/components/InvoiceForm.vue")["default"]);
 Vue.component('items-table', __webpack_require__(/*! ./components/ItemsTable.vue */ "./resources/js/components/ItemsTable.vue")["default"]);
-Vue.component('select-item', __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module './components/SelectItem.vue'"); e.code = 'MODULE_NOT_FOUND'; throw e; }()))["default"]);
 Vue.component('datapicker', __webpack_require__(/*! vuejs-datepicker */ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js")["default"]);
 Vue.component('invoices-filter', __webpack_require__(/*! ./components/Invoices-filter.vue */ "./resources/js/components/Invoices-filter.vue")["default"]);
 /**
