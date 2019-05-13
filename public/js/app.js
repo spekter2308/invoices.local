@@ -61498,16 +61498,22 @@ $('#customreTabs a[href="#contact-info"]').click(function (e) {
   $(this).tab('show');
 });
 $(function () {
-  if (window.location.search.replace('?', '')) {
-    $('.js-invoice-filter').css('display', 'block');
-  }
-
+  /*if (window.location.search.replace( '?', '')){
+      $('.js-invoice-filter').css('display', 'block');
+  }*/
+  var display = false;
   $('.js-show-invoice-filter').on('click', function (e) {
     e.preventDefault();
     var text = $(this).text();
-    $('.js-invoice-filter').toggle("show", function () {
-      $('.js-show-invoice-filter').text(text == 'Show filter' ? 'Hide filter' : 'Show filter');
-    });
+    $('.js-show-invoice-filter').text(text == 'Show filter' ? 'Hide filter' : 'Show filter');
+    var value = $('.js-show-invoice-filter').text();
+    console.log(value);
+
+    if (value == 'Hide filter') {
+      $('.js-invoice-filter').css('display', 'block');
+    } else {
+      $('.js-invoice-filter').css('display', 'none');
+    }
   });
 });
 
@@ -61559,8 +61565,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

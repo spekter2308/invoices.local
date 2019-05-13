@@ -16,8 +16,11 @@
                             <a href="/invoices/create" class="btn btn-primary">New Invoice</a>
                         </div>
                         <div class="js-invoice-filter">
+                        </div>
+                        <div class="js-invoice-filter">
                             <invoices-filter uri="{{route('get-date-for-filter')}}"></invoices-filter>
                         </div>
+
                     </div>
                 </div>
                 <div class="card-body">
