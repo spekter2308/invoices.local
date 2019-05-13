@@ -78,4 +78,4 @@
     <tr>
         <td><h3>No data</h3></td>
     </tr>
-@forelse
+@endforelse

@@ -40806,7 +40806,7 @@ var render = function() {
         _c(
           "a",
           {
-            staticClass: "btn btn-primary",
+            staticClass: "btn btn-primary m-2",
             attrs: { href: _vm.href },
             on: { click: _vm.filterShow }
           },
