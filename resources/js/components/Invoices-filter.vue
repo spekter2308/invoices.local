@@ -60,22 +60,16 @@
                 this.href = '?from=' + new Date(this.from).toJSON() + '&to=' + new Date(this.to).toJSON();
             },
             getDate() {
-                axios.post(this.uri, {selected: this.selected}).then( response => {
+                axios.post(this.uri, {selected: this.selected}).then(response => {
                         this.from = response.data.min_date;
                         this.to = response.data.max_date;
                     }
                 );
             }
         },
-        computed:{
-          setFromTo(){
-              this.from = this.$route.query.from;
-              this.to = this.$route.query.to;
-          }
-        },
-        beforeMount(){
+        beforeMount() {
             this.getDate();
-        },
+        }
 
     }
 </script>

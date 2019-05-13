@@ -2581,12 +2581,6 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  computed: {
-    setFromTo: function setFromTo() {
-      this.from = this.$route.query.from;
-      this.to = this.$route.query.to;
-    }
-  },
   beforeMount: function beforeMount() {
     this.getDate();
   }
