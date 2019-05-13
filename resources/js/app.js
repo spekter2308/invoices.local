@@ -26,7 +26,6 @@ Vue.component('customer-select', require('./components/CustomerSelect.vue').defa
 Vue.component('invoice-notes', require('./components/InvoiceNotes.vue').default);
 Vue.component('invoice-form', require('./components/InvoiceForm.vue').default);
 Vue.component('items-table', require('./components/ItemsTable.vue').default);
-Vue.component('select-item', require('./components/SelectItem.vue').default);
 Vue.component('datapicker', require('vuejs-datepicker').default);
 Vue.component('invoices-filter', require('./components/Invoices-filter.vue').default);
 
@@ -45,7 +44,7 @@ import router from './routes'
 Vue.use(Vuelidate)
 Vue.use(router)
 
-
+window.eventBus = new Vue()
 const app = new Vue({
     el: '#app',
     router,

@@ -1798,6 +1798,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   inheritProps: false,
   props: {
@@ -1899,10 +1900,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   inheritAttrs: false,
   props: {
-    bus: {
-      type: Object,
-      required: true
-    },
     customers: {
       type: Array,
       required: true
@@ -1979,7 +1976,7 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     var _this = this;
 
-    this.bus.$on('update', function (_) {
+    eventBus.$on('update', function (_) {
       _this.editing = true;
       _this.customer = {};
     });
@@ -2240,6 +2237,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /*import Items from './ItemsTable.vue'*/
@@ -2257,6 +2274,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       type: Object,
       required: false
     },
+    invoiceNumbers: {
+      type: Array,
+      required: true
+    },
     companies: {
       type: Array,
       required: true
@@ -2268,33 +2289,46 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
-      isTableInvalid: false,
-      eventBus: new Vue(),
+      //nextInvoiceNumberResponse: '',
+      createdInvoiceId: NaN,
+      isTableInvalid: true,
       invoice: {
         selectedCompany: NaN,
         selectedCustomer: {},
         //selectedFile: null,
         selectedDateFrom: new Date().toISOString().slice(0, 10),
         selectedDateTo: new Date().toISOString().slice(0, 10),
-        selectedInvoiceNumber: this.invoiceNumber.prefix + (parseInt(this.invoiceNumber.start) + parseInt(this.invoiceNumber.increment)) + this.invoiceNumber.postfix || this.invoiceNumber,
+        selectedInvoiceNumber: this.invoiceNumber,
         selectedItems: [{
-          id: 1,
+          //id: 1,
           item: null,
           description: null,
           quantity: 1,
-          unitprice: 1
+          unitprice: 1,
+          dirty: false,
+          correct: false
         }]
       },
       selectedNumber: {
-        prefix: this.formatNumber.prefix,
-        start: this.formatNumber.start,
-        postfix: this.formatNumber.postfix,
-        increment: this.formatNumber.increment
+        prefix: this.formatNumber.prefix || '',
+        start: this.formatNumber.start || 0,
+        postfix: this.formatNumber.postfix || '',
+        increment: this.formatNumber.increment || 1
       },
       notes: ''
     };
   },
   validations: {
+    selectedNumber: {
+      start: {
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"],
+        minValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["minValue"])(0)
+      },
+      increment: {
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"],
+        minValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["minValue"])(1)
+      }
+    },
     invoice: {
       selectedCompany: {
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"],
@@ -2332,16 +2366,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   watch: {
     '$v.$error': function $v$error(v) {
-      //debugger
       if (v === true) {
         this.sendButton.disabled = true;
       } else {
-        if (this.isTableInvalid === false) {
+        if (this.isTableRowsInvalid === false) {
           this.sendButton.disabled = false;
         }
       }
     },
-    isTableInvalid: function isTableInvalid(v) {
+    isTableRowsInvalid: function isTableRowsInvalid(v) {
       if (v === true && this.$v.$dirty) {
         this.sendButton.disabled = true;
       } else {
@@ -2355,65 +2388,91 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     this.sendButton = document.querySelector('.send-btn');
   },
   methods: {
+    updateNextNumber: function updateNextNumber() {
+      var _this = this;
+
+      return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/counters').then(function (response) {
+        _this.nextInvoiceNumberResponse = response.data.invoiceNumber;
+        console.log(_this.invoiceNumbers);
+      });
+    },
+    resetSelectedNumber: function resetSelectedNumber() {
+      this.selectedNumber = {
+        prefix: this.formatNumber.prefix || '',
+        start: this.formatNumber.start || 0,
+        postfix: this.formatNumber.postfix || '',
+        increment: this.formatNumber.increment || 1
+      };
+    },
     resetInvoice: function resetInvoice() {
       this.invoice.selectedCompany = NaN;
       this.invoice.selectedCustomer = {}; //this.invoice.selectedFile = null
 
       this.invoice.selectedDateFrom = new Date().toISOString().slice(0, 10);
       this.invoice.selectedDateTo = new Date().toISOString().slice(0, 10);
-      this.invoice.selectedInvoiceNumber = this.invoiceNumber + '1';
+      this.invoice.selectedInvoiceNumber = this.nextInvoiceNumberResponse;
       this.invoice.selectedItems = [{
-        id: 1,
+        //id: 1,
         description: null,
         item: null,
         quantity: 1,
-        unitprice: 1
+        unitprice: 1,
+        dirty: false,
+        correct: false
       }];
-      this.isTableInvalid = false;
-      this.isTableInvalid = false;
+      this.notes = ''; //this.isTableInvalid = false
     },
     onSubmit: function () {
       var _onSubmit = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var _this2 = this;
+
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
                 this.$v.$touch();
-                this.eventBus.$emit('touch', true);
-                this.eventBus.$emit('reset', true);
+                eventBus.$emit('touch', true);
 
-                if (!(!this.$v.$error && !this.isTableInvalid)) {
-                  _context.next = 12;
+                if (!(!this.$v.$error && !this.isTableRowsInvalid)) {
+                  _context.next = 8;
                   break;
                 }
 
                 console.log(JSON.stringify(this.invoice));
-                _context.next = 8;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices', this.invoice);
+                _context.next = 7;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices', this.invoice).then(function (response) {
+                  _this2.createdInvoiceId = response.data.id;
+                });
+
+              case 7:
+                //await this.updateNextNumber();
+                //this.resetInvoice();
+                //eventBus.$emit('update', true)
+                //this.$v.$reset()
+                //eventBus.$emit('reset', true)
+                //console.log('resetting')
+                location.href = '/invoices/' + this.createdInvoiceId;
 
               case 8:
-                this.resetInvoice();
-                this.eventBus.$emit('update', true);
-                this.$v.$reset();
-                console.log('resetting');
-
-              case 12:
-                _context.next = 16;
+                _context.next = 13;
                 break;
 
-              case 14:
-                _context.prev = 14;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](0);
+                // this.resetInvoice()
+                // this.$v.$reset()
+                console.log('some error');
 
-              case 16:
+              case 13:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 14]]);
+        }, _callee, this, [[0, 10]]);
       }));
 
       function onSubmit() {
@@ -2422,6 +2481,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return onSubmit;
     }(),
+    sendForm: function sendForm() {
+      this.editNumber();
+    },
     editNumber: function () {
       var _editNumber = _asyncToGenerator(
       /*#__PURE__*/
@@ -2430,17 +2492,28 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                try {
-                  console.log(JSON.stringify(this.selectedNumber));
-                  this.axios.patch('/counters/' + this.invoiceNumber.id, this.selectedNumber);
-                } catch (e) {}
+                _context2.prev = 0;
+                console.log(JSON.stringify(this.selectedNumber));
+                _context2.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch('/counters/' + this.formatNumber.id, this.selectedNumber);
 
-              case 1:
+              case 4:
+                this.invoice.selectedInvoiceNumber = this.invoiceNum;
+                this.updateNextNumber();
+                _context2.next = 11;
+                break;
+
+              case 8:
+                _context2.prev = 8;
+                _context2.t0 = _context2["catch"](0);
+                console.log(_context2.t0);
+
+              case 11:
               case "end":
                 return _context2.stop();
             }
           }
-        }, _callee2, this);
+        }, _callee2, this, [[0, 8]]);
       }));
 
       function editNumber() {
@@ -2449,11 +2522,29 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return editNumber;
     }(),
+
+    /*updateInvoiceNum() {
+        //axios.get('/')
+    },*/
     getInvoiceNotes: function getInvoiceNotes(variable) {
       this.notes = variable;
+    },
+    checkInArray: function checkInArray(prefix, start, increment, postfix, array, old_increment) {
+      var result = prefix + (parseInt(start) + parseInt(increment)) + postfix;
+
+      if (array.includes(result)) {
+        return this.checkInArray(prefix, start, parseInt(increment) + parseInt(old_increment), postfix, array, old_increment);
+      }
+
+      return result;
     }
   },
   computed: {
+    isTableRowsInvalid: function isTableRowsInvalid() {
+      return this.invoice.selectedItems.reduce(function (acc, curr) {
+        return acc && !curr.correct;
+      }, true);
+    },
     currentDate: function currentDate() {
       return new Date().toISOString().slice(0, 10);
     },
@@ -2463,7 +2554,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }, 0);
     },
     invoiceNum: function invoiceNum() {
-      return this.selectedNumber.prefix + (parseInt(this.selectedNumber.start) + parseInt(this.selectedNumber.increment)) + this.selectedNumber.postfix;
+      return this.checkInArray(this.selectedNumber.prefix, this.selectedNumber.start, this.selectedNumber.increment, this.selectedNumber.postfix, this.invoiceNumbers, this.selectedNumber.increment);
     }
   }
 });
@@ -2606,9 +2697,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
-/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _TableItem_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TableItem.vue */ "./resources/js/components/TableItem.vue");
+/* harmony import */ var _TableItem_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./TableItem.vue */ "./resources/js/components/TableItem.vue");
 //
 //
 //
@@ -2656,28 +2745,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-
 
 var id = 1;
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
-    bus: {
-      type: Object,
-      required: true
-    },
     items: {
       type: Array
-    }
-  },
-  watch: {
-    '$v.$anyError': {
-      handler: function handler(v) {
-        this.$emit('validation-status-changed', v);
-      },
-      immediate: true
+    },
+    isDirty: {
+      required: true,
+      type: Boolean
     }
   },
   computed: {
@@ -2688,11 +2765,12 @@ var id = 1;
   methods: {
     addNewLine: function addNewLine() {
       this.items.push({
-        id: id++,
-        description: null,
+        //id: id++,
         item: null,
+        description: null,
         quantity: 1,
-        unitprice: 1
+        unitprice: 1,
+        dirty: false
       });
     },
     removeItem: function removeItem(index) {
@@ -2710,47 +2788,52 @@ var id = 1;
     }
   },
   components: {
-    TableItem: _TableItem_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+    TableItem: _TableItem_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  validations: {
-    items: {
-      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
-      $each: {
-        item: {
-          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
-        },
-        quantity: {
-          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
-          integer: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["integer"]
-        },
-        unitprice: {
-          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
-          "float": function float(v) {
-            return /[+-]?([0-9]*[.])?[0-9]+/.test(v);
+
+  /*validations: {
+      items: {
+          required,
+          $each: {
+              item: {
+                  required
+              },
+              quantity: {
+                  required,
+                  integer
+              },
+              unitprice: {
+                  required,
+                  float: v => /[+-]?([0-9]*[.])?[0-9]+/.test(v)
+              },
+              description: {
+               }
           }
-        },
-        description: {}
       }
-    }
-  },
+  },*/
   mounted: function mounted() {
     var _this = this;
 
-    this.bus.$on('touch', function (_) {
-      _this.$v.$touch();
+    eventBus.$on('touch', function (_) {
+      /*  this.$v.items.$touch()
+        this.$v.$touch()*/
+      _this.items.forEach(function (el) {
+        el.dirty = true;
+      });
     });
-    this.bus.$on('reset', function (_) {
-      _this.$v.$reset();
+    eventBus.$on('reset', function (_) {
+      /*  this.$v.$reset()*/
+      _this.items.forEach(function (el) {});
     });
   }
 });
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SelectItem.vue?vue&type=script&lang=js&":
-/*!*********************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SelectItem.vue?vue&type=script&lang=js& ***!
-  \*********************************************************************************************************************************************************************/
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TableItem.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TableItem.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2769,104 +2852,115 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  name: "TableItem",
   data: function data() {
     return {
-      info: []
+      name: []
     };
+  },
+  props: {
+    isDirty: {
+      required: true,
+      type: Boolean
+    },
+    tableItem: {
+      type: Object,
+      required: true
+    }
   },
   mounted: function mounted() {
     var _this = this;
 
     axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/invoices/get/select-item').then(function (response) {
-      return _this.info = response;
+      return _this.name = response;
     });
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TableItem.vue?vue&type=script&lang=js&":
-/*!********************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TableItem.vue?vue&type=script&lang=js& ***!
-  \********************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: "TableItem",
-  props: {
-    tableItem: {
-      type: Object,
-      required: true
-    },
-    validationItem: {
-      type: Object,
-      required: true
+    eventBus.$on('touch', function () {
+      _this.tableItem.dirty = true;
+    });
+  },
+  watch: {
+    correct: function correct(v) {
+      this.tableItem.correct = this.correct;
     }
   },
   computed: {
+    correct: function correct() {
+      return this.itemRequired && this.quantityInteger && this.quantityRequired && this.unitPriceRequired && this.unitPriceFloat;
+    },
+    itemRequired: function itemRequired() {
+      return Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"])(this.tableItem.item);
+    },
+    quantityRequired: function quantityRequired() {
+      return Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"])(this.tableItem.quantity);
+    },
+    unitPriceRequired: function unitPriceRequired() {
+      return Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"])(this.tableItem.unitprice);
+    },
+    quantityInteger: function quantityInteger() {
+      return Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["integer"])(this.tableItem.quantity);
+    },
+    unitPriceFloat: function unitPriceFloat() {
+      return /[+-]?([0-9]*[.])?[0-9]+/.test(this.tableItem.unitprice);
+    },
     total: function total() {
       if (!this.tableItem.unitprice || !this.tableItem.quantity) {
         return 0;
@@ -2876,6 +2970,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    makeDirty: function makeDirty() {
+      this.tableItem.dirty = true;
+    },
     checkForFloats: function checkForFloats(e) {
       var val = "".concat(this.tableItem.unitprice).concat(e.key);
 
@@ -39569,30 +39666,29 @@ var render = function() {
   return _c("div", [
     _c("h4", [_vm._v("From")]),
     _vm._v(" "),
-    _c(
-      "select",
-      _vm._g(
-        { staticClass: "custom-select", domProps: { value: _vm.value } },
-        _vm.listeners
-      ),
-      [
-        _c(
-          "option",
-          { attrs: { selected: "", disabled: "" }, domProps: { value: NaN } },
-          [_vm._v("Choose company ...")]
+    _c("div", { staticClass: "form-group" }, [
+      _c(
+        "select",
+        _vm._g(
+          { staticClass: "custom-select", domProps: { value: _vm.value } },
+          _vm.listeners
         ),
-        _vm._v(" "),
-        _vm._l(_vm.companies, function(company) {
-          return _c("option", { domProps: { value: company.id } }, [
-            _vm._v(_vm._s(company.name))
-          ])
-        })
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("br"),
-    _c("br"),
+        [
+          _c(
+            "option",
+            { attrs: { selected: "", disabled: "" }, domProps: { value: NaN } },
+            [_vm._v("Choose company ...")]
+          ),
+          _vm._v(" "),
+          _vm._l(_vm.companies, function(company) {
+            return _c("option", { domProps: { value: company.id } }, [
+              _vm._v(_vm._s(company.name))
+            ])
+          })
+        ],
+        2
+      )
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "form-group" }, [
       _c("textarea", {
@@ -39628,57 +39724,56 @@ var render = function() {
   return _c("div", [
     _c("h4", [_vm._v("To")]),
     _vm._v(" "),
-    _c(
-      "select",
-      {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.customer,
-            expression: "customer"
+    _c("div", { staticClass: "form-group" }, [
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.customer,
+              expression: "customer"
+            }
+          ],
+          staticClass: "custom-select",
+          on: {
+            change: [
+              function($event) {
+                var $$selectedVal = Array.prototype.filter
+                  .call($event.target.options, function(o) {
+                    return o.selected
+                  })
+                  .map(function(o) {
+                    var val = "_value" in o ? o._value : o.value
+                    return val
+                  })
+                _vm.customer = $event.target.multiple
+                  ? $$selectedVal
+                  : $$selectedVal[0]
+              },
+              _vm.toggleActive
+            ]
           }
-        ],
-        staticClass: "custom-select",
-        on: {
-          change: [
-            function($event) {
-              var $$selectedVal = Array.prototype.filter
-                .call($event.target.options, function(o) {
-                  return o.selected
-                })
-                .map(function(o) {
-                  var val = "_value" in o ? o._value : o.value
-                  return val
-                })
-              _vm.customer = $event.target.multiple
-                ? $$selectedVal
-                : $$selectedVal[0]
-            },
-            _vm.toggleActive
-          ]
-        }
-      },
-      [
-        _c(
-          "option",
-          { attrs: { selected: "" }, domProps: { value: _vm.emptyObj } },
-          [_vm._v("New Customer ...")]
-        ),
-        _vm._v(" "),
-        _vm._l(_vm.customers, function(customer) {
-          return _c(
+        },
+        [
+          _c(
             "option",
-            { key: customer.id, domProps: { value: customer } },
-            [_vm._v(_vm._s(customer.name))]
-          )
-        })
-      ],
-      2
-    ),
-    _vm._v(" "),
-    _c("br"),
-    _c("br"),
+            { attrs: { selected: "" }, domProps: { value: _vm.emptyObj } },
+            [_vm._v("New Customer ...")]
+          ),
+          _vm._v(" "),
+          _vm._l(_vm.customers, function(customer) {
+            return _c(
+              "option",
+              { key: customer.id, domProps: { value: customer } },
+              [_vm._v(_vm._s(customer.name))]
+            )
+          })
+        ],
+        2
+      )
+    ]),
     _vm._v(" "),
     _vm.editing
       ? _c(
@@ -39712,7 +39807,9 @@ var render = function() {
             _vm.$v.enteredname.$error
               ? [
                   !_vm.$v.enteredname.required
-                    ? _c("small", [_vm._v("Please type name")])
+                    ? _c("small", { staticClass: "error-control" }, [
+                        _vm._v("Please type name")
+                      ])
                     : _vm._e()
                 ]
               : _vm._e()
@@ -39742,7 +39839,6 @@ var render = function() {
                 }
               ],
               staticClass: "form-control",
-              attrs: { name: "" },
               domProps: { value: _vm.enteredaddress },
               on: {
                 blur: function($event) {
@@ -39760,7 +39856,9 @@ var render = function() {
             _vm.$v.enteredaddress.$error
               ? [
                   !_vm.$v.enteredaddress.required
-                    ? _c("small", [_vm._v("Please type address")])
+                    ? _c("small", { staticClass: "error-control" }, [
+                        _vm._v("Please type address")
+                      ])
                     : _vm._e()
                 ]
               : _vm._e()
@@ -39834,11 +39932,11 @@ var render = function() {
                   _vm.$v.invoice.selectedCompany.$error
                     ? [
                         _vm.$v.invoice.selectedCompany.required
-                          ? _c("small", [_vm._v("Please select company")])
-                          : _vm._e(),
-                        _vm._v(" "),
-                        !_vm.$v.invoice.selectedCompany.integer
-                          ? _c("small", [_vm._v("Company does not exist")])
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v(
+                                "\n                                Please select company\n                            "
+                              )
+                            ])
                           : _vm._e()
                       ]
                     : _vm._e()
@@ -39855,7 +39953,7 @@ var render = function() {
                 { staticClass: "col-md-8" },
                 [
                   _c("customer-select", {
-                    attrs: { customers: _vm.customers, bus: _vm.eventBus },
+                    attrs: { customers: _vm.customers },
                     on: {
                       blur: function($event) {
                         return _vm.$v.invoice.selectedCustomer.$touch()
@@ -39873,19 +39971,19 @@ var render = function() {
                   _vm.$v.invoice.selectedCustomer.$error
                     ? [
                         !_vm.$v.invoice.selectedCustomer.allInputsFilled
-                          ? _c("small", [
+                          ? _c("small", { staticClass: "error-control" }, [
                               _vm._v(
-                                "\n                                Please fill all inputs\n                            "
+                                "\n                                Please select customer from list or create new\n                            "
                               )
                             ])
                           : !_vm.$v.invoice.selectedCustomer.isCorrectType
-                          ? _c("small", [
-                              _vm._v(
-                                "Sorry but you have\n                                choosen wrong data"
-                              )
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Sorry but you have choosen wrong data")
                             ])
                           : !_vm.$v.invoice.selectedCustomer.required
-                          ? _c("small", [_vm._v("Please select customer")])
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Please select customer")
+                            ])
                           : _vm._e()
                       ]
                     : _vm._e()
@@ -39902,11 +40000,11 @@ var render = function() {
           _c("div", { staticClass: "row level" }, [
             _vm._m(1),
             _vm._v(" "),
-            _c("div", { staticClass: "col-md-8" }, [
-              _c(
-                "div",
-                { staticClass: "form-group d-flex" },
-                [
+            _c(
+              "div",
+              { staticClass: "col-md-8" },
+              [
+                _c("div", { staticClass: "form-group d-flex" }, [
                   _c("input", {
                     directives: [
                       {
@@ -40038,40 +40136,86 @@ var render = function() {
                                         })
                                       ]),
                                       _vm._v(" "),
-                                      _c("div", { staticClass: "form-group" }, [
-                                        _c(
-                                          "label",
-                                          { staticClass: "font-weight-bold" },
-                                          [_vm._v("Start #")]
-                                        ),
-                                        _vm._v(" "),
-                                        _c("input", {
-                                          directives: [
-                                            {
-                                              name: "model",
-                                              rawName: "v-model",
-                                              value: _vm.selectedNumber.start,
-                                              expression: "selectedNumber.start"
-                                            }
-                                          ],
-                                          staticClass: "form-control",
-                                          domProps: {
-                                            value: _vm.selectedNumber.start
-                                          },
-                                          on: {
-                                            input: function($event) {
-                                              if ($event.target.composing) {
-                                                return
+                                      _c(
+                                        "div",
+                                        { staticClass: "form-group" },
+                                        [
+                                          _c(
+                                            "label",
+                                            { staticClass: "font-weight-bold" },
+                                            [_vm._v("Start #")]
+                                          ),
+                                          _vm._v(" "),
+                                          _c("input", {
+                                            directives: [
+                                              {
+                                                name: "model",
+                                                rawName: "v-model.number",
+                                                value: _vm.selectedNumber.start,
+                                                expression:
+                                                  "selectedNumber.start",
+                                                modifiers: { number: true }
                                               }
-                                              _vm.$set(
-                                                _vm.selectedNumber,
-                                                "start",
-                                                $event.target.value
-                                              )
+                                            ],
+                                            staticClass: "form-control",
+                                            domProps: {
+                                              value: _vm.selectedNumber.start
+                                            },
+                                            on: {
+                                              input: function($event) {
+                                                if ($event.target.composing) {
+                                                  return
+                                                }
+                                                _vm.$set(
+                                                  _vm.selectedNumber,
+                                                  "start",
+                                                  _vm._n($event.target.value)
+                                                )
+                                              },
+                                              blur: function($event) {
+                                                return _vm.$forceUpdate()
+                                              }
                                             }
-                                          }
-                                        })
-                                      ]),
+                                          }),
+                                          _vm._v(" "),
+                                          _vm.$v.selectedNumber.start.$invalid
+                                            ? [
+                                                !_vm.$v.selectedNumber.start
+                                                  .minValue
+                                                  ? _c(
+                                                      "p",
+                                                      {
+                                                        staticClass:
+                                                          "error-control"
+                                                      },
+                                                      [
+                                                        _vm._v(
+                                                          "Start must be > 0"
+                                                        )
+                                                      ]
+                                                    )
+                                                  : _vm._e(),
+                                                _vm._v(" "),
+                                                !_vm.$v.selectedNumber.start
+                                                  .required
+                                                  ? _c(
+                                                      "p",
+                                                      {
+                                                        staticClass:
+                                                          "error-control"
+                                                      },
+                                                      [
+                                                        _vm._v(
+                                                          "Please fill start field"
+                                                        )
+                                                      ]
+                                                    )
+                                                  : _vm._e()
+                                              ]
+                                            : _vm._e()
+                                        ],
+                                        2
+                                      ),
                                       _vm._v(" "),
                                       _c("div", { staticClass: "form-group" }, [
                                         _c(
@@ -40109,42 +40253,89 @@ var render = function() {
                                         })
                                       ]),
                                       _vm._v(" "),
-                                      _c("div", { staticClass: "form-group" }, [
-                                        _c(
-                                          "label",
-                                          { staticClass: "font-weight-bold" },
-                                          [_vm._v("Increment")]
-                                        ),
-                                        _vm._v(" "),
-                                        _c("input", {
-                                          directives: [
-                                            {
-                                              name: "model",
-                                              rawName: "v-model",
-                                              value:
-                                                _vm.selectedNumber.increment,
-                                              expression:
-                                                "selectedNumber.increment"
-                                            }
-                                          ],
-                                          staticClass: "form-control",
-                                          domProps: {
-                                            value: _vm.selectedNumber.increment
-                                          },
-                                          on: {
-                                            input: function($event) {
-                                              if ($event.target.composing) {
-                                                return
+                                      _c(
+                                        "div",
+                                        { staticClass: "form-group" },
+                                        [
+                                          _c(
+                                            "label",
+                                            { staticClass: "font-weight-bold" },
+                                            [_vm._v("Increment")]
+                                          ),
+                                          _vm._v(" "),
+                                          _c("input", {
+                                            directives: [
+                                              {
+                                                name: "model",
+                                                rawName: "v-model.number",
+                                                value:
+                                                  _vm.selectedNumber.increment,
+                                                expression:
+                                                  "selectedNumber.increment",
+                                                modifiers: { number: true }
                                               }
-                                              _vm.$set(
-                                                _vm.selectedNumber,
-                                                "increment",
-                                                $event.target.value
-                                              )
+                                            ],
+                                            staticClass: "form-control",
+                                            domProps: {
+                                              value:
+                                                _vm.selectedNumber.increment
+                                            },
+                                            on: {
+                                              input: function($event) {
+                                                if ($event.target.composing) {
+                                                  return
+                                                }
+                                                _vm.$set(
+                                                  _vm.selectedNumber,
+                                                  "increment",
+                                                  _vm._n($event.target.value)
+                                                )
+                                              },
+                                              blur: function($event) {
+                                                return _vm.$forceUpdate()
+                                              }
                                             }
-                                          }
-                                        })
-                                      ])
+                                          }),
+                                          _vm._v(" "),
+                                          _vm.$v.selectedNumber.increment
+                                            .$invalid
+                                            ? [
+                                                !_vm.$v.selectedNumber.increment
+                                                  .minValue
+                                                  ? _c(
+                                                      "p",
+                                                      {
+                                                        staticClass:
+                                                          "error-control"
+                                                      },
+                                                      [
+                                                        _vm._v(
+                                                          "Increment must be > 0"
+                                                        )
+                                                      ]
+                                                    )
+                                                  : _vm._e(),
+                                                _vm._v(" "),
+                                                !_vm.$v.selectedNumber.increment
+                                                  .required
+                                                  ? _c(
+                                                      "p",
+                                                      {
+                                                        staticClass:
+                                                          "error-control"
+                                                      },
+                                                      [
+                                                        _vm._v(
+                                                          "Please fill increment field"
+                                                        )
+                                                      ]
+                                                    )
+                                                  : _vm._e()
+                                              ]
+                                            : _vm._e()
+                                        ],
+                                        2
+                                      )
                                     ]
                                   ),
                                   _vm._v(" "),
@@ -40157,30 +40348,64 @@ var render = function() {
                                   _c("span", [_vm._v(_vm._s(_vm.invoiceNum))])
                                 ]),
                                 _vm._v(" "),
-                                _vm._m(3)
+                                _c("div", { staticClass: "modal-footer" }, [
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn",
+                                      attrs: {
+                                        type: "button",
+                                        "data-dismiss": "modal"
+                                      },
+                                      on: { click: _vm.resetSelectedNumber }
+                                    },
+                                    [_vm._v("Close")]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-primary",
+                                      attrs: {
+                                        disabled:
+                                          _vm.$v.selectedNumber.$invalid,
+                                        type: "button",
+                                        "data-dismiss": "modal"
+                                      },
+                                      on: { click: _vm.sendForm }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "Save\n                                            changes"
+                                      )
+                                    ]
+                                  )
+                                ])
                               ])
                             ]
                           )
                         ]
                       )
                     ]
-                  ),
-                  _vm._v(" "),
-                  _vm.$v.invoice.selectedInvoiceNumber.$error
-                    ? [
-                        !_vm.$v.invoice.selectedInvoiceNumber.required
-                          ? _c("small", [_vm._v("You must fill number field")])
-                          : _vm._e()
-                      ]
-                    : _vm._e()
-                ],
-                2
-              )
-            ])
+                  )
+                ]),
+                _vm._v(" "),
+                _vm.$v.invoice.selectedInvoiceNumber.$error
+                  ? [
+                      !_vm.$v.invoice.selectedInvoiceNumber.required
+                        ? _c("small", { staticClass: "error-control" }, [
+                            _vm._v("You must fill number field")
+                          ])
+                        : _vm._e()
+                    ]
+                  : _vm._e()
+              ],
+              2
+            )
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "row level" }, [
-            _vm._m(4),
+            _vm._m(3),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-8" }, [
               _c(
@@ -40208,7 +40433,9 @@ var render = function() {
                   _vm.$v.invoice.selectedDateFrom.$error
                     ? [
                         !_vm.$v.invoice.selectedDateFrom.required
-                          ? _c("small", [_vm._v("Please fill the date field")])
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Please fill the date field")
+                            ])
                           : _vm._e()
                       ]
                     : _vm._e()
@@ -40219,7 +40446,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "row level" }, [
-            _vm._m(5),
+            _vm._m(4),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-8" }, [
               _c(
@@ -40243,7 +40470,9 @@ var render = function() {
                   _vm.$v.invoice.selectedDateTo.$error
                     ? [
                         !_vm.$v.invoice.selectedDateTo.required
-                          ? _c("small", [_vm._v("Please fill the date field")])
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Please fill the date field")
+                            ])
                           : _vm._e()
                       ]
                     : _vm._e()
@@ -40259,17 +40488,15 @@ var render = function() {
           { staticClass: "invoice-box invoice-item-box" },
           [
             _c("items-table", {
-              attrs: { bus: _vm.eventBus, items: _vm.invoice.selectedItems },
-              on: {
-                "validation-status-changed": function(v) {
-                  return (_vm.isTableInvalid = v)
-                }
+              attrs: {
+                items: _vm.invoice.selectedItems,
+                "is-dirty": _vm.$v.$dirty
               }
             }),
             _vm._v(" "),
-            _vm.isTableInvalid
-              ? _c("p", { staticClass: "error" }, [
-                  _vm._v("Please correct table data")
+            _vm.isTableRowsInvalid && _vm.$v.$dirty
+              ? _c("small", { staticClass: "error-control-table" }, [
+                  _vm._v("Please type table data")
                 ])
               : _vm._e()
           ],
@@ -40302,7 +40529,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
-          _vm._m(6),
+          _vm._m(5),
           _vm._v(" "),
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
@@ -40377,27 +40604,6 @@ var staticRenderFns = [
           }
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-footer" }, [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-secondary",
-          attrs: { type: "button", "data-dismiss": "modal" }
-        },
-        [_vm._v("Close")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        { staticClass: "btn btn-primary", attrs: { type: "submit" } },
-        [_vm._v("Save changes")]
       )
     ])
   },
@@ -40600,7 +40806,7 @@ var render = function() {
         _c(
           "a",
           {
-            staticClass: "btn btn-primary",
+            staticClass: "btn btn-primary m-2",
             attrs: { href: _vm.href },
             on: { click: _vm.filterShow }
           },
@@ -40638,7 +40844,7 @@ var render = function() {
     [
       _vm._m(0),
       _vm._v(" "),
-      _vm._l(_vm.$v.items.$each.$iter, function(i, index) {
+      _vm._l(_vm.items, function(el, index) {
         return [
           _c(
             "div",
@@ -40669,45 +40875,11 @@ var render = function() {
               _vm._v(" "),
               _c("TableItem", {
                 key: index,
-                attrs: { "table-item": _vm.items[index], "validation-item": i }
+                attrs: { "is-dirty": _vm.isDirty, "table-item": el }
               })
             ],
             2
-          ),
-          _vm._v(" "),
-          i.$error
-            ? [
-                !i.item.required
-                  ? _c("h4", { staticClass: "error" }, [
-                      _vm._v("Item name is required")
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                !i.quantity.required
-                  ? _c("h4", { staticClass: "error" }, [
-                      _vm._v("quantity is required")
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                !i.quantity.integer
-                  ? _c("h4", { staticClass: "error" }, [
-                      _vm._v("quantity must be integer number")
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                !i.unitprice.required
-                  ? _c("h4", { staticClass: "error" }, [
-                      _vm._v("uniprice is required")
-                    ])
-                  : _vm._e(),
-                _vm._v(" "),
-                !i.unitprice.float
-                  ? _c("h4", { staticClass: "error" }, [
-                      _vm._v("uniprice must be floating number")
-                    ])
-                  : _vm._e()
-              ]
-            : _vm._e()
+          )
         ]
       }),
       _vm._v(" "),
@@ -40716,7 +40888,7 @@ var render = function() {
       _c(
         "button",
         {
-          staticClass: "btn btn-primary",
+          staticClass: "btn",
           attrs: { type: "button" },
           on: {
             click: function($event) {
@@ -40769,39 +40941,6 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SelectItem.vue?vue&type=template&id=0a94435a&scoped=true&":
-/*!*************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/SelectItem.vue?vue&type=template&id=0a94435a&scoped=true& ***!
-  \*************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "select",
-      { staticClass: "form-control", attrs: { name: "item-name[]" } },
-      _vm._l(_vm.info.data, function(item) {
-        return _c("option", [_vm._v(_vm._s(item.name))])
-      }),
-      0
-    )
-  ])
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/TableItem.vue?vue&type=template&id=02fb55a6&scoped=true&":
 /*!************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/TableItem.vue?vue&type=template&id=02fb55a6&scoped=true& ***!
@@ -40817,196 +40956,246 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    {
-      staticClass: "items-table-row",
-      attrs: { id: "items-row", "item-list": "" }
-    },
-    [
-      _c("div", { staticClass: "item-name" }, [
-        _c(
-          "select",
-          {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.tableItem.item,
-                expression: "tableItem.item"
-              }
+  return _c("div", [
+    _c(
+      "div",
+      {
+        staticClass: "items-table-row",
+        attrs: { id: "items-row", "item-list": "" }
+      },
+      [
+        _c("div", { staticClass: "item-name" }, [
+          _c(
+            "div",
+            { staticClass: "form-group-table" },
+            [
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.tableItem.item,
+                      expression: "tableItem.item"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  on: {
+                    blur: _vm.makeDirty,
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.$set(
+                        _vm.tableItem,
+                        "item",
+                        $event.target.multiple
+                          ? $$selectedVal
+                          : $$selectedVal[0]
+                      )
+                    }
+                  }
+                },
+                _vm._l(_vm.name.data, function(item) {
+                  return _c("option", [_vm._v(_vm._s(item.name))])
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _vm.isDirty && _vm.tableItem.dirty
+                ? [
+                    !_vm.itemRequired
+                      ? _c("small", { staticClass: "error-control" }, [
+                          _vm._v("Item name is required")
+                        ])
+                      : _vm._e()
+                  ]
+                : _vm._e()
             ],
-            staticClass: "form-control",
-            attrs: { name: "item-name[]" },
-            on: {
-              blur: function($event) {
-                return _vm.validationItem.item.$touch()
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "item-description" }, [
+          _c("div", { staticClass: "form-group-table" }, [
+            _c("textarea", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.tableItem.description,
+                  expression: "tableItem.description"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: { rows: "1", name: "item-description[]" },
+              domProps: { value: _vm.tableItem.description },
+              on: {
+                blur: _vm.makeDirty,
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.tableItem, "description", $event.target.value)
+                }
+              }
+            })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "item-unit-price" }, [
+          _c(
+            "div",
+            { staticClass: "form-group-table" },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model.number",
+                    value: _vm.tableItem.unitprice,
+                    expression: "tableItem.unitprice",
+                    modifiers: { number: true }
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "number",
+                  name: "item-unit-price[]",
+                  placeholder: "1.0",
+                  min: "1",
+                  step: "1"
+                },
+                domProps: { value: _vm.tableItem.unitprice },
+                on: {
+                  keypress: _vm.checkForFloats,
+                  blur: [
+                    _vm.makeDirty,
+                    function($event) {
+                      return _vm.$forceUpdate()
+                    }
+                  ],
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.tableItem,
+                      "unitprice",
+                      _vm._n($event.target.value)
+                    )
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm.isDirty && _vm.tableItem.dirty
+                ? [
+                    !_vm.unitPriceFloat
+                      ? _c("small", { staticClass: "error-control" }, [
+                          _vm._v("Uniprice must be floating number")
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    !_vm.unitPriceRequired
+                      ? _c("small", { staticClass: "error-control" }, [
+                          _vm._v("Uniprice is required")
+                        ])
+                      : _vm._e()
+                  ]
+                : _vm._e()
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "item-quantity" }, [
+          _c(
+            "div",
+            { staticClass: "form-group-table" },
+            [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model.number",
+                    value: _vm.tableItem.quantity,
+                    expression: "tableItem.quantity",
+                    modifiers: { number: true }
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: {
+                  type: "number",
+                  min: "1",
+                  step: "1",
+                  name: "item-quantity[]",
+                  placeholder: "1"
+                },
+                domProps: { value: _vm.tableItem.quantity },
+                on: {
+                  keypress: _vm.checkForIntegers,
+                  blur: [
+                    _vm.makeDirty,
+                    function($event) {
+                      return _vm.$forceUpdate()
+                    }
+                  ],
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(
+                      _vm.tableItem,
+                      "quantity",
+                      _vm._n($event.target.value)
+                    )
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _vm.isDirty && _vm.tableItem.dirty
+                ? [
+                    !_vm.quantityRequired
+                      ? _c("small", { staticClass: "error-control" }, [
+                          _vm._v("Quantity is required")
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    !_vm.quantityInteger
+                      ? _c("small", { staticClass: "error-control" }, [
+                          _vm._v("Quantity must be integer number")
+                        ])
+                      : _vm._e()
+                  ]
+                : _vm._e()
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "item-total" }, [
+          _c("div", { staticClass: "form-group-table" }, [
+            _c("input", {
+              staticClass: "form-control",
+              attrs: {
+                type: "number",
+                name: "item-total[]",
+                placeholder: "0.00",
+                disabled: ""
               },
-              change: function($event) {
-                var $$selectedVal = Array.prototype.filter
-                  .call($event.target.options, function(o) {
-                    return o.selected
-                  })
-                  .map(function(o) {
-                    var val = "_value" in o ? o._value : o.value
-                    return val
-                  })
-                _vm.$set(
-                  _vm.tableItem,
-                  "item",
-                  $event.target.multiple ? $$selectedVal : $$selectedVal[0]
-                )
-              }
-            }
-          },
-          [
-            _c("option"),
-            _vm._v(" "),
-            _c("option", [_vm._v("Days")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("Hours")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("Product")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("Service")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("Expense")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("Discount")])
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "item-description" }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("textarea", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model",
-                value: _vm.tableItem.description,
-                expression: "tableItem.description"
-              }
-            ],
-            staticClass: "form-control",
-            attrs: { rows: "1", name: "item-description[]" },
-            domProps: { value: _vm.tableItem.description },
-            on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.tableItem, "description", $event.target.value)
-              }
-            }
-          })
+              domProps: { value: _vm.total }
+            })
+          ])
         ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "item-unit-price" }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model.number",
-                value: _vm.tableItem.unitprice,
-                expression: "tableItem.unitprice",
-                modifiers: { number: true }
-              }
-            ],
-            staticClass: "form-control",
-            attrs: {
-              type: "number",
-              name: "item-unit-price[]",
-              placeholder: "1.0",
-              min: "1",
-              step: "1"
-            },
-            domProps: { value: _vm.tableItem.unitprice },
-            on: {
-              keypress: _vm.checkForFloats,
-              blur: [
-                function($event) {
-                  return _vm.validationItem.unitprice.$touch()
-                },
-                function($event) {
-                  return _vm.$forceUpdate()
-                }
-              ],
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(
-                  _vm.tableItem,
-                  "unitprice",
-                  _vm._n($event.target.value)
-                )
-              }
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "item-quantity" }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("input", {
-            directives: [
-              {
-                name: "model",
-                rawName: "v-model.number",
-                value: _vm.tableItem.quantity,
-                expression: "tableItem.quantity",
-                modifiers: { number: true }
-              }
-            ],
-            staticClass: "form-control",
-            attrs: {
-              type: "number",
-              min: "1",
-              step: "1",
-              name: "item-quantity[]",
-              placeholder: "1"
-            },
-            domProps: { value: _vm.tableItem.quantity },
-            on: {
-              keypress: _vm.checkForIntegers,
-              blur: [
-                function($event) {
-                  return _vm.validationItem.quantity.$touch()
-                },
-                function($event) {
-                  return _vm.$forceUpdate()
-                }
-              ],
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
-                }
-                _vm.$set(_vm.tableItem, "quantity", _vm._n($event.target.value))
-              }
-            }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "item-total" }, [
-        _c("div", { staticClass: "form-group" }, [
-          _c("input", {
-            staticClass: "form-control",
-            attrs: {
-              type: "number",
-              name: "item-total[]",
-              placeholder: "0.00",
-              disabled: ""
-            },
-            domProps: { value: _vm.total }
-          })
-        ])
-      ])
-    ]
-  )
+      ]
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -59293,7 +59482,6 @@ Vue.component('customer-select', __webpack_require__(/*! ./components/CustomerSe
 Vue.component('invoice-notes', __webpack_require__(/*! ./components/InvoiceNotes.vue */ "./resources/js/components/InvoiceNotes.vue")["default"]);
 Vue.component('invoice-form', __webpack_require__(/*! ./components/InvoiceForm.vue */ "./resources/js/components/InvoiceForm.vue")["default"]);
 Vue.component('items-table', __webpack_require__(/*! ./components/ItemsTable.vue */ "./resources/js/components/ItemsTable.vue")["default"]);
-Vue.component('select-item', __webpack_require__(/*! ./components/SelectItem.vue */ "./resources/js/components/SelectItem.vue")["default"]);
 Vue.component('datapicker', __webpack_require__(/*! vuejs-datepicker */ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js")["default"]);
 Vue.component('invoices-filter', __webpack_require__(/*! ./components/Invoices-filter.vue */ "./resources/js/components/Invoices-filter.vue")["default"]);
 /**
@@ -59308,6 +59496,7 @@ Vue.component('invoices-filter', __webpack_require__(/*! ./components/Invoices-f
 
 Vue.use(vuelidate__WEBPACK_IMPORTED_MODULE_0___default.a);
 Vue.use(_routes__WEBPACK_IMPORTED_MODULE_1__["default"]);
+window.eventBus = new Vue();
 var app = new Vue({
   el: '#app',
   router: _routes__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -59813,75 +60002,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemsTable_vue_vue_type_template_id_6f584199_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ItemsTable_vue_vue_type_template_id_6f584199_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/js/components/SelectItem.vue":
-/*!************************************************!*\
-  !*** ./resources/js/components/SelectItem.vue ***!
-  \************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _SelectItem_vue_vue_type_template_id_0a94435a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./SelectItem.vue?vue&type=template&id=0a94435a&scoped=true& */ "./resources/js/components/SelectItem.vue?vue&type=template&id=0a94435a&scoped=true&");
-/* harmony import */ var _SelectItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./SelectItem.vue?vue&type=script&lang=js& */ "./resources/js/components/SelectItem.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _SelectItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _SelectItem_vue_vue_type_template_id_0a94435a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _SelectItem_vue_vue_type_template_id_0a94435a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  "0a94435a",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/SelectItem.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/SelectItem.vue?vue&type=script&lang=js&":
-/*!*************************************************************************!*\
-  !*** ./resources/js/components/SelectItem.vue?vue&type=script&lang=js& ***!
-  \*************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./SelectItem.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SelectItem.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectItem_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/SelectItem.vue?vue&type=template&id=0a94435a&scoped=true&":
-/*!*******************************************************************************************!*\
-  !*** ./resources/js/components/SelectItem.vue?vue&type=template&id=0a94435a&scoped=true& ***!
-  \*******************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectItem_vue_vue_type_template_id_0a94435a_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./SelectItem.vue?vue&type=template&id=0a94435a&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/SelectItem.vue?vue&type=template&id=0a94435a&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectItem_vue_vue_type_template_id_0a94435a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_SelectItem_vue_vue_type_template_id_0a94435a_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

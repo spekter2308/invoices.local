@@ -4,11 +4,9 @@
     @if(isset($item->id))
         <form method="POST" enctype="multipart/form-data"
               action="{{route('save-select-item', ['id' => $item->id])}}">
-
-            @else
-                <form method="POST" action="{{route('save-select-item')}}">
-
-                    @endif
+    @else
+        <form method="POST" action="{{route('save-select-item')}}">
+    @endif
 
                     @csrf
                     <div class="container">

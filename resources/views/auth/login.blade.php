@@ -65,6 +65,12 @@
                             </div>
                         </div>
                     </form>
+                    
+                    @if ($registerMessage)
+                        <div class="d-flex justify-content-center mt-3">
+                            <a href="{{ route('register') }}">{{ $registerMessage }}</a>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

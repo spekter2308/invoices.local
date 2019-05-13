@@ -34,7 +34,6 @@
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                         <a class="dropdown-item" href="{{route('company-list')}}">Profiles</a>
                                         <a class="dropdown-item" href="{{route('users-list')}}">Users</a>
-                                        <a class="dropdown-item" href="#">Invoice numbers</a>
                                         <a class="dropdown-item" href="#">Buy Premium</a>
                                     </div>
                                 </li>
@@ -43,8 +42,8 @@
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Invoices</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#">New Invlice</a>
-                                        <a class="dropdown-item" href="#">List of Invoices</a>
+                                        <a class="dropdown-item" href="/invoices/create">New Invlice</a>
+                                        <a class="dropdown-item" href="/invoices">List of Invoices</a>
                                         <a class="dropdown-item" href="{{route('select-item')}}">Items</a>
                                     </div>
                                 </li>

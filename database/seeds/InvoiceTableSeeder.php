@@ -14,7 +14,7 @@ class InvoiceTableSeeder extends Seeder
      */
     public function run()
     {
-        $faker = Factory::create();
+        /*$faker = Factory::create();
         Invoice::truncate();
         Item::truncate();
         foreach (range(1, 20) as $i) {
@@ -23,12 +23,11 @@ class InvoiceTableSeeder extends Seeder
                 $unitPrice = $faker->numberBetween(100, 1000);
                 $quantity = $faker->numberBetween(1, 10);
                 $items->push(new Item([
-                    'name' => $faker->name,
+                    'item' => $faker->name,
                     'description' => $faker->sentence(rand(1, 5), true),
-                    'unit_price' => $unitPrice,
+                    'unitprice' => $unitPrice,
                     'quantity' => $quantity,
                     'tax' => 0,
-                    'amount' => ($unitPrice * $quantity)
                 ]));
             }
             $subTotal = $items->sum('amount');
@@ -49,6 +48,6 @@ class InvoiceTableSeeder extends Seeder
                 'status' => 'Partial'
             ]);
             $invoice->items()->saveMany($items);
-        }
+        }*/
     }
 }

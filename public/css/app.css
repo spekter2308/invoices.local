@@ -10662,6 +10662,10 @@ a.text-dark:focus {
   }
 }
 
+.invoice-create-body {
+  background-color: #fff;
+}
+
 .wrapper-invoice-create {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -10677,6 +10681,33 @@ a.text-dark:focus {
 
 .invoice-from-to-customer-box {
   grid-area: invoice-box-1;
+}
+
+.invoice-from-to-customer-box .company-data-show {
+  min-height: 200px;
+  margin-top: 10px;
+}
+
+.invoice-from-to-customer-box .company-data-show span {
+  display: block;
+}
+
+.invoice-from-to-customer-box .customer-data-show {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 200px;
+  margin-top: 10px;
+}
+
+.invoice-from-to-customer-box .customer-data-show span {
+  display: block;
+}
+
+.invoice-from-to-customer-box .customer-data-show a {
+  text-decoration: none;
+  color: grey;
+  font-weight: bold;
 }
 
 .invoice-logo-box {
@@ -10710,7 +10741,6 @@ a.text-dark:focus {
 .invoice-item-box .items-table-header,
 .invoice-item-box .items-table-row {
   display: grid;
-  height: 35px;
   grid-template-columns: 1.5fr 3fr 1fr 1fr 1fr;
 }
 
@@ -10722,6 +10752,44 @@ a.text-dark:focus {
 
 .invoice-item-box .items-table-header > div {
   padding: 3px 14px;
+}
+
+.invoice-item-box .items-table-header-show,
+.invoice-item-box .items-table-row-show {
+  display: grid;
+  grid-template-columns: 3fr 6fr 1fr 1fr 1fr;
+}
+
+.invoice-item-box .items-table-header-show {
+  margin: 0;
+  background-color: #54A0E7;
+  color: #eee;
+}
+
+.invoice-item-box .items-table-header-show > div {
+  padding: 3px 14px;
+}
+
+.invoice-item-box .items-table-row-show {
+  border: 1px solid #ced4da;
+  border-top: none;
+}
+
+.invoice-item-box .items-table-row-show > div {
+  padding: 3px 14px;
+}
+
+.invoice-item-box .invoice-notes-result {
+  display: grid;
+  grid-column-gap: 10px;
+  grid-template-columns: 3fr 2fr;
+  border: 1px solid #ced4da;
+  border-top: none;
+  padding: 3px 10px;
+}
+
+.invoice-item-box .invoice-notes-result .invoice-notes {
+  border-right: 1px solid #ced4da;
 }
 
 .invoice-item-box .remove-item-button {
@@ -10752,6 +10820,152 @@ a.text-dark:focus {
   grid-area: invoice-box-6;
   margin-top: 30px;
   margin-left: 30px;
+}
+
+.btn {
+  border: none;
+  border-radius: 2px;
+  font-size: 13px;
+  line-height: 13px;
+  padding: 8px 16px;
+  display: inline-block;
+  cursor: pointer;
+  transition: background 0.2s;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  background: #f4f4f4;
+  box-shadow: 0 1px #dbdbdb;
+}
+
+.btn-select {
+  border: none;
+  box-shadow: none;
+}
+
+.btn:focus {
+  outline-style: dotted;
+  outline-width: 1px;
+  outline-offset: 1px;
+}
+
+.btn:active {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.btn[disabled] {
+  opacity: 0.75;
+  cursor: not-allowed;
+}
+
+a.btn {
+  text-decoration: none;
+}
+
+a.btn-primary {
+  color: #fff;
+}
+
+a.btn-secondary {
+  color: #555 !important;
+}
+
+a.btn-secondary:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-primary {
+  background: #3aa3e3;
+  color: #fff;
+  box-shadow: 0 1px #1a7bb7;
+}
+
+.btn-danger {
+  background: #e75650;
+  color: #fff;
+  box-shadow: 0 1px #ce231c;
+}
+
+.btn-success {
+  background: #66bb6a;
+  color: #fff;
+  box-shadow: 0 1px #419345;
+}
+
+.btn-sm,
+.btn-group-sm > .btn {
+  padding: 4px 8px;
+}
+
+.error-control {
+  display: block;
+  color: #e75650;
+  padding-left: 8px;
+}
+
+.error-control-table {
+  display: block;
+  position: relative;
+  color: #e75650;
+  padding-left: 8px;
+  font-size: 15px;
+  text-align: center;
+  top: -40px;
+}
+
+.form-group {
+  margin-bottom: 0;
+  padding: 8px;
+}
+
+.form-group-table {
+  margin-bottom: 0;
+  padding-bottom: 8px;
+}
+
+.table thead th,
+.table thead td {
+  border: none;
+}
+
+.table th,
+.table td {
+  vertical-align: middle;
+}
+
+.form-check-invoice {
+  display: table-cell;
+  vertical-align: middle;
+  padding: 4px;
+}
+
+.form-check-invoice input[type=checkbox] {
+  display: none;
+}
+
+.form-check-invoice input[type=checkbox] + label {
+  background-color: #fafafa;
+  border: 1px solid #cacece;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -5px 3px -4px rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  padding: 6px;
+}
+
+.form-check-invoice input[type=checkbox] + label:hover {
+  cursor: pointer;
+}
+
+.form-check-invoice input[type=checkbox]:checked + label {
+  background-color: #1d643b;
+}
+
+.dropdown-item:hover {
+  background-color: #f3f3f3;
 }
 
 .error {

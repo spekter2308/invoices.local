@@ -1,74 +1,126 @@
 <template>
 
-    <div class="items-table-row" id="items-row" item-list>
-        <div class="item-name">
-            <select class="form-control" name="item-name[]" v-model="tableItem.item"
-                    @blur="validationItem.item.$touch()">
-                <option></option>
-                <option>Days</option>
-                <option>Hours</option>
-                <option>Product</option>
-                <option>Service</option>
-                <option>Expense</option>
-                <option>Discount</option>
-            </select>
-        </div>
-        <div class="item-description">
-            <div class="form-group">
+   <div>
+       <div class="items-table-row" id="items-row" item-list>
+           <div class="item-name">
+               <div class="form-group-table">
+                   <select class="form-control" v-model="tableItem.item"
+                           @blur="makeDirty">
+                       <option v-for="item in name.data">{{item.name}}</option>
+                   </select>
+                   <template v-if="isDirty && tableItem.dirty">
+                       <small class="error-control" v-if="!itemRequired">Item name is required</small>
+                   </template>
+               </div>
+           </div>
+           <div class="item-description">
+               <div class="form-group-table">
                 <textarea class="form-control"
                           rows="1" name="item-description[]"
+                          @blur="makeDirty"
                           v-model="tableItem.description">
                 </textarea>
-            </div>
-        </div>
-        <div class="item-unit-price">
-            <div class="form-group">
-                <input type="number" class="form-control"
-                       name="item-unit-price[]" placeholder="1.0"
-                       min="1"
-                       step="1"
-                       @keypress="checkForFloats"
-                       @blur="validationItem.unitprice.$touch()"
-                       v-model.number="tableItem.unitprice">
-            </div>
-        </div>
-        <div class="item-quantity">
-            <div class="form-group">
-                <input type="number" class="form-control"
-                       min="1"
-                       step="1"
-                       @keypress="checkForIntegers"
-                       name="item-quantity[]" placeholder="1"
-                       @blur="validationItem.quantity.$touch()"
-                       v-model.number="tableItem.quantity">
-            </div>
-        </div>
-        <div class="item-total">
-            <div class="form-group">
-                <input type="number" class="form-control"
-                       name="item-total[]" placeholder="0.00" disabled
-                       :value="total">
-            </div>
-        </div>
-
-
-    </div>
+                </div>
+           </div>
+           <div class="item-unit-price">
+               <div class="form-group-table">
+                   <input type="number" class="form-control"
+                          name="item-unit-price[]" placeholder="1.0"
+                          min="1"
+                          step="1"
+                          @keypress="checkForFloats"
+                          @blur="makeDirty"
+                          v-model.number="tableItem.unitprice">
+                   <template v-if="isDirty && tableItem.dirty">
+                       <small v-if="!unitPriceFloat" class="error-control">Uniprice must be floating number</small>
+                       <small v-if="!unitPriceRequired" class="error-control">Uniprice is required</small>
+                   </template>
+               </div>
+           </div>
+           <div class="item-quantity">
+               <div class="form-group-table">
+                   <input type="number" class="form-control"
+                          min="1"
+                          step="1"
+                          @keypress="checkForIntegers"
+                          name="item-quantity[]" placeholder="1"
+                          @blur="makeDirty"
+                          v-model.number="tableItem.quantity">
+                   <template v-if="isDirty && tableItem.dirty">
+                       <small v-if="!quantityRequired" class="error-control">Quantity is required</small>
+                       <small v-if="!quantityInteger" class="error-control">Quantity must be integer number</small>
+                   </template>
+               </div>
+           </div>
+           <div class="item-total">
+               <div class="form-group-table">
+                   <input type="number" class="form-control"
+                          name="item-total[]" placeholder="0.00" disabled
+                          :value="total">
+               </div>
+           </div>
+       </div>
+   </div>
 </template>
 
 <script>
+    import axios from 'axios'
+    import { required, integer } from 'vuelidate/lib/validators'
+
     export default {
         name: "TableItem",
+        data() {
+            return {
+                name: []
+            }
+        },
         props: {
-            tableItem: {
-                type: Object,
-                required: true
+            isDirty: {
+                required: true,
+                type: Boolean
             },
-            validationItem: {
+            tableItem: {
                 type: Object,
                 required: true
             }
         },
+        mounted() {
+            axios
+                .get('/invoices/get/select-item')
+                .then(response => (this.name = response));
+
+            eventBus.$on('touch', () => {
+                this.tableItem.dirty = true
+            })
+        },
+        watch: {
+            correct(v) {
+                this.tableItem.correct = this.correct
+            }
+        },
         computed: {
+            correct() {
+              return this.itemRequired
+                  && this.quantityInteger
+                  && this.quantityRequired
+                  && this.unitPriceRequired
+                  && this.unitPriceFloat
+            },
+            itemRequired() {
+                return required(this.tableItem.item)
+            },
+            quantityRequired() {
+                return required(this.tableItem.quantity)
+            },
+            unitPriceRequired() {
+                return required(this.tableItem.unitprice)
+            },
+            quantityInteger() {
+                return integer(this.tableItem.quantity)
+            },
+            unitPriceFloat() {
+                return /[+-]?([0-9]*[.])?[0-9]+/.test(this.tableItem.unitprice)
+            },
             total() {
                 if (!this.tableItem.unitprice || !this.tableItem.quantity){
                     return 0;
@@ -77,6 +129,9 @@
             }
         },
         methods: {
+            makeDirty() {
+                this.tableItem.dirty = true
+            },
             checkForFloats(e) {
                 const val = `${this.tableItem.unitprice}${e.key}`
                 if ( this.tableItem.unitprice !== null && !/[+-]?([0-9]*[.])?[0-9]+/.test(val)) {

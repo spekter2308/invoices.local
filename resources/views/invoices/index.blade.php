@@ -23,13 +23,14 @@
                 <div class="card-body">
                     <div class="level">
                         <h5 class="mr-3">Status:</h5>
-                        <a href="#" class="pd-1 border-right">All</a>
-                        <a href="#" class="pd-1 pdl-1 border-right">Draft</a>
-                        <a href="#" class="pd-1 pdl-1 border-right">Sent</a>
-                        <a href="#" class="pd-1 pdl-1 border-right">Late</a>
-                        <a href="#" class="pd-1 pdl-1 border-right">Paid</a>
-                        <a href="#" class="pd-1 pdl-1 border-right">Partial</a>
-                        <a href="#" class="pd-1 pdl-1 border-right">Archived</a>
+                        <a href="/invoices" class="pd-1 border-right">All</a>
+                        <a href="/invoices?status=Late" class="pd-1 pdl-1 border-right">Late</a>
+                        <a href="/invoices?status=Draft" class="pd-1 pdl-1 border-right">Draft</a>
+                        <a href="/invoices?status=Sent" class="pd-1 pdl-1 border-right">Sent</a>
+                        <a href="/invoices?status=Viewed" class="pd-1 pdl-1 border-right">Viewed</a>
+                        <a href="/invoices?status=Paid" class="pd-1 pdl-1 border-right">Paid</a>
+                        <a href="/invoices?status=Partial" class="pd-1 pdl-1 border-right">Partial</a>
+                        <a href="/invoices?status=Archived" class="pd-1 pdl-1 border-right">Archived</a>
                     </div>
                     <table class="table">
                         <thead class="bg-primary text-white">
@@ -53,67 +54,14 @@
                             <th scope="col">Company</th>
                             <th scope="col">Date</th>
                             <th scope="col">Days</th>
-                            <th scope="col">Toral</th>
+                            <th scope="col">Total</th>
                             <th scope="col">Balance</th>
                             <th scope="col">Status</th>
-                            {{--<th scope="col">Mark Paid</th>--}}
+                            <th class="bg-white"></th>
                         </tr>
                         </thead>
                         <tbody>
-                        @forelse  ($invoices as $invoice)
-                            @php
-                                /** @var \App\Invoice $invoice */
-                            @endphp
-                            <tr>
-
-                                <td>
-                                    <div class="form-group row">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox"
-                                                   id="check-{{ $invoice->id }}">
-                                        </div>
-                                    </div>
-                                </td>
-
-                                <td scope="row">
-                                    <div class="dropdown">
-                                        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
-                                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                        </div>
-                                        {{ str_pad($invoice->number, 7, "0", STR_PAD_LEFT) }}
-                                    </div>
-                                </td>
-
-                                <td><a href="#">{{ $invoice->customer->name }}</a></td>
-                                <td><a href="#">{{ $invoice->company->name }}</a></td>
-                                <td>{{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}</td>
-                                <td
-                                        @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))
-                                        style="color: green;"
-                                        @else
-                                        style="color: red"
-                                        @endif
-                                >{{
-                                     \Carbon\Carbon::parse($invoice->due_date)->diffInDays(\Carbon\Carbon::now())
-                                     }}
-                                </td>
-                                <td>{{ $invoice->total }}</td>
-                                <td>{{ $invoice->balance }}</td>
-                                <td>{{ $invoice->status }}</td>
-                                <td>
-                                    <button>
-                                        mark paid
-                                    </button>
-                                </td>
-                            </tr>
-                            @empty
-                            <tr><td><h3>No data</h3></td></tr>
-                        @endforelse
-
+                        @include('invoices/includes/invoice_table_body')
                         </tbody>
                     </table>
                 </div>

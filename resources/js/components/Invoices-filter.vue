@@ -31,7 +31,7 @@
                 </div>
             </div>
             <div class="col-md-3 text-right">
-                <a @click="filterShow" :href="href" class="btn btn-primary">Show</a>
+                <a @click="filterShow" :href="href" class="btn btn-primary m-2">Show</a>
             </div>
 
         </div>

@@ -16,9 +16,9 @@
                             >
                             </company-select>
                             <template v-if="$v.invoice.selectedCompany.$error">
-                                <small v-if="$v.invoice.selectedCompany.required"
-                                >Please select company</small>
-                                <small v-if="!$v.invoice.selectedCompany.integer">Company does not exist</small>
+                                <small class="error-control" v-if="$v.invoice.selectedCompany.required">
+                                    Please select company
+                                </small>
                             </template>
                         </div>
                     </div>
@@ -28,18 +28,14 @@
                             <customer-select
                                     :customers="customers"
                                     @blur="$v.invoice.selectedCustomer.$touch()"
-                                    :bus="eventBus"
                                     v-model="invoice.selectedCustomer">
                             </customer-select>
                             <template v-if="$v.invoice.selectedCustomer.$error">
-
-                                <small v-if="!$v.invoice.selectedCustomer.allInputsFilled">
-                                    Please fill all inputs
+                                <small class="error-control" v-if="!$v.invoice.selectedCustomer.allInputsFilled">
+                                    Please select customer from list or create new
                                 </small>
-                                <small v-else-if="!$v.invoice.selectedCustomer.isCorrectType">Sorry but you have
-                                    choosen wrong data</small>
-                                <small v-else-if="!$v.invoice.selectedCustomer.required"
-                                >Please select customer</small>
+                                <small class="error-control" v-else-if="!$v.invoice.selectedCustomer.isCorrectType">Sorry but you have choosen wrong data</small>
+                                <small class="error-control" v-else-if="!$v.invoice.selectedCustomer.required">Please select customer</small>
                             </template>
                         </div>
                     </div>
@@ -84,7 +80,8 @@
                             </button>
 
                             <!-- Modal -->
-                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                     <form @submit.prevent="editNumber">
                                         <div class="modal-content">
@@ -101,11 +98,23 @@
                                                 <div class="d-flex justify-content-between">
                                                     <div class="form-group">
                                                         <label class="font-weight-bold">Prefix</label>
-                                                        <input class="form-control" v-model="selectedNumber.prefix">
+                                                        <input
+                                                                class="form-control"
+                                                                v-model="selectedNumber.prefix"
+                                                        >
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="font-weight-bold">Start #</label>
-                                                        <input class="form-control" v-model="selectedNumber.start">
+                                                        <input
+                                                                class="form-control"
+                                                               v-model.number="selectedNumber.start"
+                                                        >
+                                                       <template v-if="$v.selectedNumber.start.$invalid">
+                                                           <p v-if="!$v.selectedNumber.start.minValue"
+                                                              class="error-control">Start must be > 0</p>
+                                                           <p v-if="!$v.selectedNumber.start.required"
+                                                              class="error-control">Please fill start field</p>
+                                                       </template>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="font-weight-bold">Postfix</label>
@@ -113,28 +122,42 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="font-weight-bold">Increment</label>
-                                                        <input class="form-control" v-model="selectedNumber.increment">
+                                                        <input
+                                                                class="form-control"
+                                                               v-model.number="selectedNumber.increment"
+                                                        >
+                                                        <template v-if="$v.selectedNumber.increment.$invalid">
+                                                            <p v-if="!$v.selectedNumber.increment.minValue"
+                                                               class="error-control">Increment must be > 0</p>
+                                                            <p v-if="!$v.selectedNumber.increment.required"
+                                                               class="error-control">Please fill increment field</p>
+                                                        </template>
                                                     </div>
                                                 </div>
                                                 <h6 class="font-weight-bold">Next invoice number</h6>
                                                 <span>{{invoiceNum}}</span>
                                             </div>
                                             <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                                <button type="submit" class="btn btn-primary">Save changes</button>
+                                                <button @click="resetSelectedNumber" type="button"
+                                                        class="btn"
+                                                        data-dismiss="modal">Close</button>
+                                                <button :disabled="$v.selectedNumber.$invalid" type="button"
+                                                        class="btn btn-primary"
+                                                        @click="sendForm" data-dismiss="modal">Save
+                                                changes</button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-
-                            <template v-if="$v.invoice.selectedInvoiceNumber.$error">
-                                <small v-if="!$v.invoice.selectedInvoiceNumber.required"
-                                >You must fill number field</small>
-                            </template>
                         </div>
+                        <template v-if="$v.invoice.selectedInvoiceNumber.$error">
+                            <small class="error-control" v-if="!$v.invoice.selectedInvoiceNumber.required"
+                            >You must fill number field</small>
+                        </template>
                     </div>
                 </div>
+                <!--Invoice Date-->
                 <div class="row level">
                     <div class="col-md-4">
                         <h6 class="font-weight-bold">Invoice Date</h6>
@@ -148,12 +171,13 @@
                                    @input="invoice.selectedDateFrom=$event.target.value"
                             >
                             <template v-if="$v.invoice.selectedDateFrom.$error">
-                                <small v-if="!$v.invoice.selectedDateFrom.required"
+                                <small class="error-control" v-if="!$v.invoice.selectedDateFrom.required"
                                 >Please fill the date field</small>
                             </template>
                         </div>
                     </div>
                 </div>
+                <!--Due Date-->
                 <div class="row level">
                     <div class="col-md-4">
                         <h6 class="font-weight-bold">Due Date</h6>
@@ -167,7 +191,7 @@
                                    @input="invoice.selectedDateTo=$event.target.value"
                             >
                             <template v-if="$v.invoice.selectedDateTo.$error">
-                                <small v-if="!$v.invoice.selectedDateTo.required"
+                                <small class="error-control" v-if="!$v.invoice.selectedDateTo.required"
                                 >Please fill the date field</small>
                             </template>
                         </div>
@@ -176,15 +200,11 @@
             </div>
             <!-- {{--Items part--}} -->
 
-            <!--  <div class="invoice-box invoice-item-box">
-                      @include('invoices.items_table')
-                  </div>        -->
-
             <div class="invoice-box invoice-item-box">
-                <items-table @validation-status-changed="v => isTableInvalid = v"
-                             :bus="eventBus"
-                             :items="invoice.selectedItems"></items-table>
-                <p v-if="isTableInvalid" class="error">Please correct table data</p>
+                <items-table :items="invoice.selectedItems"
+                             :is-dirty="$v.$dirty"
+                ></items-table>
+                <small v-if="isTableRowsInvalid && $v.$dirty" class="error-control-table">Please type table data</small>
             </div>
 
             <div class="invoice-box invoice-notes-box">
@@ -220,7 +240,7 @@
 
 <script>
     import axios from 'axios'
-    import { required, integer } from 'vuelidate/lib/validators'
+    import { required, integer, minValue } from 'vuelidate/lib/validators'
     /*import Items from './ItemsTable.vue'*/
     export default {
         /* comments: {
@@ -235,6 +255,10 @@
                 type: Object,
                 required: false
             },
+            invoiceNumbers: {
+                type: Array,
+                required: true
+            },
             companies: {
                 type: Array,
                 required: true
@@ -246,37 +270,48 @@
         },
         data() {
             return {
-                isTableInvalid: false,
-                eventBus: new Vue(),
+                //nextInvoiceNumberResponse: '',
+                createdInvoiceId: NaN,
+                isTableInvalid: true,
                 invoice: {
                     selectedCompany: NaN,
                     selectedCustomer: {},
                     //selectedFile: null,
                     selectedDateFrom: new Date().toISOString().slice(0,10),
                     selectedDateTo: new Date().toISOString().slice(0,10),
-                    selectedInvoiceNumber: this.invoiceNumber.prefix +
-                                            (parseInt(this.invoiceNumber.start) + parseInt(this.invoiceNumber.increment)) +
-                                            this.invoiceNumber.postfix || this.invoiceNumber,
+                    selectedInvoiceNumber: this.invoiceNumber,
                     selectedItems: [
                         {
-                            id: 1,
+                            //id: 1,
                             item: null,
                             description: null,
                             quantity: 1,
-                            unitprice: 1
+                            unitprice: 1,
+                            dirty: false,
+                            correct: false
                         }
                     ]
                 },
                 selectedNumber: {
-                    prefix: this.formatNumber.prefix,
-                    start: this.formatNumber.start,
-                    postfix: this.formatNumber.postfix,
-                    increment: this.formatNumber.increment
+                    prefix: this.formatNumber.prefix || '',
+                    start: this.formatNumber.start || 0,
+                    postfix: this.formatNumber.postfix || '',
+                    increment: this.formatNumber.increment || 1
                 },
                 notes: ''
             }
         },
         validations: {
+            selectedNumber: {
+                start: {
+                    required,
+                    minValue: minValue(0)
+                },
+                increment: {
+                    required,
+                    minValue: minValue(1)
+                }
+            },
             invoice: {
                 selectedCompany: {
                     required,
@@ -312,18 +347,17 @@
         },
         watch: {
             '$v.$error'(v) {
-                //debugger
                 if ( v === true) {
                     this.sendButton.disabled = true
                 } else {
-                    if (this.isTableInvalid === false) {
+                    if (this.isTableRowsInvalid === false) {
                         this.sendButton.disabled = false
                     }
                 }
             },
-            isTableInvalid(v) {
+            isTableRowsInvalid(v) {
                 if ( v === true && this.$v.$dirty) {
-                    this.sendButton.disabled = true
+                        this.sendButton.disabled = true
                 } else {
                     if (this.$v.$error === false) {
                         this.sendButton.disabled = false
@@ -335,57 +369,99 @@
             this.sendButton = document.querySelector('.send-btn')
         },
         methods: {
+            updateNextNumber() {
+                return axios.get('/counters').then(response => {
+                    this.nextInvoiceNumberResponse = response.data.invoiceNumber;
+                    console.log(this.invoiceNumbers)
+                })
+            },
+            resetSelectedNumber() {
+                this.selectedNumber = {
+                    prefix: this.formatNumber.prefix || '',
+                    start: this.formatNumber.start || 0,
+                    postfix: this.formatNumber.postfix || '',
+                    increment: this.formatNumber.increment || 1
+                }
+            },
             resetInvoice() {
                 this.invoice.selectedCompany = NaN
                 this.invoice.selectedCustomer = {}
                 //this.invoice.selectedFile = null
                 this.invoice.selectedDateFrom = new Date().toISOString().slice(0, 10)
                 this.invoice.selectedDateTo = new Date().toISOString().slice(0, 10)
-                this.invoice.selectedInvoiceNumber = this.invoiceNumber + '1';
+                this.invoice.selectedInvoiceNumber = this.nextInvoiceNumberResponse;
                 this.invoice.selectedItems = [
                     {
-                        id: 1,
+                        //id: 1,
                         description: null,
                         item: null,
                         quantity: 1,
-                        unitprice: 1
+                        unitprice: 1,
+                        dirty: false,
+                        correct: false
                     }
                 ]
-                this.isTableInvalid = false
-                this.isTableInvalid = false
+                this.notes = ''
+                //this.isTableInvalid = false
             },
             async onSubmit() {
                 try {
                     this.$v.$touch();
-                    this.eventBus.$emit('touch', true)
-                    this.eventBus.$emit('reset', true)
-                    if (!this.$v.$error && !this.isTableInvalid) {
+                    eventBus.$emit('touch', true)
+                    if (!this.$v.$error && !this.isTableRowsInvalid) {
                         console.log(JSON.stringify(this.invoice));
-                        await axios.post('/invoices', this.invoice)
-                        this.resetInvoice()
-                        this.eventBus.$emit('update', true)
-                        this.$v.$reset()
-                        console.log('resetting')
+                        await axios.post('/invoices', this.invoice).then(response => {
+                            this.createdInvoiceId = response.data.id
+                        });
+                        //await this.updateNextNumber();
+                        //this.resetInvoice();
+                        //eventBus.$emit('update', true)
+                        //this.$v.$reset()
+                        //eventBus.$emit('reset', true)
+                        //console.log('resetting')
+                        location.href = '/invoices/' + this.createdInvoiceId;
                     }
                 } catch(e) {
                     // this.resetInvoice()
                     // this.$v.$reset()
+                    console.log('some error')
                 }
+            },
+            sendForm() {
+                this.editNumber();
             },
             async editNumber() {
                 try {
                     console.log(JSON.stringify(this.selectedNumber));
-                    this.axios.patch('/counters/' + this.invoiceNumber.id, this.selectedNumber);
+                    await axios.patch('/counters/' + this.formatNumber.id, this.selectedNumber);
+                    this.invoice.selectedInvoiceNumber = this.invoiceNum;
+                    this.updateNextNumber();
                 } catch (e) {
-
+                    console.log(e)
                 }
             },
+            /*updateInvoiceNum() {
+                //axios.get('/')
+            },*/
             getInvoiceNotes(variable){
                 this.notes = variable;
-            }
-        },
+            },
+            checkInArray(prefix, start, increment, postfix, array, old_increment) {
+                let result = prefix + (parseInt(start) + parseInt(increment)) + postfix;
+                if (array.includes(result)){
+                    return this.checkInArray(prefix, start, (parseInt(increment) + parseInt(old_increment)), postfix,
+                        array, old_increment);
+                }
+                return result;
+            },
 
+        },
         computed: {
+            isTableRowsInvalid() {
+              return this.invoice.selectedItems.reduce((acc, curr) => {
+                  return acc && !curr.correct
+              }, true)
+            },
             currentDate() {
                 return new Date().toISOString().slice(0,10);
             },
@@ -393,10 +469,10 @@
                 return this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0)
             },
             invoiceNum(){
-                return this.selectedNumber.prefix +
-                    (parseInt(this.selectedNumber.start) + parseInt(this.selectedNumber.increment)) +
-                    this.selectedNumber.postfix;
-            }
+                return this.checkInArray(this.selectedNumber.prefix, this.selectedNumber.start,
+                    this.selectedNumber.increment, this.selectedNumber.postfix, this.invoiceNumbers,
+                    this.selectedNumber.increment);
+            },
         }
     }
     function isObject(v) {

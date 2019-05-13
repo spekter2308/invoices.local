@@ -1,11 +1,12 @@
 <template>
     <div>
         <h4>From</h4>
-        <select class="custom-select" :value="value" v-on="listeners">
-            <option selected :value="NaN" disabled>Choose company ...</option>
-            <option v-for="company of companies" :value="company.id">{{ company.name }}</option>
-        </select>
-        <br><br>
+        <div class="form-group">
+            <select class="custom-select" :value="value" v-on="listeners">
+                <option selected :value="NaN" disabled>Choose company ...</option>
+                <option v-for="company of companies" :value="company.id">{{ company.name }}</option>
+            </select>
+        </div>
         <div class="form-group">
             <textarea name="company_address"
                       id="company_address"
