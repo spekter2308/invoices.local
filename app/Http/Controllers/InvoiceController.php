@@ -242,8 +242,8 @@ class InvoiceController extends Controller
 
         switch ($selected) {
             case 1 :
-                $response['min_date'] = $invoice->min('created_at');
-                $response['max_date'] = $invoice->max('created_at');
+                $response['min_date'] = $invoice->min('invoice_date');
+                $response['max_date'] = $invoice->max('invoice_date');
                 break;
             case 2 :
                 $response['min_date'] = Carbon::now()->startOfMonth();
