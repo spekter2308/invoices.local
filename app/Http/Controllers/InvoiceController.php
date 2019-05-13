@@ -22,19 +22,17 @@ class InvoiceController extends Controller
     use HasManyRelation;
 
 
-    public function index(Invoice $invoice, Request $request)
+    public function index(Request $request, InvoiceFilters $filters)
     {
-        $invoices = $invoice->latest()->with(['company', 'customer']);
+        $invoices = $this->getInvoices($filters);
 
         if ($request->has(['from', 'to'])) {
 
             $from = Carbon::createFromTimeString($request->from)->format('Y-m-d');
             $to = Carbon::createFromTimeString($request->to)->format('Y-m-d');
 
-            $invoices = $invoices->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+            $invoices = $invoices->where('invoice_date', '>=', $from)->where('invoice_date', '<=', $to);
         }
-
-        $invoices = $invoices->get();
 
         if (\request()->wantsJson()) {
             return $invoices;
@@ -176,9 +174,7 @@ class InvoiceController extends Controller
     public function selectItem(InvoiceItemName $invoiceItem)
     {
         $items = $invoiceItem->latest()->paginate(15);
-        return view('invoices.table-select-item')->with([
-            'items' => $items
-        ]);
+        return view('invoices.table-select-item', ['items' => $items]);
     }
 
     public function getSelectItem(InvoiceItemName $invoiceItem)
