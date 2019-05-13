@@ -129,6 +129,32 @@ class InvoiceController extends Controller
         return view('invoices.show', compact('invoice'));
     }
 
+    public function edit($id)
+    {
+        $invoice = Invoice::findOrFail($id);
+
+        //check for unique invoice number
+        $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
+        $counter = Counter::where(['user_id' => auth()->id()])->first();
+        $prefix = $counter->prefix;
+        $start = $counter->start;
+        $increment = $counter->increment;
+        $postfix = $counter->postfix;
+
+        $invoiceNumber = $invoice->number;
+
+        $customers = Customer::latest()->get();
+        $companies = Company::latest()->get();
+
+        return view('invoices.edit', [
+            'invoiceNumber' => $invoiceNumber,
+            'invoiceFormatNumber' => $counter,
+            'invoiceNumbers' => $invoiceNumbers,
+            'customers' => $customers,
+            'companies' => $companies
+        ]);
+    }
+
     public function markAsPaid($id)
     {
         $invoice = Invoice::findOrFail($id);

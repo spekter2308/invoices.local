@@ -270,7 +270,8 @@
         },
         data() {
             return {
-                nextInvoiceNumberResponse: '',
+                //nextInvoiceNumberResponse: '',
+                createdInvoiceId: NaN,
                 isTableInvalid: true,
                 invoice: {
                     selectedCompany: NaN,
@@ -371,7 +372,6 @@
             updateNextNumber() {
                 return axios.get('/counters').then(response => {
                     this.nextInvoiceNumberResponse = response.data.invoiceNumber;
-                    this.invoiceNumbers = response.data.invoiceNumbers;
                     console.log(this.invoiceNumbers)
                 })
             },
@@ -410,13 +410,16 @@
                     eventBus.$emit('touch', true)
                     if (!this.$v.$error && !this.isTableRowsInvalid) {
                         console.log(JSON.stringify(this.invoice));
-                        await axios.post('/invoices', this.invoice);
-                        await this.updateNextNumber();
-                        this.resetInvoice();
-                        eventBus.$emit('update', true)
-                        this.$v.$reset()
-                        eventBus.$emit('reset', true)
-                        console.log('resetting')
+                        await axios.post('/invoices', this.invoice).then(response => {
+                            this.createdInvoiceId = response.data.id
+                        });
+                        //await this.updateNextNumber();
+                        //this.resetInvoice();
+                        //eventBus.$emit('update', true)
+                        //this.$v.$reset()
+                        //eventBus.$emit('reset', true)
+                        //console.log('resetting')
+                        location.href = '/invoices/' + this.createdInvoiceId;
                     }
                 } catch(e) {
                     // this.resetInvoice()

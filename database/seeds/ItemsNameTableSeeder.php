@@ -12,9 +12,11 @@ class ItemsNameTableSeeder extends Seeder
      */
     public function run()
     {
-        for ($i = 1; $i <= 3; $i++) {
-            $itemName = InvoiceItemName::create([
-                'name' => 'item-' . $i
+        $items = ['Expense', 'Hours', 'Product', 'Service'];
+
+        foreach ($items as $item) {
+            InvoiceItemName::create([
+                'name' => $item
             ]);
         }
     }

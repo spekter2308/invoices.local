@@ -2289,7 +2289,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
-      nextInvoiceNumberResponse: '',
+      //nextInvoiceNumberResponse: '',
+      createdInvoiceId: NaN,
       isTableInvalid: true,
       invoice: {
         selectedCompany: NaN,
@@ -2392,7 +2393,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get('/counters').then(function (response) {
         _this.nextInvoiceNumberResponse = response.data.invoiceNumber;
-        _this.invoiceNumbers = response.data.invoiceNumbers;
         console.log(_this.invoiceNumbers);
       });
     },
@@ -2426,6 +2426,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _onSubmit = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var _this2 = this;
+
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
@@ -2435,42 +2437,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 eventBus.$emit('touch', true);
 
                 if (!(!this.$v.$error && !this.isTableRowsInvalid)) {
-                  _context.next = 14;
+                  _context.next = 8;
                   break;
                 }
 
                 console.log(JSON.stringify(this.invoice));
                 _context.next = 7;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices', this.invoice);
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices', this.invoice).then(function (response) {
+                  _this2.createdInvoiceId = response.data.id;
+                });
 
               case 7:
-                _context.next = 9;
-                return this.updateNextNumber();
+                //await this.updateNextNumber();
+                //this.resetInvoice();
+                //eventBus.$emit('update', true)
+                //this.$v.$reset()
+                //eventBus.$emit('reset', true)
+                //console.log('resetting')
+                location.href = '/invoices/' + this.createdInvoiceId;
 
-              case 9:
-                this.resetInvoice();
-                eventBus.$emit('update', true);
-                this.$v.$reset();
-                eventBus.$emit('reset', true);
-                console.log('resetting');
-
-              case 14:
-                _context.next = 19;
+              case 8:
+                _context.next = 13;
                 break;
 
-              case 16:
-                _context.prev = 16;
+              case 10:
+                _context.prev = 10;
                 _context.t0 = _context["catch"](0);
                 // this.resetInvoice()
                 // this.$v.$reset()
                 console.log('some error');
 
-              case 19:
+              case 13:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 16]]);
+        }, _callee, this, [[0, 10]]);
       }));
 
       function onSubmit() {
@@ -55609,8 +55611,8 @@ $('#customreTabs a[href="#contact-info"]').click(function (e) {
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

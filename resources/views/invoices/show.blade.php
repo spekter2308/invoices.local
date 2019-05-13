@@ -10,7 +10,7 @@
                     <div class="card-header">
                         <div class="level">
                            <span class="flex">
-                               <h1>New Invoice</h1>
+                               <h1>View Invoice</h1>
                                <button class="btn btn-link">
                                    Show Customization Options
                                </button>
@@ -23,7 +23,7 @@
                 {{--Top buttons--}}
                 <div class="level mt-2">
                     <div class="flex">
-                        <a href="" class="btn btn-secondary">Edit</a>
+                        <a href="/invoices/{{ $invoice->id }}/edit" class="btn btn-secondary">Edit</a>
                         <a href="#" class="btn btn-secondary">Print</a>
                         <a href="#" class="btn btn-secondary">PDF</a>
                         <a href="/invoice-mail/create/{{ $invoice->id }}" class="btn btn-secondary">Send</a>

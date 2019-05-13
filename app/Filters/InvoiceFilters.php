@@ -10,11 +10,11 @@ use Illuminate\Http\Request;
  */
 class InvoiceFilters extends Filters
 {
-    protected $filters = ['byuser', 'status'];
+    protected $filters = ['byuser', 'status', 'bycompany'];
     /**
-     * Filter the query by a given username
+     * Filter the query by a given customer id
      *
-     * @param string $username
+     * @param string $customerId
      * @return mixed
      */
     protected function byuser($customerId)
@@ -22,7 +22,17 @@ class InvoiceFilters extends Filters
         return $this->builder->where('customer_id', $customerId);
     }
     /**
-     * Filter the query according to most popular threads.
+     * Filter the query by a given company id
+     *
+     * @param string $companyId
+     * @return mixed
+     */
+    protected function bycompany($companyId)
+    {
+        return $this->builder->where('company_id', $companyId);
+    }
+    /**
+     * Filter the query by status
      *
      * @return $this
      */

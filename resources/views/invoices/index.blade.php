@@ -54,11 +54,10 @@
                             <th scope="col">Company</th>
                             <th scope="col">Date</th>
                             <th scope="col">Days</th>
-                            <th scope="col">Toral</th>
+                            <th scope="col">Total</th>
                             <th scope="col">Balance</th>
                             <th scope="col">Status</th>
                             <th class="bg-white"></th>
-                            {{--<th scope="col">Mark Paid</th>--}}
                         </tr>
                         </thead>
                         <tbody>

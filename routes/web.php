@@ -24,6 +24,7 @@ Route::get('invoices', 'InvoiceController@index');
 Route::get('invoices/create', 'InvoiceController@create');
 Route::get('invoices/{invoice}', 'InvoiceController@show');
 Route::post('invoices', 'InvoiceController@store');
+Route::get('invoices/{invoice}/edit', 'InvoiceController@edit');
 Route::get('invoices/mark-as-paid/{invoice}', 'InvoiceController@markAsPaid')->name('mark-as-paid');
 
 Route::get('invoices/select-item', 'InvoiceController@selectItem')->name('select-item');

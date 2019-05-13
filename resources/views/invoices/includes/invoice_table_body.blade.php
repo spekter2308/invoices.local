@@ -17,8 +17,20 @@
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 </button>
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item" href="#">Action</a>
-                    <a class="dropdown-item" href="#">Another action</a>
+                    <ul>
+                        <li><a class="dropdown-item" href="#">Edit</a></li>
+                        <li><a class="dropdown-item" href="#">Duplicate</a></li>
+                        <li><a class="dropdown-item" href="#">Send</a></li>
+                        <li><a class="dropdown-item" href="#">RecordPayment</a></li>
+                        <li><a class="dropdown-item" href="#">Download/Print PDF</a></li>
+                        <li class><a class="dropdown-item" href="#">Change Status to:</a>
+                            <a class="dropdown-item" href="#">Paid</a>
+                            <a class="dropdown-item" href="#">Partial</a>
+                            <a class="dropdown-item" href="#">Sent</a>
+                        </li>
+                        <li><a class="dropdown-item" href="#">Archive</a></li>
+                        <li><a class="dropdown-item" href="#">Delete</a></li>
+                    </ul>
                 </div>
                 <a href="/invoices/{{ $invoice->id }}">{{ $invoice->number }}</a>
             </div>
@@ -28,7 +40,7 @@
             <a href="/invoices?byuser={{ $invoice->customer->id }}">{{ $invoice->customer->name }}</a>
         </td>
         <td>
-            <a href="#">
+            <a href="/invoices?bycompany={{ $invoice->company->id }}">
             @if ($invoice->company->short_name)
                 {{ $invoice->company->short_name }}
             @else
@@ -39,9 +51,9 @@
         <td>{{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}</td>
         <td
             @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))
-            style="color: green;"
+            style="color: green"
             @else
-            style="color: red";
+            style="color: red"
             @endif>
             {{ \Carbon\Carbon::parse($invoice->due_date)->diffInDays(\Carbon\Carbon::now()) }}
         </td>
