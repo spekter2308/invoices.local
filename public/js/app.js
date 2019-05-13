@@ -59267,7 +59267,7 @@ module.exports = function(module) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuelidate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuelidate */ "./node_modules/vuelidate/lib/index.js");
 /* harmony import */ var vuelidate__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./routes */ "./resources/js/routes/index.js");
+/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./routes */ "./resources/js/routes/index.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -59307,10 +59307,10 @@ Vue.component('invoices-filter', __webpack_require__(/*! ./components/Invoices-f
 
 
 Vue.use(vuelidate__WEBPACK_IMPORTED_MODULE_0___default.a);
-Vue.use(_routes__WEBPACK_IMPORTED_MODULE_2__["default"]);
+Vue.use(_routes__WEBPACK_IMPORTED_MODULE_1__["default"]);
 var app = new Vue({
   el: '#app',
-  router: _routes__WEBPACK_IMPORTED_MODULE_2__["default"],
+  router: _routes__WEBPACK_IMPORTED_MODULE_1__["default"],
   data: function data() {
     return {};
   }
