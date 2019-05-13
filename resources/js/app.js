@@ -26,6 +26,7 @@ Vue.component('company-select', require('./components/CompanySelect.vue').defaul
 Vue.component('customer-select', require('./components/CustomerSelect.vue').default);
 Vue.component('invoice-notes', require('./components/InvoiceNotes.vue').default);
 Vue.component('invoice-form', require('./components/InvoiceForm.vue').default);
+Vue.component('invoice-edit-form', require('./components/InvoiceEditForm.vue').default);
 Vue.component('items-table', require('./components/ItemsTable.vue').default);
 
 /**
