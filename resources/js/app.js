@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -40,17 +39,14 @@ Vue.component('invoices-filter', require('./components/Invoices-filter.vue').def
 
 /*import Vue from 'vue'*/
 import Vuelidate from 'vuelidate'
+
 Vue.use(Vuelidate)
 
 
 const app = new Vue({
     el: '#app',
-
     data() {
-       return {
-
-       }
-    },
-
+        return {}
+    }
 });
 

@@ -13,11 +13,10 @@
                                <h1>List of Invoices</h1>
                                <button class="btn btn-link js-show-invoice-filter">Show filter</button>
                            </span>
-
                             <a href="/invoices/create" class="btn btn-primary">New Invoice</a>
                         </div>
                         <div class="js-invoice-filter">
-                            <invoices-filter></invoices-filter>
+                            <invoices-filter uri="{{route('get-date-for-filter')}}"></invoices-filter>
                         </div>
                     </div>
                 </div>
@@ -61,7 +60,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        @foreach ($invoices as $invoice)
+                        @forelse  ($invoices as $invoice)
                             @php
                                 /** @var \App\Invoice $invoice */
                             @endphp
@@ -96,7 +95,7 @@
                                         @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))
                                         style="color: green;"
                                         @else
-                                        style="color: red" ;
+                                        style="color: red"
                                         @endif
                                 >{{
                                      \Carbon\Carbon::parse($invoice->due_date)->diffInDays(\Carbon\Carbon::now())
@@ -111,7 +110,9 @@
                                     </button>
                                 </td>
                             </tr>
-                        @endforeach
+                            @empty
+                            <tr><td><h3>No data</h3></td></tr>
+                        @endforelse
 
                         </tbody>
                     </table>

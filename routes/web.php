@@ -27,6 +27,8 @@ Route::get('invoices/get/select-item', 'InvoiceController@getSelectItem')->name(
 Route::get('invoices/create/select-item/{id?}', 'InvoiceController@createSelectItem')->name('create-select-item')->where(['id' => '[0-9]+']);
 Route::post('invoices/save/select-item/{id?}', 'InvoiceController@saveSelectItem')->name('save-select-item')->where(['id' => '[0-9]+']);
 Route::delete('invoices/destroy/select-item/{id}', 'InvoiceController@deleteSelectItem')->name('delete-select-item')->where(['id' => '[0-9]+']);
+Route::post('invoices/get/date', 'InvoiceController@getDate')->name('get-date-for-filter');
+
 
 Route::post('invoices', 'InvoiceController@store');
 

@@ -2551,22 +2551,44 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: {
+    uri: {
+      type: String,
+      required: true
+    }
+  },
   data: function data() {
     return {
-      date: new Date(),
-      from: new Date(),
-      to: '',
+      selected: 1,
+      from: null,
+      to: null,
       href: ''
     };
   },
   methods: {
     filterShow: function filterShow() {
-      this.href = '?from=' + new Date(this.from).toJSON() + '&to=' + this.to.getTime();
+      this.href = '?from=' + new Date(this.from).toJSON() + '&to=' + new Date(this.to).toJSON();
+    },
+    getDate: function getDate() {
+      var _this = this;
+
+      axios.post(this.uri, {
+        selected: this.selected
+      }).then(function (response) {
+        _this.from = response.data.min_date;
+        _this.to = response.data.max_date;
+      });
     }
+  },
+  computed: {
+    setFromTo: function setFromTo() {
+      this.from = this.$route.query.from;
+      this.to = this.$route.query.to;
+    }
+  },
+  beforeMount: function beforeMount() {
+    this.getDate();
   }
 });
 
@@ -40460,7 +40482,58 @@ var render = function() {
     _c("hr"),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
-      _vm._m(0),
+      _c("div", { staticClass: "col-md-3" }, [
+        _c("div", { staticClass: "form-group row " }, [
+          _c(
+            "label",
+            { staticClass: "col-md-6 p-2", attrs: { for: "time_frame" } },
+            [_vm._v("Time Frame")]
+          ),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.selected,
+                  expression: "selected"
+                }
+              ],
+              staticClass: "form-control col-md-6",
+              attrs: { id: "time_frame" },
+              on: {
+                change: [
+                  function($event) {
+                    var $$selectedVal = Array.prototype.filter
+                      .call($event.target.options, function(o) {
+                        return o.selected
+                      })
+                      .map(function(o) {
+                        var val = "_value" in o ? o._value : o.value
+                        return val
+                      })
+                    _vm.selected = $event.target.multiple
+                      ? $$selectedVal
+                      : $$selectedVal[0]
+                  },
+                  _vm.getDate
+                ]
+              }
+            },
+            [
+              _c("option", { attrs: { value: "1" } }, [_vm._v("All time")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "2" } }, [_vm._v("This Month")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "3" } }, [_vm._v("Last Month")]),
+              _vm._v(" "),
+              _c("option", { attrs: { value: "4" } }, [_vm._v("This Year")])
+            ]
+          )
+        ])
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "col-md-6" }, [
         _c("div", { staticClass: "form-group row" }, [
@@ -40534,40 +40607,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-3" }, [
-      _c("div", { staticClass: "form-group row " }, [
-        _c(
-          "label",
-          { staticClass: "col-md-6 p-2", attrs: { for: "time_frame" } },
-          [_vm._v("Time Frame")]
-        ),
-        _vm._v(" "),
-        _c(
-          "select",
-          { staticClass: "form-control col-md-6", attrs: { id: "time_frame" } },
-          [
-            _c("option", [_vm._v("All time")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("This Month")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("Last Month")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("This Quarter")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("Last Quarter")]),
-            _vm._v(" "),
-            _c("option", [_vm._v("This Year")])
-          ]
-        )
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

@@ -5,13 +5,11 @@
             <div class="col-md-3">
                 <div class="form-group row ">
                     <label for="time_frame" class="col-md-6 p-2">Time Frame</label>
-                    <select class="form-control col-md-6" id="time_frame">
-                        <option>All time</option>
-                        <option>This Month</option>
-                        <option>Last Month</option>
-                        <option>This Quarter</option>
-                        <option>Last Quarter</option>
-                        <option>This Year</option>
+                    <select @change="getDate" v-model="selected" class="form-control col-md-6" id="time_frame">
+                        <option value="1">All time</option>
+                        <option value="2">This Month</option>
+                        <option value="3">Last Month</option>
+                        <option value="4">This Year</option>
                     </select>
                 </div>
             </div>
@@ -31,7 +29,6 @@
                     </div>
 
                 </div>
-
             </div>
             <div class="col-md-3 text-right">
                 <a @click="filterShow" :href="href" class="btn btn-primary">Show</a>
@@ -44,19 +41,42 @@
 <script>
 
     export default {
-        data(){
+        props: {
+            uri: {
+                type: String,
+                required: true
+            }
+        },
+        data() {
             return {
-                date: new Date(),
-                from:  new Date(),
-                to: '',
+                selected: 1,
+                from: null,
+                to: null,
                 href: ''
             }
         },
-        methods:{
-            filterShow(){
-                this.href = '?from=' + new Date(this.from).toJSON() + '&to=' + this.to.getTime();
+        methods: {
+            filterShow() {
+                this.href = '?from=' + new Date(this.from).toJSON() + '&to=' + new Date(this.to).toJSON();
+            },
+            getDate() {
+                axios.post(this.uri, {selected: this.selected}).then( response => {
+                        this.from = response.data.min_date;
+                        this.to = response.data.max_date;
+                    }
+                );
             }
-        }
+        },
+        computed:{
+          setFromTo(){
+              this.from = this.$route.query.from;
+              this.to = this.$route.query.to;
+          }
+        },
+        beforeMount(){
+            this.getDate();
+        },
+
     }
 </script>
 

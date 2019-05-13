@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\InvoiceItemName;
 use App\Helper\HasManyRelation;
 use App\Http\Requests\CreateInvoiceRequest;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Invoice;
 use App\Customer;
@@ -19,9 +20,19 @@ class InvoiceController extends Controller
 {
     use HasManyRelation;
 
-    public function index(Invoice $invoice)
+    public function index(Invoice $invoice, Request $request)
     {
-        $invoices = $invoice->latest()->with(['company', 'customer'])->get();
+        $invoices = $invoice->latest()->with(['company', 'customer']);
+
+        if ($request->has(['from', 'to'])) {
+
+            $from = Carbon::createFromTimeString($request->from)->format('Y-m-d');
+            $to = Carbon::createFromTimeString($request->to)->format('Y-m-d');
+
+            $invoices = $invoices->whereDate('created_at', '>=', $from)->whereDate('created_at', '<=', $to);
+        }
+
+        $invoices = $invoices->get();
 
         if (\request()->wantsJson()) {
             return $invoices;
@@ -135,7 +146,7 @@ class InvoiceController extends Controller
             'name' => 'required|min:3|max:100',
         ]);
 
-        if ($validator->fails()){
+        if ($validator->fails()) {
             $request->flash();
             return redirect(route('create-select-item'))->withErrors($validator);
         }
@@ -168,5 +179,41 @@ class InvoiceController extends Controller
             return $this->checkInArray($prefix, $start, $increment + $old_increment, $postfix, $array, $old_increment);
         }
         return strval($result);
+    }
+
+    public function getDate(Request $request, Invoice $invoice)
+    {
+        $response = [];
+
+        $validator = \Validator::make($request->all(), [
+            'selected' => 'required|numeric'
+        ]);
+
+        if ($validator->fails())
+            abort(500);
+
+        $selected = $request->selected;
+
+        switch ($selected) {
+            case 1 :
+                $response['min_date'] = $invoice->min('created_at');
+                $response['max_date'] = $invoice->max('created_at');
+                break;
+            case 2 :
+                $response['min_date'] = Carbon::now()->startOfMonth();
+                $response['max_date'] = Carbon::now()->endOfMonth();
+                break;
+            case 3 :
+                $response['min_date'] = Carbon::now()->subMonth()->startOfMonth();
+                $response['max_date'] = Carbon::now()->subMonth()->endOfMonth();
+                break;
+            case 4 :
+                $response['min_date'] = Carbon::now()->startOfYear();
+                $response['max_date'] = Carbon::now()->endOfYear();
+                break;
+            default:
+
+        }
+        return \response()->json($response);
     }
 }
