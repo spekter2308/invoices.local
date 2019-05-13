@@ -12,7 +12,7 @@
                 <!-- Left Side Of Navbar -->
                 <ul class="navbar-nav mr-auto">
                     <div class="container">
-                        <a class="navbar-brand" href="#">
+                        <a class="navbar-brand" href="/invoices">
                             <img src="http://placehold.it/150x50?text=Logo" alt="">
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,9 +32,8 @@
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Settings</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#">Profiles</a>
-                                        <a class="dropdown-item" href="#">Users</a>
-                                        <a class="dropdown-item" href="#">Invoice numbers</a>
+                                        <a class="dropdown-item" href="{{route('company-list')}}">Profiles</a>
+                                        <a class="dropdown-item" href="{{route('users-list')}}">Users</a>
                                         <a class="dropdown-item" href="#">Buy Premium</a>
                                     </div>
                                 </li>
@@ -43,9 +42,9 @@
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Invoices</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#">New Invlice</a>
-                                        <a class="dropdown-item" href="#">List of Invoices</a>
-                                        <a class="dropdown-item" href="#">Items</a>
+                                        <a class="dropdown-item" href="/invoices/create">New Invlice</a>
+                                        <a class="dropdown-item" href="/invoices">List of Invoices</a>
+                                        <a class="dropdown-item" href="{{ route('select-item') }}">Items</a>
                                     </div>
                                 </li>
 
@@ -53,8 +52,8 @@
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Customers</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="#">New Customer</a>
-                                        <a class="dropdown-item" href="#">List of Customers</a>
+                                        <a class="dropdown-item" href="/customers/create">New Customer</a>
+                                        <a class="dropdown-item" href="/customers">List of Customers</a>
                                     </div>
                                 </li>
                             </ul>

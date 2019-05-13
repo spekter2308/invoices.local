@@ -6,6 +6,11 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script>
+        window.Laravel = {!! json_encode([
+            'csrfToken' => csrf_token(),
+        ]) !!};
+    </script>
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
@@ -18,6 +23,7 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    {{--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css">--}}
 
     <style>
         .level { display: flex; align-items: center; }
@@ -32,7 +38,7 @@
 
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-md-10 col-md-offset-2">
+                <div class="col-md-12">
                     <div class="top-menu">
                         @include('layouts.nav')
                     </div>

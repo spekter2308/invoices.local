@@ -6,17 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
-    protected $fillable = [
-        'name', 'address', 'phone', 'email',
-        'first_name', 'last_name', 'additional_phone'
-    ];
+    protected $guarded = [];
 
-    protected $appends = [
-        'text'
-    ];
-
-    public function getTextAttribute()
+    public function invoices()
     {
-        return $this->attributes['name'];
+        return $this->hasMany(Invoice::class);
     }
 }

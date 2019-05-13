@@ -11,6 +11,7 @@ class Invoice extends Model
 
     protected $guarded = [];
 
+    protected $with = ['customer', 'company'];
 
     public function items()
     {
@@ -27,4 +28,22 @@ class Invoice extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function sentMails()
+    {
+        return $this->hasMany(InvoiceMail::class);
+    }
+
+    public function createItems($items)
+    {
+        foreach ($items as $item) {
+            $this->items()->create($item);
+        }
+
+        return $this;
+    }
+
+    public function scopeFilter($query, $filters)
+    {
+        return $filters->apply($query);
+    }
 }
