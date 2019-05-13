@@ -32,6 +32,8 @@ Route::get('invoices/get/select-item', 'InvoiceController@getSelectItem')->name(
 Route::get('invoices/create/select-item/{id?}', 'InvoiceController@createSelectItem')->name('create-select-item')->where(['id' => '[0-9]+']);
 Route::post('invoices/save/select-item/{id?}', 'InvoiceController@saveSelectItem')->name('save-select-item')->where(['id' => '[0-9]+']);
 Route::delete('invoices/destroy/select-item/{id}', 'InvoiceController@deleteSelectItem')->name('delete-select-item')->where(['id' => '[0-9]+']);
+Route::post('invoices/get/date', 'InvoiceController@getDate')->name('get-date-for-filter');
+
 
 //invoice email part
 Route::get('invoice-mail/create/{invoice}', 'InvoiceMailController@create');
@@ -54,6 +56,8 @@ Route::prefix('company')->group(function () {
     Route::get('update/{id}', 'CompanyController@update')->name('company-update')->where(['id' => '[0-9]+']);
     Route::post('create/save', 'CompanyController@createSave')->name('company-create-save');
     Route::post('upload/save/{id}', 'CompanyController@updateSave')->name('company-upload-save')->where(['id' => '[0-9]+']);
+    Route::get('{id}', 'CompanyController@deleteImage')->name('company-image-delete')->where(['id' => '[0-9]+']);
+
 });
 
 //users path

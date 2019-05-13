@@ -23,7 +23,7 @@
                     <table class="table">
                         <thead class="bg-primary text-white">
                         <tr>
-                            <th scope="col">Company></th>
+                            <th scope="col">Company</th>
                             <th scope="col">Short name</th>
                             <th scope="col">Address</th>
                             <th scope="col">Invoice notes</th>
@@ -38,7 +38,7 @@
                                 <td>{{ $item->short_name }}</td>
                                 <td>{{ $item->address }}</td>
                                 <td>{{ $item->invoice_notes }}</td>
-                                <td><img width="100" src="upload/company/{{$item->logo_img}}" alt="{{$item->short_name}}"></td>
+                                <td><img width="100" src="{{($item->logo_img) ? 'upload/company/' . $item->logo_img : '/img/no_img.png'}}" alt="{{$item->short_name}}"></td>
                             </tr>
                         @endforeach
 

@@ -32,8 +32,8 @@
                                             <label for="name" class="font-weight-bold">Item Name</label>
                                             <input type="text" name="name"
                                                    class="form-control {{ $errors->has ('name') ? 'error' : '' }}"
-                                                   placeholder="Company name..."
-                                                   value="{{ old('name') ?? $item->name }}">
+                                                   placeholder="Item name..."
+                                                   value="{{old('name') ?? $item->name}}">
                                         </div>
 
                                     </div>

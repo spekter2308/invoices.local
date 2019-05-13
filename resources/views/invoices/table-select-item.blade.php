@@ -8,13 +8,22 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <div class="level">
-                           <span class="flex">
-                               <h1>List of items</h1>
-                           </span>
-
-                            <a href="{{route('create-select-item')}}" class="btn btn-primary">Create new item </a>
-                        </div>
+                        <form method="POST" action="{{route('save-select-item')}}">
+                            <div class="row p-3">
+                                <div class="col-md-10">
+                                    @csrf
+                                    <div class="">
+                                        <input type="text" name="name"
+                                               class="form-control {{ $errors->has ('name') ? 'error' : '' }}"
+                                               placeholder="Item name..."
+                                               value="{{old('name')}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-2 text-right">
+                                    <button class="btn btn-primary" type="submit">Save</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
                 @include('errors')
