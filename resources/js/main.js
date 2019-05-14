@@ -9,6 +9,7 @@ $('#customreTabs a[href="#contact-info"]').click(function (e) {
 })
 
 $(function () {
+
     if (window.location.search.replace( '?', '')){
         $('.js-invoice-filter').css('display', 'block');
     }

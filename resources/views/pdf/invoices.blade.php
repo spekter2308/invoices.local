@@ -1,6 +1,6 @@
 <style>
     .page-break {
-        page-break-after: always;
+        /*page-break-after: always;*/
     }
 </style>
 <div class="page-break">
@@ -189,47 +189,6 @@
                     </tr>
 
 
-                    <tr class="invoice-line-row" style="height:30px;line-height:17px;">
-
-
-                        <td id="item0"
-                            style="width:65px; padding:5px; padding-top:5px; padding-left:8px; border-left:1px solid #ccc; font-family:verdana;font-size:12px;color:#3c3c3c;vertical-align:top;">
-
-
-                            Days
-                        </td>
-
-
-                        <td id="description0" colspan="2"
-                            style="width:372px; padding:5px; padding-top:5px; font-family:verdana;font-size:12px;color:#3c3c3c;vertical-align:top;">
-
-
-                            vvvvvvv
-                        </td>
-
-
-                        <td id="unitprice0"
-                            style="width:83px; padding:5px; padding-top:5px;vertical-align:top;text-align:right;font-weight:normal; font-family:verdana;font-size:12px;color:#3c3c3c;">
-
-                            234.00
-                        </td>
-
-
-                        <td id="qty0"
-                            style="width:83px; padding:5px; padding-top:5px;vertical-align:top;text-align:right;font-weight:normal; font-family:verdana;font-size:12px;color:#3c3c3c;">
-
-                            234.00
-                        </td>
-
-
-                        <td id="total0"
-                            style="width:83px; padding:5px; padding-top:5px; padding-right:8px; vertical-align:top;text-align:right;border-right:1px solid #ccc;font-weight:normal; font-family:verdana;font-size:12px;color:#3c3c3c;">
-
-                            54,756.00
-
-                        </td>
-
-                    </tr>
 
                     @foreach ($invoice->items as $item)
 
@@ -283,7 +242,7 @@
                         <td id="invoice_notes" colspan="6"
                             style="width:400px;border-bottom:1px solid #ccc; border-left:1px solid #ccc;border-right:1px solid #ccc;vertical-align:top; padding:5px; padding-top:100px; padding-bottom:15px; padding-left:8px; font-family:verdana; font-size:13px; color:#3c3c3c;">
 
-                                                   </td>
+                        </td>
 
 
                     </tr>
@@ -296,7 +255,8 @@
 
                         </td>
 
-                        <td rowspan="7" style="width:420px; padding: 5px; padding-left: -40px; border-bottom:1px solid #ccc;border-right:1px solid #ccc;">
+                        <td rowspan="7"
+                            style="width:420px; padding: 5px; padding-left: -40px; border-bottom:1px solid #ccc;border-right:1px solid #ccc;">
 
                             {{ $invoice->company->invoice_notes }}
                         </td>
@@ -385,3 +345,8 @@
     </table>
 
 </div>
+<script>
+    window.onload = function () {
+        window.print();
+    }
+</script>

@@ -23,7 +23,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('invoices', 'InvoiceController@index');
 Route::get('invoices/create', 'InvoiceController@create');
 Route::get('invoices/{invoice}', 'InvoiceController@show');
-Route::get('invoices/pdf/{invoice}', 'InvoiceController@generatePdf')->where(['id' => '[0-9]+'])->name('generate-pdf');
+Route::get('invoices/pdf/{invoice}/{print?}', 'InvoiceController@generatePdf')->where(['id' => '[0-9]+', 'print' => 'print'])->name('generate-pdf');
 Route::post('invoices', 'InvoiceController@store');
 Route::get('invoices/{invoice}/edit', 'InvoiceController@edit');
 Route::get('invoices/mark-as-paid/{invoice}', 'InvoiceController@markAsPaid')->name('mark-as-paid');

@@ -264,11 +264,16 @@ class InvoiceController extends Controller
         return \response()->json($response);
     }
     
-    public function generatePdf($invoice){
+    public function generatePdf($invoice, $print = false)
+    {
+
         $invoice = Invoice::findOrFail($invoice);
 
-        $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice]);
-
-        return $pdf->download('I-' . $invoice->number . '.pdf');
+        if ($print) {
+            return view('pdf.invoices', ['invoice' => $invoice]);
+        } else {
+            $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice]);
+            return $pdf->download('I-' . $invoice->number . '.pdf');
+        }
     }
 }
