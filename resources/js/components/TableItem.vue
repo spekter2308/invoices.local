@@ -86,7 +86,7 @@
         },
         mounted() {
             axios
-                .get('/invoices/get/select-item')
+                .get('/invoices/select/select-item')
                 .then(response => (this.name = response));
 
             eventBus.$on('touch', () => {

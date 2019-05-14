@@ -171,7 +171,14 @@ class InvoiceController extends Controller
         return redirect()->back();
     }
 
-    public function selectItem(InvoiceItemName $invoiceItem)
+    public function selectItem()
+    {
+        $items = InvoiceItemName::latest()->get();
+
+        return $items;
+    }
+
+    public function getSelectItem(InvoiceItemName $invoiceItem)
     {
         $items = $invoiceItem->latest()->paginate(15);
         return view('invoices.table-select-item', ['items' => $items]);
@@ -203,7 +210,7 @@ class InvoiceController extends Controller
             abort(500);
         }
 
-        return redirect(route('select-item'))->with(['success' => 'Item has been save']);
+        return redirect(route('get-select-item'))->with(['success' => 'Item has been save']);
 
     }
 
