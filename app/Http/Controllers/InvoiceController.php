@@ -16,6 +16,7 @@ use App\Counter;
 use App\InvoiceItemName;
 use DB;
 use App\Filters\InvoiceFilters;
+use PhpParser\Node\Expr\Cast\Object_;
 
 class InvoiceController extends Controller
 {
@@ -66,11 +67,15 @@ class InvoiceController extends Controller
             $companies = Company::latest()->get();
 
             return view('invoices.create', [
+                'invoiceCustomer' => '',
+                'invoiceCompany' => '',
+                'invoiceItems' => collect(),
                 'invoiceNumber' => $invoiceNumber,
                 'invoiceFormatNumber' => $counter,
                 'invoiceNumbers' => $invoiceNumbers,
                 'customers' => $customers,
-                'companies' => $companies
+                'companies' => $companies,
+                'mode' => 'create'
             ]);
         }
 
@@ -149,12 +154,19 @@ class InvoiceController extends Controller
         $customers = Customer::latest()->get();
         $companies = Company::latest()->get();
 
+        $invoiceItems = collect($invoice->items);
+
         return view('invoices.edit', [
+            'invoice' => $invoice,
+            'invoiceCustomer' => $invoice->customer,
+            'invoiceCompany' => $invoice->company,
+            'invoiceItems' => $invoiceItems,
             'invoiceNumber' => $invoice->number,
             'invoiceFormatNumber' => $counter,
             'invoiceNumbers' => $invoiceNumbers,
             'customers' => $customers,
-            'companies' => $companies
+            'companies' => $companies,
+            'mode' => 'edit'
         ]);
     }
 

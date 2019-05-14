@@ -37,7 +37,7 @@
                     </div>
                     <button form="createInvoice" class="btn btn-primary send-btn" type="submit">Save</button>
                 </div>
-
+                
                 <div class="mt-3 invoice-create-body">
                     <invoice-form
                             :invoice-numbers="{{ json_encode($invoiceNumbers) }}"
@@ -47,7 +47,7 @@
                             :customers="{{ $customers  }}"
                     >
                         {{ csrf_field() }}
-
+                    
                     </invoice-form>
                 </div>
             </div>
