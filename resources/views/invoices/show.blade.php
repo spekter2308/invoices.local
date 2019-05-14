@@ -25,7 +25,7 @@
                     <div class="flex">
                         <a href="/invoices/{{ $invoice->id }}/edit" class="btn btn-secondary">Edit</a>
                         <a href="#" class="btn btn-secondary">Print</a>
-                        <a href="#" class="btn btn-secondary">PDF</a>
+                        <a href="{{route('generate-pdf', ['invoice' => $invoice->id])}}" class="btn btn-secondary">PDF</a>
                         <a href="/invoice-mail/create/{{ $invoice->id }}" class="btn btn-secondary">Send</a>
                         <a href="#" class="btn btn-secondary">Mark as Paid</a>
                         <a href="#" class="btn btn-secondary">Record Payment</a>

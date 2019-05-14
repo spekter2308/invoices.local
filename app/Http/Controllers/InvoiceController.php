@@ -16,6 +16,7 @@ use App\Counter;
 use App\InvoiceItemName;
 use DB;
 use App\Filters\InvoiceFilters;
+use PDF;
 
 class InvoiceController extends Controller
 {
@@ -261,5 +262,13 @@ class InvoiceController extends Controller
         }
 
         return \response()->json($response);
+    }
+    
+    public function generatePdf($invoice){
+        $invoice = Invoice::findOrFail($invoice);
+
+        $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice]);
+
+        return $pdf->download('I-' . $invoice->number . '.pdf');
     }
 }
