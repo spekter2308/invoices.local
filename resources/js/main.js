@@ -21,7 +21,6 @@ $(function () {
         $('.js-show-invoice-filter').text((text == 'Show filter') ? 'Hide filter' : 'Show filter');
 
         let value = $('.js-show-invoice-filter').text();
-        console.log(value)
 
         if (value == 'Hide filter') {
             $('.js-invoice-filter').css('display', 'block');
