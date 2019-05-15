@@ -67,8 +67,8 @@ class InvoiceController extends Controller
             $companies = Company::latest()->get();
 
             return view('invoices.create', [
-                'invoiceCustomer' => '',
-                'invoiceCompany' => '',
+                'invoiceCustomer' => null,
+                'invoiceCompany' => null,
                 'invoiceItems' => collect(),
                 'invoiceNumber' => $invoiceNumber,
                 'invoiceFormatNumber' => $counter,

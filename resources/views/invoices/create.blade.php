@@ -40,11 +40,15 @@
                 
                 <div class="mt-3 invoice-create-body">
                     <invoice-form
+                            :invoice-company="{{ $invoiceCompany ?? '{}' }}"
+                            :invoice-customer="{{ $invoiceCustomer ?? '{}'}}"
+                            :invoice-items="{{ $invoiceItems ?? '[]'}}"
                             :invoice-numbers="{{ json_encode($invoiceNumbers) }}"
                             invoice-number= "{{ ($invoiceNumber)  }}"
                             :format-number="{{ $invoiceFormatNumber }}"
                             :companies="{{ $companies }}"
                             :customers="{{ $customers  }}"
+                            mode="{{ $mode }}"
                     >
                         {{ csrf_field() }}
                     

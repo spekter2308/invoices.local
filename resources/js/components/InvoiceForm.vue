@@ -10,6 +10,7 @@
                         <div class="col-md-8">
                             <company-select
                                     :companies="companies"
+                                    :current-company="invoiceCompany"
                                     v-model="invoice.selectedCompany"
                                     @blur="$v.invoice.selectedCompany.$touch()"
                                     @sendinvoicenotes="getInvoiceNotes"
@@ -247,6 +248,20 @@
              'items-table': Items
          },*/
         props: {
+            invoiceCustomer: {
+                type: Object,
+                default: null,
+                required: true
+            },
+            invoiceCompany: {
+                type: Object,
+                default: null,
+                required: true
+            },
+            invoiceItems: {
+                type: [Array, String],
+                required: true
+            },
             invoiceNumber: {
                 type: String,
                 required: true

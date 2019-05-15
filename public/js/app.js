@@ -1799,9 +1799,16 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   inheritProps: false,
   props: {
+    currentCompany: {
+      type: Object,
+      required: true
+    },
     companies: {
       type: Array,
       required: true
@@ -1817,6 +1824,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     };
   },
   computed: {
+    checkCurrentCompany: function checkCurrentCompany() {
+      return Object.keys(this.currentCompany).length === 0 ? '' : this.currentCompany.id;
+    },
     listeners: function listeners() {
       var _this = this;
 
@@ -2257,6 +2267,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 /*import Items from './ItemsTable.vue'*/
@@ -2266,6 +2277,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
        'items-table': Items
    },*/
   props: {
+    invoiceCustomer: {
+      type: Object,
+      "default": null,
+      required: true
+    },
+    invoiceCompany: {
+      type: Object,
+      "default": null,
+      required: true
+    },
+    invoiceItems: {
+      type: [Array, String],
+      required: true
+    },
     invoiceNumber: {
       type: String,
       required: true
@@ -39674,11 +39699,29 @@ var render = function() {
           _vm.listeners
         ),
         [
-          _c(
-            "option",
-            { attrs: { selected: "", disabled: "" }, domProps: { value: NaN } },
-            [_vm._v("Choose company ...")]
-          ),
+          _vm.checkCurrentCompany
+            ? _c(
+                "option",
+                {
+                  attrs: { selected: "" },
+                  domProps: { value: _vm.checkCurrentCompany }
+                },
+                [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.currentCompany.name) +
+                      "\n            "
+                  )
+                ]
+              )
+            : _c(
+                "option",
+                {
+                  attrs: { selected: "", disabled: "" },
+                  domProps: { value: NaN }
+                },
+                [_vm._v("Choose company...")]
+              ),
           _vm._v(" "),
           _vm._l(_vm.companies, function(company) {
             return _c("option", { domProps: { value: company.id } }, [
@@ -39913,7 +39956,10 @@ var render = function() {
                 { staticClass: "col-md-8" },
                 [
                   _c("company-select", {
-                    attrs: { companies: _vm.companies },
+                    attrs: {
+                      companies: _vm.companies,
+                      "current-company": _vm.invoiceCompany
+                    },
                     on: {
                       blur: function($event) {
                         return _vm.$v.invoice.selectedCompany.$touch()
