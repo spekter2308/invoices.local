@@ -95,7 +95,7 @@ class InvoiceController extends Controller
         $increment = $counter->increment;
         $postfix = $counter->postfix;
 
-        if(in_array($data['selectedInvoiceNumber'], $invoiceNumbers)) {
+        if (in_array($data['selectedInvoiceNumber'], $invoiceNumbers)) {
             $data['selectedInvoiceNumber'] = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
         }
 
@@ -282,7 +282,7 @@ class InvoiceController extends Controller
 
         return \response()->json($response);
     }
-    
+
     public function generatePdf($invoice, $print = false)
     {
 
