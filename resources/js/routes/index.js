@@ -11,6 +11,7 @@ export default new VueRouter({
             name: 'invoices',
             component: Invoices ,
         },
+
     ],
     mode: 'history',
 

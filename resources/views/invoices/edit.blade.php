@@ -27,37 +27,35 @@
                 {{--Top buttons--}}
                 <div class="level mt-2">
                     <div class="flex">
-                        <button class="btn btn-outline-secondary" disabled>View</button>
-                        <button class="btn btn-outline-secondary" disabled>Print</button>
-                        <button class="btn btn-outline-secondary" disabled>PDF</button>
-                        <button class="btn btn-outline-secondary" disabled>Send</button>
-                        <button class="btn btn-outline-secondary" disabled>Mark as Paid</button>
-                        <button class="btn btn-outline-secondary" disabled>Record Payment</button>
-                        <button class="btn btn-outline-secondary" disabled>Duplicate</button>
+                        <a href="/invoices/{{ $invoice->id }}" class="btn btn-secondary">View</a>
+                        <a href="#" class="btn btn-secondary">Print</a>
+                        <a href="#" class="btn btn-secondary">PDF</a>
+                        <a href="/invoice-mail/create/{{ $invoice->id }}" class="btn btn-secondary">Send</a>
+                        <a href="#" class="btn btn-secondary">Mark as Paid</a>
+                        <a href="#" class="btn btn-secondary">Record Payment</a>
+                        <a href="#" class="btn btn-secondary">Duplicate</a>
                     </div>
                     <button form="createInvoice" class="btn btn-primary send-btn" type="submit">Save</button>
                 </div>
                 
                 <div class="mt-3 invoice-create-body">
-                    <invoice-edit-form
-                            :invoice-numbers="{{ json_encode($invoiceNumbers) }}"
+                    <invoice-form
+                            :invoice-company="{{ $invoiceCompany }}"
+                            :invoice-customer="{{ $invoiceCustomer }}"
+                            :invoice-items="{{ $invoiceItems }}"
                             invoice-number= "{{ ($invoiceNumber)  }}"
                             :format-number="{{ $invoiceFormatNumber }}"
-                            :companies="{{ $companies }}"
+                            :invoice-numbers="{{ json_encode($invoiceNumbers) }}"
                             :customers="{{ $customers  }}"
+                            :companies="{{ $companies }}"
+                            mode="{{ $mode }}"
                     >
                         {{ csrf_field() }}
-                    
-                    </invoice-edit-form>
+    
+                    </invoice-form>
                 </div>
             </div>
         </div>
     </div>
 
 @endsection
-<script>
-    import InvoiceEditForm from "../../js/components/InvoiceEditForm";
-    export default {
-        components: {InvoiceEditForm}
-    }
-</script>

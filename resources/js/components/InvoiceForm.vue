@@ -52,13 +52,13 @@
                 <div class="mt-1">
                     <button class="btn btn-danger ml-auto">Delete Logo</button>
                 </div>
-                    <!--@change="f => invoice.selectedFile=f"
-                    @blur="$v.invoice.selectedFile.$touch()"-->
-                   <!-- <template v-if="$v.invoice.selectedFile.$error">
-                        <small v-if="!$v.invoice.selectedFile.isCorrectType">
-                            Sorry but you have choosen wrong data
-                        </small>
-                    </template>-->
+                <!--@change="f => invoice.selectedFile=f"
+                @blur="$v.invoice.selectedFile.$touch()"-->
+                <!-- <template v-if="$v.invoice.selectedFile.$error">
+                     <small v-if="!$v.invoice.selectedFile.isCorrectType">
+                         Sorry but you have choosen wrong data
+                     </small>
+                 </template>-->
             </div>
 
             <!-- {{--Date and Nubmer part--}} -->
@@ -107,14 +107,14 @@
                                                         <label class="font-weight-bold">Start #</label>
                                                         <input
                                                                 class="form-control"
-                                                               v-model.number="selectedNumber.start"
+                                                                v-model.number="selectedNumber.start"
                                                         >
-                                                       <template v-if="$v.selectedNumber.start.$invalid">
-                                                           <p v-if="!$v.selectedNumber.start.minValue"
-                                                              class="error-control">Start must be > 0</p>
-                                                           <p v-if="!$v.selectedNumber.start.required"
-                                                              class="error-control">Please fill start field</p>
-                                                       </template>
+                                                        <template v-if="$v.selectedNumber.start.$invalid">
+                                                            <p v-if="!$v.selectedNumber.start.minValue"
+                                                               class="error-control">Start must be > 0</p>
+                                                            <p v-if="!$v.selectedNumber.start.required"
+                                                               class="error-control">Please fill start field</p>
+                                                        </template>
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="font-weight-bold">Postfix</label>
@@ -124,7 +124,7 @@
                                                         <label class="font-weight-bold">Increment</label>
                                                         <input
                                                                 class="form-control"
-                                                               v-model.number="selectedNumber.increment"
+                                                                v-model.number="selectedNumber.increment"
                                                         >
                                                         <template v-if="$v.selectedNumber.increment.$invalid">
                                                             <p v-if="!$v.selectedNumber.increment.minValue"
@@ -144,7 +144,7 @@
                                                 <button :disabled="$v.selectedNumber.$invalid" type="button"
                                                         class="btn btn-primary"
                                                         @click="sendForm" data-dismiss="modal">Save
-                                                changes</button>
+                                                    changes</button>
                                             </div>
                                         </div>
                                     </form>
@@ -357,7 +357,7 @@
             },
             isTableRowsInvalid(v) {
                 if ( v === true && this.$v.$dirty) {
-                        this.sendButton.disabled = true
+                    this.sendButton.disabled = true
                 } else {
                     if (this.$v.$error === false) {
                         this.sendButton.disabled = false
@@ -454,13 +454,12 @@
                 }
                 return result;
             },
-
         },
         computed: {
             isTableRowsInvalid() {
-              return this.invoice.selectedItems.reduce((acc, curr) => {
-                  return acc && !curr.correct
-              }, true)
+                return this.invoice.selectedItems.reduce((acc, curr) => {
+                    return acc && !curr.correct
+                }, true)
             },
             currentDate() {
                 return new Date().toISOString().slice(0,10);
