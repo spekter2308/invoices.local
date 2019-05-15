@@ -189,7 +189,6 @@
                     </tr>
 
 
-
                     @foreach ($invoice->items as $item)
 
                         <tr class="invoice-line-row" style="height:30px;line-height:17px;">
@@ -246,7 +245,18 @@
 
 
                     </tr>
+                    <tr>
 
+
+                        <td id="invoice_notes" colspan="6"
+                            style="width:400px;border-bottom:1px solid #ccc; border-left:1px solid #ccc;border-right:1px solid #ccc;vertical-align:top; padding:5px; padding-top:14px; padding-bottom:15px; padding-left:8px; font-family:verdana; font-size:13px; color:#3c3c3c;">
+
+                            <u>NOTES:</u>&nbsp; {{ $invoice->company->invoice_notes }}
+
+                        </td>
+
+
+                    </tr>
 
                     <tr>
 
@@ -256,9 +266,8 @@
                         </td>
 
                         <td rowspan="7"
-                            style="width:420px; padding: 5px; padding-left: -40px; border-bottom:1px solid #ccc;border-right:1px solid #ccc;">
+                            style="width:420px; border-bottom:1px solid #ccc;border-right:1px solid #ccc;">
 
-                            {{ $invoice->company->invoice_notes }}
                         </td>
 
 
