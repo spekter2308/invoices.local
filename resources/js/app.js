@@ -28,6 +28,7 @@ Vue.component('invoice-form', require('./components/InvoiceForm.vue').default);
 Vue.component('items-table', require('./components/ItemsTable.vue').default);
 Vue.component('datapicker', require('vuejs-datepicker').default);
 Vue.component('invoices-filter', require('./components/Invoices-filter.vue').default);
+Vue.component('change-status', require('./components/ChangeStatus').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
