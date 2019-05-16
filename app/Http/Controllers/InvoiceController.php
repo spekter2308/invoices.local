@@ -55,6 +55,32 @@ class InvoiceController extends Controller
     public function create()
     {
         if (auth()->check()) {
+
+            if(session()->get('id')) {
+                $id = session()->get('id');
+                $invoice = Invoice::findOrFail($id);
+
+                $invoiceCustomer = $invoice->customer;
+                $invoiceCompany = $invoice->company;
+                foreach ($invoice->items as $item) {
+                    $items = [
+                        'item' => $item->item,
+                        'description' => $item->description,
+                        'quantity' => $item->quantity,
+                        'unitprice' => $item->unitprice,
+                        'dirty' => $item->dirty,
+                        'correct' => $item->correct
+                    ];
+                    $invoiceItems[] = $items;
+                }
+                //return $invoiceItems;
+                session()->forget('id');
+            } else {
+                $invoiceCustomer = '{}';
+                $invoiceCompany = '{}';
+                $invoiceItems = [['item' => '', 'description' => '', 'quantity' => 1, 'unitprice' => 1, 'dirty' => false, 'correct' => false]];
+            }
+
             //check for unique invoice number
             $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
             $counter = Counter::where(['user_id' => auth()->id()])->first();
@@ -70,18 +96,9 @@ class InvoiceController extends Controller
 
             return view('invoices.edit', [
                 'invoiceId' => '',
-                'invoiceCustomer' => '{}',
-                'invoiceCompany' => '{}',
-                'invoiceItems' => [
-                        [
-                        'item' => '',
-                        'description' => '',
-                        'quantity' => 1,
-                        'unitprice' => 1,
-                        'dirty' => false,
-                        'correct' => false
-                    ]
-                ],
+                'invoiceCustomer' => $invoiceCustomer,
+                'invoiceCompany' => $invoiceCompany,
+                'invoiceItems' => $invoiceItems,
                 'invoiceNumber' => $invoiceNumber,
                 'invoiceFormatNumber' => $counter,
                 'invoiceNumbers' => $invoiceNumbers,
@@ -217,6 +234,11 @@ class InvoiceController extends Controller
         });
 
         return $invoice;
+    }
+
+    public function duplicate($id)
+    {
+        return redirect('/invoices/create')->with(['id' => $id]);
     }
 
     public function markAsPaid($id)
