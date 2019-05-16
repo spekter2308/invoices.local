@@ -236,7 +236,7 @@ class InvoiceController extends Controller
             abort(500);
         }
 
-        return redirect(route('select-item'))->with(['success' => 'Item has been delete']);
+        return redirect(route('get-select-item'))->with(['success' => 'Item has been delete']);
     }
 
     protected function checkInArray($prefix, $start, $increment, $postfix, $array, $old_increment)

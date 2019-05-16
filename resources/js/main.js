@@ -12,6 +12,12 @@ $(function () {
     /*if (window.location.search.replace( '?', '')){
         $('.js-invoice-filter').css('display', 'block');
     }*/
+    $('#modal-edit').modal('show');
+
+    $('.js-btn-edit-invoice').click(function (e) {
+        e.preventDefault();
+        $('.js-input-edit-invoice').val($("*[data-element='" + $(this).data('id') + "']").text())
+    })
 
     var display = false;
     $('.js-show-invoice-filter').on('click', function (e) {
