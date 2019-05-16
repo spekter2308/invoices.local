@@ -122,42 +122,47 @@
                                     </div>
                                 </div>
 
-                                @foreach ($invoice->items as $item)
-
-                                    <div class="items-table-row-show">
-                                        <div class="item-name">
-                                            <div class="form-group-table">
-                                                {{ $item->item }}
+                                <div class="items-table-body">
+                                    @foreach ($invoice->items as $item)
+                                        <div class="items-table-row-show">
+                                            <div class="item-name">
+                                                <div class="form-group-table">
+                                                    {{ $item->item }}
+                                                </div>
+                                            </div>
+                                            <div class="item-description">
+                                                <div class="form-group-table">
+                                                    {{ $item->description }}
+                                                </div>
+                                            </div>
+                                            <div class="item-unit-price">
+                                                <div class="form-group-table">
+                                                    {{ $item->unitprice }}
+                                                </div>
+                                            </div>
+                                            <div class="item-quantity">
+                                                <div class="form-group-table">
+                                                    {{ $item->quantity }}
+                                                </div>
+                                            </div>
+                                            <div class="item-total">
+                                                <div class="form-group-table">
+                                                    {{ $item->unitprice * $item->quantity }}
+                                                </div>
                                             </div>
                                         </div>
-                                        <div class="item-description">
-                                            <div class="form-group-table">
-                                                {{ $item->description }}
-                                            </div>
-                                        </div>
-                                        <div class="item-unit-price">
-                                            <div class="form-group-table">
-                                                {{ $item->unitprice }}
-                                            </div>
-                                        </div>
-                                        <div class="item-quantity">
-                                            <div class="form-group-table">
-                                                {{ $item->quantity }}
-                                            </div>
-                                        </div>
-                                        <div class="item-total">
-                                            <div class="form-group-table">
-                                                {{ $item->unitprice * $item->quantity }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endforeach
-                                <div class="invoice-notes-result">
-                                    <div class="invoice-notes">
+                                    @endforeach
+                                    <div class="invoice-table-row-notes">
                                         <div class="form-group">
-                                            <p>{{ $invoice->company->invoice_notes }}</p>
+                                            <p> NOTES: {{ $invoice->company->invoice_notes }}</p>
                                         </div>
                                     </div>
+                                </div>
+                                
+                                <div class="invoice-table-result">
+                                    <div class="invoice-empty">
+                                    </div>
+                                    
                                     <div class="invoice-total">
                                         <div class="level mt-2">
                                             <h6 class="flex" >Subtotal</h6>

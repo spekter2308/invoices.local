@@ -122,21 +122,30 @@ $border-color: #f2f2f2;
       padding: 3px 14px;
     }
   }
-  .items-table-row-show {
+  
+  .items-table-body {
     border: 1px solid #ced4da;
-    border-top: none;
+  }
+  .items-table-row-show {
+    margin-top: 5px;
     > div {
       padding: 3px 14px;
     }
   }
-  .invoice-notes-result {
+    .invoice-table-row-notes {
+      margin-top: 20px;
+      > div {
+        padding: 3px 14px;
+      }
+  }
+  .invoice-table-result {
     display: grid;
     grid-column-gap: 10px;
     grid-template-columns: 3fr 2fr;
     border: 1px solid #ced4da;
     border-top: none;
     padding: 3px 10px;
-    .invoice-notes {
+    .invoice-empty {
       border-right: 1px solid #ced4da;
     }
   }

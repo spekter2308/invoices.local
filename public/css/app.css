@@ -10770,16 +10770,27 @@ a.text-dark:focus {
   padding: 3px 14px;
 }
 
-.invoice-item-box .items-table-row-show {
+.invoice-item-box .items-table-body {
   border: 1px solid #ced4da;
-  border-top: none;
+}
+
+.invoice-item-box .items-table-row-show {
+  margin-top: 5px;
 }
 
 .invoice-item-box .items-table-row-show > div {
   padding: 3px 14px;
 }
 
-.invoice-item-box .invoice-notes-result {
+.invoice-item-box .invoice-table-row-notes {
+  margin-top: 20px;
+}
+
+.invoice-item-box .invoice-table-row-notes > div {
+  padding: 3px 14px;
+}
+
+.invoice-item-box .invoice-table-result {
   display: grid;
   grid-column-gap: 10px;
   grid-template-columns: 3fr 2fr;
@@ -10788,7 +10799,7 @@ a.text-dark:focus {
   padding: 3px 10px;
 }
 
-.invoice-item-box .invoice-notes-result .invoice-notes {
+.invoice-item-box .invoice-table-result .invoice-empty {
   border-right: 1px solid #ced4da;
 }
 

@@ -1799,9 +1799,6 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   inheritProps: false,
   props: {
@@ -1820,13 +1817,10 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   data: function data() {
     return {
-      address: ''
+      address: this.currentCompany.address || ''
     };
   },
   computed: {
-    checkCurrentCompany: function checkCurrentCompany() {
-      return Object.keys(this.currentCompany).length === 0 ? '' : this.currentCompany.id;
-    },
     listeners: function listeners() {
       var _this = this;
 
@@ -1906,10 +1900,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   inheritAttrs: false,
   props: {
+    currentCustomer: {
+      type: Object,
+      required: true
+    },
     customers: {
       type: Array,
       required: true
@@ -1925,9 +1924,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      customer: {},
-      address: '',
-      editing: true,
+      customer: this.currentCustomer || {},
+      address: this.currentCustomer.address || '',
+      editing: this.isEditing(),
       emptyObj: {},
       enteredname: null,
       enteredaddress: null,
@@ -1998,6 +1997,9 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.editing = false;
       }
+    },
+    isEditing: function isEditing() {
+      return this.currentCustomer.id ? false : true;
     }
   }
 });
@@ -2268,6 +2270,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 
 /*import Items from './ItemsTable.vue'*/
@@ -2277,18 +2280,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
        'items-table': Items
    },*/
   props: {
+    invoiceId: {
+      type: [Number, String],
+      required: true
+    },
     invoiceCustomer: {
       type: Object,
-      "default": null,
       required: true
     },
     invoiceCompany: {
-      type: Object,
-      "default": null,
+      type: [Object],
       required: true
     },
     invoiceItems: {
-      type: [Array, String],
+      type: [Array],
       required: true
     },
     invoiceNumber: {
@@ -2310,6 +2315,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     customers: {
       type: Array,
       required: true
+    },
+    mode: {
+      type: String,
+      required: true
     }
   },
   data: function data() {
@@ -2318,21 +2327,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       createdInvoiceId: NaN,
       isTableInvalid: true,
       invoice: {
-        selectedCompany: NaN,
-        selectedCustomer: {},
+        selectedCompany: this.invoiceCompany.id || NaN,
+        selectedCustomer: this.invoiceCustomer.id || {},
         //selectedFile: null,
         selectedDateFrom: new Date().toISOString().slice(0, 10),
         selectedDateTo: new Date().toISOString().slice(0, 10),
         selectedInvoiceNumber: this.invoiceNumber,
-        selectedItems: [{
-          //id: 1,
-          item: null,
-          description: null,
-          quantity: 1,
-          unitprice: 1,
-          dirty: false,
-          correct: false
-        }]
+        selectedItems: this.invoiceItems
       },
       selectedNumber: {
         prefix: this.formatNumber.prefix || '',
@@ -2340,7 +2341,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         postfix: this.formatNumber.postfix || '',
         increment: this.formatNumber.increment || 1
       },
-      notes: ''
+      notes: this.invoiceCompany.invoice_notes || ''
     };
   },
   validations: {
@@ -2462,42 +2463,64 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 eventBus.$emit('touch', true);
 
                 if (!(!this.$v.$error && !this.isTableRowsInvalid)) {
-                  _context.next = 8;
+                  _context.next = 16;
                   break;
                 }
 
                 console.log(JSON.stringify(this.invoice));
-                _context.next = 7;
+
+                if (!(this.mode === 'create')) {
+                  _context.next = 11;
+                  break;
+                }
+
+                _context.next = 8;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices', this.invoice).then(function (response) {
                   _this2.createdInvoiceId = response.data.id;
                 });
 
-              case 7:
-                //await this.updateNextNumber();
+              case 8:
+                location.href = '/invoices/' + this.createdInvoiceId;
+                _context.next = 15;
+                break;
+
+              case 11:
+                if (!(this.mode === 'edit')) {
+                  _context.next = 15;
+                  break;
+                }
+
+                console.log(this.invoiceId);
+                _context.next = 15;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch('/invoices/' + this.invoiceId, this.invoice).then(function (response) {
+                  _this2.createdInvoiceId = response.data.id;
+                });
+
+              case 15:
+                location.href = '/invoices/' + this.createdInvoiceId; //await this.updateNextNumber();
                 //this.resetInvoice();
                 //eventBus.$emit('update', true)
                 //this.$v.$reset()
                 //eventBus.$emit('reset', true)
                 //console.log('resetting')
-                location.href = '/invoices/' + this.createdInvoiceId;
 
-              case 8:
-                _context.next = 13;
+              case 16:
+                _context.next = 21;
                 break;
 
-              case 10:
-                _context.prev = 10;
+              case 18:
+                _context.prev = 18;
                 _context.t0 = _context["catch"](0);
                 // this.resetInvoice()
                 // this.$v.$reset()
                 console.log('some error');
 
-              case 13:
+              case 21:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 10]]);
+        }, _callee, this, [[0, 18]]);
       }));
 
       function onSubmit() {
@@ -39699,29 +39722,9 @@ var render = function() {
           _vm.listeners
         ),
         [
-          _vm.checkCurrentCompany
-            ? _c(
-                "option",
-                {
-                  attrs: { selected: "" },
-                  domProps: { value: _vm.checkCurrentCompany }
-                },
-                [
-                  _vm._v(
-                    "\n                " +
-                      _vm._s(_vm.currentCompany.name) +
-                      "\n            "
-                  )
-                ]
-              )
-            : _c(
-                "option",
-                {
-                  attrs: { selected: "", disabled: "" },
-                  domProps: { value: NaN }
-                },
-                [_vm._v("Choose company...")]
-              ),
+          _c("option", { attrs: { disabled: "" }, domProps: { value: NaN } }, [
+            _vm._v("Choose company...")
+          ]),
           _vm._v(" "),
           _vm._l(_vm.companies, function(company) {
             return _c("option", { domProps: { value: company.id } }, [
@@ -39999,7 +40002,10 @@ var render = function() {
                 { staticClass: "col-md-8" },
                 [
                   _c("customer-select", {
-                    attrs: { customers: _vm.customers },
+                    attrs: {
+                      customers: _vm.customers,
+                      "current-customer": _vm.invoiceCustomer
+                    },
                     on: {
                       blur: function($event) {
                         return _vm.$v.invoice.selectedCustomer.$touch()

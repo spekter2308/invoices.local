@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\HasManyRelation;
 use App\Http\Requests\CreateInvoiceRequest;
+use App\Http\Requests\UpdateInvoiceRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Invoice;
@@ -66,10 +67,20 @@ class InvoiceController extends Controller
             $customers = Customer::latest()->get();
             $companies = Company::latest()->get();
 
-            return view('invoices.create', [
-                'invoiceCustomer' => null,
-                'invoiceCompany' => null,
-                'invoiceItems' => collect(),
+            return view('invoices.edit', [
+                'invoiceId' => '',
+                'invoiceCustomer' => '{}',
+                'invoiceCompany' => '{}',
+                'invoiceItems' => [
+                        [
+                        'item' => '',
+                        'description' => '',
+                        'quantity' => 1,
+                        'unitprice' => 1,
+                        'dirty' => false,
+                        'correct' => false
+                    ]
+                ],
                 'invoiceNumber' => $invoiceNumber,
                 'invoiceFormatNumber' => $counter,
                 'invoiceNumbers' => $invoiceNumbers,
@@ -87,16 +98,7 @@ class InvoiceController extends Controller
         $data = $request->input();
 
         //check for unique invoice number
-        $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
-        $counter = Counter::where(['user_id' => auth()->id()])->first();
-        $prefix = $counter->prefix;
-        $start = $counter->start;
-        $increment = $counter->increment;
-        $postfix = $counter->postfix;
-
-        if(in_array($data['selectedInvoiceNumber'], $invoiceNumbers)) {
-            $data['selectedInvoiceNumber'] = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
-        }
+        $data['selectedInvoiceNumber'] = $this->checkInvoiceNumber($data['selectedInvoiceNumber']);
 
         if (is_array($data['selectedCustomer'])) {
             $customer = (new Customer())->create([
@@ -134,7 +136,6 @@ class InvoiceController extends Controller
         });
 
         return $invoice;
-
     }
 
     public function show($id)
@@ -158,6 +159,7 @@ class InvoiceController extends Controller
 
         return view('invoices.edit', [
             'invoice' => $invoice,
+            'invoiceId' => $invoice->id,
             'invoiceCustomer' => $invoice->customer,
             'invoiceCompany' => $invoice->company,
             'invoiceItems' => $invoiceItems,
@@ -168,6 +170,52 @@ class InvoiceController extends Controller
             'companies' => $companies,
             'mode' => 'edit'
         ]);
+    }
+
+    public function update($id, UpdateInvoiceRequest $request)
+    {
+        $invoice = Invoice::findOrFail($id);
+
+        $data = $request->input();
+
+        //check for unique invoice number
+        $data['selectedInvoiceNumber'] = $this->checkInvoiceNumber($data['selectedInvoiceNumber']);
+
+        if (is_array($data['selectedCustomer'])) {
+            $customer = (new Customer())->create([
+                'name' => $data['selectedCustomer']['name'],
+                'address' => $data['selectedCustomer']['address']
+            ]);
+            $customerId = $customer->id;
+        } else {
+            $customerId = $data['selectedCustomer'];
+        }
+
+        $total = collect($data['selectedItems'])->sum(function ($item) {
+            return $item['quantity'] * $item['unitprice'];
+        });
+
+        $invoice->update([
+            'number' => $data['selectedInvoiceNumber'],
+            'customer_id' => $customerId,
+            'company_id' => \request('selectedCompany'),
+            'invoice_date' => \request('selectedDateFrom'),
+            'due_date' => \request('selectedDateTo'),
+            'amount_paid' => 0,
+            'subtotal' => $total,
+            'total' => $total,
+            'balance' => $total,
+        ]);
+
+        $invoice = DB::transaction(function () use ($invoice, $request) {
+            $invoice->updateHasMany([
+                'items' => $request->selectedItems
+            ]);
+
+            return $invoice;
+        });
+
+        return $invoice;
     }
 
     public function markAsPaid($id)
@@ -235,6 +283,22 @@ class InvoiceController extends Controller
         }
 
         return redirect(route('select-item'))->with(['success' => 'Item has been delete']);
+    }
+
+    protected function checkInvoiceNumber($value)
+    {
+        $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
+        $counter = Counter::where(['user_id' => auth()->id()])->first();
+        $prefix = $counter->prefix;
+        $start = $counter->start;
+        $increment = $counter->increment;
+        $postfix = $counter->postfix;
+
+        if(in_array($value, $invoiceNumbers)) {
+            $value = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
+        }
+
+        return $value;
     }
 
     protected function checkInArray($prefix, $start, $increment, $postfix, $array, $old_increment)

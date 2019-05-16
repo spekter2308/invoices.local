@@ -3,10 +3,7 @@
         <h4>From</h4>
         <div class="form-group">
             <select class="custom-select" :value="value" v-on="listeners">
-                <option v-if="checkCurrentCompany" :value="checkCurrentCompany" selected>
-                    {{ currentCompany.name }}
-                </option>
-                <option v-else selected :value="NaN" disabled>Choose company...</option>
+                <option disabled :value="NaN">Choose company...</option>
                 <option v-for="company of companies" :value="company.id">{{ company.name }}</option>
             </select>
         </div>
@@ -40,13 +37,10 @@
         },
         data() {
             return {
-                address: '',
+                address: this.currentCompany.address || ''
             }
         },
         computed: {
-            checkCurrentCompany() {
-                return Object.keys(this.currentCompany).length === 0 ? '' : this.currentCompany.id;
-            },
             listeners() {
                 return {
                     ...this.$listeners,
