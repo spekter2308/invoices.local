@@ -16,6 +16,7 @@ use App\Counter;
 use App\InvoiceItemName;
 use DB;
 use App\Filters\InvoiceFilters;
+use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Expr\Cast\Object_;
 use PDF;
 
@@ -294,5 +295,49 @@ class InvoiceController extends Controller
             $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice]);
             return $pdf->download('I-' . $invoice->number . '.pdf');
         }
+    }
+
+    public function changeInvoicesStatus(Request $request, Invoice $invoice)
+    {
+
+        if (!$request->has(['ststus', 'invoices']))
+            abort(500);
+
+        $validator = Validator::make($request->all(), [
+            'ststus' => 'required|numeric|min:1|max:3',
+            'invoices' => 'required|string',
+        ]);
+
+        if (!$validator->fails()) {
+            return redirect(route('invoice-index'))->withErrors($validator);
+
+        }
+
+        $invoices = $invoice->whereIn('id', json_decode($request->invoices))->get();
+
+        switch ($request->status) {
+            case 1 :
+                $invoices->map(function ($row) {
+                    $row->update([
+                        'status' => 'Paid',
+                        'balance' => 0,
+                        'amount_paid' => $row->total
+                    ]);
+                });
+                break;
+            case 2 :
+
+                break;
+            case 3 :
+                $invoices->map(function ($row) {
+                    $row->update([
+                        'status' => 'Sent',
+                    ]);
+                });
+                break;
+            default:
+        }
+
+        return redirect(route('invoice-index'))->with(['success' => 'Status has been save']);
     }
 }

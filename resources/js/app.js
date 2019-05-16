@@ -40,6 +40,7 @@ Vue.component('change-status', require('./components/ChangeStatus').default);
 /*import Vue from 'vue'*/
 import Vuelidate from 'vuelidate'
 import router from './routes'
+import store from './store'
 
 
 Vue.use(Vuelidate)
@@ -49,6 +50,7 @@ window.eventBus = new Vue()
 const app = new Vue({
     el: '#app',
     router,
+    store,
     data() {
         return {}
     }

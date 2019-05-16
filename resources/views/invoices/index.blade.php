@@ -22,6 +22,8 @@
                         </div>
 
                     </div>
+                    @include('errors')
+                    @include('success')
                 </div>
                 <div class="card-body">
                     <div class="level">
