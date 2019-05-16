@@ -18,6 +18,7 @@ use App\InvoiceItemName;
 use DB;
 use App\Filters\InvoiceFilters;
 use PhpParser\Node\Expr\Cast\Object_;
+use PDF;
 
 class InvoiceController extends Controller
 {
@@ -344,5 +345,18 @@ class InvoiceController extends Controller
         }
 
         return \response()->json($response);
+    }
+    
+    public function generatePdf($invoice, $print = false)
+    {
+
+        $invoice = Invoice::findOrFail($invoice);
+
+        if ($print) {
+            return view('pdf.invoices', ['invoice' => $invoice]);
+        } else {
+            $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice]);
+            return $pdf->download('I-' . $invoice->number . '.pdf');
+        }
     }
 }
