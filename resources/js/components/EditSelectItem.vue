@@ -2,14 +2,14 @@
     <div>
         <b-button variant="primary" :id="setId" @click="$bvModal.show(setId)">Edit</b-button>
 
-        <b-modal :id="setId" hide-footer>
+        <b-modal centered  :id="setId" hide-footer>
             <template slot="modal-title">
                 Edit
             </template>
-            <div class="d-block text-center">
+            <div class="d-block text-right">
                 <form method="post" :action="setAction">
                     <input type="hidden" name="_token" :value="token_csrf">
-                    <b-input  min="3" required="true" id="edit_name" :value="name" name="name" type="text"></b-input>
+                    <b-input min="3" :required="true" id="edit_name" :value="name" name="name" type="text"></b-input>
                     <b-button variant="success" type="submit" class="mt-3">Save</b-button>
                 </form>
             </div>

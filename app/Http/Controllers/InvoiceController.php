@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\HasManyRelation;
 use App\Http\Requests\CreateInvoiceRequest;
+use App\PaymentInvoice;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Invoice;
@@ -31,11 +32,12 @@ class InvoiceController extends Controller
 
         if ($request->has(['from', 'to'])) {
 
-            $from = Carbon::createFromTimeString($request->from)->format('Y-m-d');
-            $to = Carbon::createFromTimeString($request->to)->format('Y-m-d');
+            $from = Carbon::createFromTimeString($request->from)->setTimezone('Europe/Kiev')->format('Y-m-d H:i:s');
+            $to = Carbon::createFromTimeString($request->to)->setTimezone('Europe/Kiev')->format('Y-m-d H:i:s');
 
             $invoices = $invoices->where('invoice_date', '>=', $from)->where('invoice_date', '<=', $to);
         }
+
 
         if (\request()->wantsJson()) {
             return $invoices;
@@ -46,9 +48,8 @@ class InvoiceController extends Controller
 
     protected function getInvoices($filters)
     {
-        $invoices = Invoice::latest()->filter($filters);
+        $invoices = Invoice::latest()->filter($filters)->get();
 
-        $invoices = $invoices->get();
         return $invoices;
     }
 
@@ -339,5 +340,49 @@ class InvoiceController extends Controller
         }
 
         return redirect(route('invoice-index'))->with(['success' => 'Status has been save']);
+    }
+
+    public function recordPayment($invoice)
+    {
+
+        $invoice = Invoice::with('customer')->findOrFail($invoice);
+
+        return view('invoices.record-payment')->with([
+            'invoice' => $invoice
+        ]);
+    }
+
+    public function recordPaymentSave($id, Request $request, Invoice $invoice, PaymentInvoice $paymentInvoice)
+    {
+        $validator = Validator::make($request->all(), [
+            'date' => 'required|date',
+            'amount' => 'required|numeric|min:0.01',
+            'receiving_account' => 'required|string|max:255',
+            'notes' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+//dd($request->all());
+        $paymentInvoice->invoice_id = $id;
+        $paymentInvoice->date = Carbon::parse($request->date)->format(('Y-m-d'));
+        $paymentInvoice->amount = $request->amount;
+        $paymentInvoice->receiving_account = $request->receiving_account;
+        $paymentInvoice->notes = $request->notes;
+
+        $status = $paymentInvoice->save();
+
+        if (!$status)
+            abort(500);
+
+        $findInvoice = $invoice->findOrFail($id);
+        $findInvoice->update([
+            'status' => 'Partial',
+            'balance' => $findInvoice->total - $request->amount,
+            'amount_paid' => $findInvoice->amount_paid + $request->amount,
+        ]);
+
+        return redirect()->back()->with(['success' => 'Status has been save']);
     }
 }

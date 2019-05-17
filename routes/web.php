@@ -27,6 +27,8 @@ Route::get('invoices/pdf/{invoice}/{print?}', 'InvoiceController@generatePdf')->
 Route::post('invoices', 'InvoiceController@store');
 Route::get('invoices/{invoice}/edit', 'InvoiceController@edit');
 Route::get('invoices/mark-as-paid/{invoice}', 'InvoiceController@markAsPaid')->name('mark-as-paid');
+Route::get('invoices/record-payment/{id}', 'InvoiceController@recordPayment')->where(['id' => '[0-9]+'])->name('record-payment');
+Route::post('invoices/record-payment/save/{id}', 'InvoiceController@recordPaymentSave')->where(['id' => '[0-9]+'])->name('record-payment-save');
 
 Route::get('invoices/select/select-item', 'InvoiceController@selectItem')->name('select-item');
 Route::get('invoices/get/select-item', 'InvoiceController@getSelectItem')->name('get-select-item');

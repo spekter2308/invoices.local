@@ -30,6 +30,7 @@ Vue.component('datapicker', require('vuejs-datepicker').default);
 Vue.component('invoices-filter', require('./components/Invoices-filter.vue').default);
 Vue.component('change-status', require('./components/ChangeStatus').default);
 Vue.component('edit-item', require('./components/EditSelectItem').default);
+Vue.component('payment-details', require('./components/PaymentDetails').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -54,7 +55,8 @@ const app = new Vue({
     router,
     store,
     data() {
-        return {}
+        return {
+        }
     }
 });
 
