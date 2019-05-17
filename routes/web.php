@@ -59,11 +59,10 @@ Route::prefix('company')->group(function () {
     Route::post('create/save', 'CompanyController@createSave')->name('company-create-save');
     Route::post('upload/save/{id}', 'CompanyController@updateSave')->name('company-upload-save')->where(['id' => '[0-9]+']);
     Route::get('{id}', 'CompanyController@deleteImage')->name('company-image-delete')->where(['id' => '[0-9]+']);
-
 });
 
 //users path
-Route::prefix('user')->group(function () {
+Route::prefix('user')->middleware('admin')->group(function () {
     Route::get('', 'UserController@index')->name('users-list');
     Route::get('create/{id?}', 'UserController@create')->name('users-create')->where(['id' => '[0-9]+']);
     Route::post('create/save', 'UserController@createSave')->name('users-create-save');

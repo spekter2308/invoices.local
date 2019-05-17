@@ -66,6 +66,35 @@
                     </invoice-form>
                 </div>
             </div>
+            
+            @if ($mode === 'edit')
+    
+            <div class="col-md-12">
+                <hr>
+                <h4>Invoice history</h4>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">User</th>
+                        <th scope="col">Changes</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($invoice->histories as $history)
+                            <tr>
+                                <td>{{ $history->created_at }}</td>
+                                <td>{{ $history->user->name }}</td>
+                                <td>{{ $history->changes  }}</td>
+                            </tr>
+                        @empty
+                            <p>History is empty</p>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+            @endif
+
         </div>
     </div>
 

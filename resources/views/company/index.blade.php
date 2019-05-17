@@ -5,7 +5,6 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-
                 <div class="card">
                     <div class="card-header">
                         <div class="level">
@@ -18,7 +17,6 @@
                     </div>
                 </div>
                 </div>
-
                 <div class="card-body">
                     <table class="table">
                         <thead class="bg-primary text-white">
@@ -41,12 +39,9 @@
                                 <td><img width="100" src="{{($item->logo_img) ? 'upload/company/' . $item->logo_img : '/img/no_img.png'}}" alt="{{$item->short_name}}"></td>
                             </tr>
                         @endforeach
-
                         </tbody>
                     </table>
                 </div>
-            {{ $company->links() }}
-
             </div>
         </div>
     </div>

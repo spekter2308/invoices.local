@@ -23,6 +23,12 @@ class CustomerController extends Controller
     {
         $customer = new Customer();
 
+        if(\Gate::denies('create', $customer)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t create company.']);
+        }
+
         return view('customers.edit', compact('customer'));
     }
 
@@ -36,6 +42,12 @@ class CustomerController extends Controller
     public function update($id)
     {
         $customer = Customer::findOrFail($id);
+
+        if(\Gate::denies('update', $customer)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t update company.']);
+        }
 
         $customer->update($this->validateRequest());
 

@@ -71,7 +71,7 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
 
-        $user->roles()->attach(Role::where('slug', 'user')->first()->id);
+        $user->roles()->attach(Role::where('slug', 'view')->first()->id);
 
         Counter::create([
             'user_id' => $user->id,

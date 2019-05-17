@@ -21,6 +21,7 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
+Vue.component('flash', require('./components/Flash.vue').default);
 Vue.component('company-select', require('./components/CompanySelect.vue').default);
 Vue.component('customer-select', require('./components/CustomerSelect.vue').default);
 Vue.component('invoice-notes', require('./components/InvoiceNotes.vue').default);

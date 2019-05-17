@@ -5,7 +5,9 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-12">
-
+                
+                @include('access')
+                
                 <div class="card">
                     <div class="card-header">
                         <div class="level">
@@ -21,17 +23,26 @@
                 </div>
 
                 {{--Top buttons--}}
-                <div class="level mt-2">
-                    <div class="flex">
-                        <a href="/invoices/{{ $invoice->id }}/edit" class="btn btn-secondary">Edit</a>
-                        <a href="{{route('generate-pdf', ['invoice' => $invoice->id, 'print' => 'print'])}}" target="_blank" class="btn btn-secondary">Print</a>
-                        <a href="{{route('generate-pdf', ['invoice' => $invoice->id])}}" class="btn btn-secondary">PDF</a>
-                        <a href="/invoice-mail/create/{{ $invoice->id }}" class="btn btn-secondary">Send</a>
-                        <a href="#" class="btn btn-secondary">Mark as Paid</a>
-                        <a href="#" class="btn btn-secondary">Record Payment</a>
-                        <a href="/invoices/duplicate/{{ $invoice->id }}" class="btn btn-secondary">Duplicate</a>
+               @if (auth()->check())
+                    <div class="level mt-2">
+                        <div class="flex">
+                            <a href="/invoices/{{ $invoice->id }}/edit" class="btn btn-secondary">Edit</a>
+                            <a href="{{route('generate-pdf', ['invoice' => $invoice->id, 'print' => 'print'])}}" target="_blank" class="btn btn-secondary">Print</a>
+                            <a href="{{route('generate-pdf', ['invoice' => $invoice->id])}}" class="btn btn-secondary">PDF</a>
+                            <a href="/invoice-mail/create/{{ $invoice->id }}" class="btn btn-secondary">Send</a>
+                            <a href="#" class="btn btn-secondary">Mark as Paid</a>
+                            <a href="#" class="btn btn-secondary">Record Payment</a>
+                            <a href="/invoices/duplicate/{{ $invoice->id }}" class="btn btn-secondary">Duplicate</a>
+                        </div>
                     </div>
-                </div>
+               @else
+                    <div class="level mt-2">
+                        <div class="flex">
+                            <a href="{{route('generate-pdf', ['invoice' => $invoice->id, 'print' => 'print'])}}" target="_blank" class="btn btn-secondary">Print</a>
+                            <a href="{{route('generate-pdf', ['invoice' => $invoice->id])}}" class="btn btn-secondary">PDF</a>
+                        </div>
+                    </div>
+               @endif
 
                 <div class="mt-3 invoice-create-body">
                     <div class="wrapper-invoice-create">

@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
+    
+    
     @if(isset($item->id))
         <form method="POST" enctype="multipart/form-data"
               action="{{route('save-select-item', ['id' => $item->id])}}">
@@ -20,10 +22,10 @@
                                     </li>
                                 </ul>
                                 <br>
-
+                                
                                 @include('errors')
                                 @include('success')
-
+    
                                 <div class="tab-content">
                                     <div class="tab-pane fade show active" id="home" role="tabpanel"
                                          aria-labelledby="home-tab">
