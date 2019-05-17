@@ -4489,6 +4489,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     id: {
@@ -4501,7 +4502,9 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   data: function data() {
-    return {};
+    return {
+      token_csrf: window.Laravel.csrfToken
+    };
   },
   computed: {
     setId: function setId() {
@@ -71764,8 +71767,20 @@ var render = function() {
               "form",
               { attrs: { method: "post", action: _vm.setAction } },
               [
+                _c("input", {
+                  attrs: { type: "hidden", name: "_token" },
+                  domProps: { value: _vm.token_csrf }
+                }),
+                _vm._v(" "),
                 _c("b-input", {
-                  attrs: { id: "edit_name", value: _vm.name, type: "text" }
+                  attrs: {
+                    min: "3",
+                    required: "true",
+                    id: "edit_name",
+                    value: _vm.name,
+                    name: "name",
+                    type: "text"
+                  }
                 }),
                 _vm._v(" "),
                 _c(

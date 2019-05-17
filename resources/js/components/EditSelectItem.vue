@@ -8,7 +8,8 @@
             </template>
             <div class="d-block text-center">
                 <form method="post" :action="setAction">
-                    <b-input id="edit_name" :value="name" type="text"></b-input>
+                    <input type="hidden" name="_token" :value="token_csrf">
+                    <b-input  min="3" required="true" id="edit_name" :value="name" name="name" type="text"></b-input>
                     <b-button variant="success" type="submit" class="mt-3">Save</b-button>
                 </form>
             </div>
@@ -30,6 +31,7 @@
         },
         data() {
             return {
+                token_csrf: window.Laravel.csrfToken
             }
         },
         computed: {

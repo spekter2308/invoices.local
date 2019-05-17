@@ -210,12 +210,12 @@ class InvoiceController extends Controller
     public function saveSelectItem($id = false, Request $request, InvoiceItemName $invoiceItem)
     {
         $validator = \Validator::make($request->all(), [
-            'name' => 'required|min:3|max:100',
+            'name' => 'required|max:100',
         ]);
 
         if ($validator->fails()) {
             $request->flash();
-            return redirect(route('create-select-item'))->withErrors($validator);
+            return redirect()->back()->withErrors($validator);
         }
 
         $status = (!$id) ? $invoiceItem->create($request->all()) : $invoiceItem->find($id)->update($request->all());
