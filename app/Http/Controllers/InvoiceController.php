@@ -300,17 +300,16 @@ class InvoiceController extends Controller
 
     public function changeInvoicesStatus(Request $request, Invoice $invoice)
     {
-
-        if (!$request->has(['ststus', 'invoices']))
+        if (!$request->has(['status', 'invoices']))
             abort(500);
 
         $validator = Validator::make($request->all(), [
-            'ststus' => 'required|numeric|min:1|max:3',
+            'status' => 'required|numeric|min:1|max:3',
             'invoices' => 'required|string',
         ]);
 
-        if (!$validator->fails()) {
-            return redirect(route('invoice-index'))->withErrors($validator);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
 
         }
 
@@ -364,7 +363,7 @@ class InvoiceController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator);
         }
-//dd($request->all());
+
         $paymentInvoice->invoice_id = $id;
         $paymentInvoice->date = Carbon::parse($request->date)->format(('Y-m-d'));
         $paymentInvoice->amount = $request->amount;
