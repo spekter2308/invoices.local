@@ -32,8 +32,9 @@
                             <a href="/invoice-mail/create/{{ $invoice->id }}" class="btn btn-secondary">Send</a>
                             <a href="#" class="btn btn-secondary">Mark as Paid</a>
                             <a href="{{route('record-payment', ['invoice' => $invoice->id])}}" class="btn btn-secondary">Record Payment</a>
-                            <a href="#" class="btn btn-secondary">Duplicate</a>
+                            <a href="/invoices/duplicate/{{ $invoice->id }}" class="btn btn-secondary">Duplicate</a>
                         </div>
+                    </div>
                @else
                     <div class="level mt-2">
                         <div class="flex">
