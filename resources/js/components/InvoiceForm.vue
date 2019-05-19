@@ -10,6 +10,7 @@
                         <div class="col-md-8">
                             <company-select
                                     :companies="companies"
+                                    :current-company="invoiceCompany"
                                     v-model="invoice.selectedCompany"
                                     @blur="$v.invoice.selectedCompany.$touch()"
                                     @sendinvoicenotes="getInvoiceNotes"
@@ -27,6 +28,7 @@
                         <div class="col-md-8">
                             <customer-select
                                     :customers="customers"
+                                    :current-customer="invoiceCustomer"
                                     @blur="$v.invoice.selectedCustomer.$touch()"
                                     v-model="invoice.selectedCustomer">
                             </customer-select>
@@ -247,6 +249,22 @@
              'items-table': Items
          },*/
         props: {
+            invoiceId: {
+                type: [Number, String],
+                required: true
+            },
+            invoiceCustomer: {
+                type: Object,
+                required: true
+            },
+            invoiceCompany: {
+                type: [Object],
+                required: true
+            },
+            invoiceItems: {
+                type: [Array],
+                required: true
+            },
             invoiceNumber: {
                 type: String,
                 required: true
@@ -267,6 +285,10 @@
                 type: Array,
                 required: true
             },
+            mode: {
+                type: String,
+                required: true
+            }
         },
         data() {
             return {
@@ -274,23 +296,13 @@
                 createdInvoiceId: NaN,
                 isTableInvalid: true,
                 invoice: {
-                    selectedCompany: NaN,
-                    selectedCustomer: {},
+                    selectedCompany: this.invoiceCompany.id || NaN,
+                    selectedCustomer: this.invoiceCustomer.id || {},
                     //selectedFile: null,
                     selectedDateFrom: new Date().toISOString().slice(0,10),
                     selectedDateTo: new Date().toISOString().slice(0,10),
                     selectedInvoiceNumber: this.invoiceNumber,
-                    selectedItems: [
-                        {
-                            //id: 1,
-                            item: null,
-                            description: null,
-                            quantity: 1,
-                            unitprice: 1,
-                            dirty: false,
-                            correct: false
-                        }
-                    ]
+                    selectedItems: this.invoiceItems
                 },
                 selectedNumber: {
                     prefix: this.formatNumber.prefix || '',
@@ -298,7 +310,7 @@
                     postfix: this.formatNumber.postfix || '',
                     increment: this.formatNumber.increment || 1
                 },
-                notes: ''
+                notes: this.invoiceCompany.invoice_notes || ''
             }
         },
         validations: {
@@ -410,16 +422,25 @@
                     eventBus.$emit('touch', true)
                     if (!this.$v.$error && !this.isTableRowsInvalid) {
                         console.log(JSON.stringify(this.invoice));
-                        await axios.post('/invoices', this.invoice).then(response => {
-                            this.createdInvoiceId = response.data.id
-                        });
+                        if (this.mode === 'create') {
+                            await axios.post('/invoices', this.invoice).then(response => {
+                                this.createdInvoiceId = response.data.id
+                            });
+                            location.href = '/invoices/' + this.createdInvoiceId;
+                        }
+                        else if(this.mode === 'edit') {
+                            console.log(this.invoiceId)
+                            await axios.patch('/invoices/' + this.invoiceId, this.invoice).then(response => {
+                                this.createdInvoiceId = response.data.id
+                            });
+                        }
+                        location.href = '/invoices/' + this.createdInvoiceId;
                         //await this.updateNextNumber();
                         //this.resetInvoice();
                         //eventBus.$emit('update', true)
                         //this.$v.$reset()
                         //eventBus.$emit('reset', true)
                         //console.log('resetting')
-                        location.href = '/invoices/' + this.createdInvoiceId;
                     }
                 } catch(e) {
                     // this.resetInvoice()

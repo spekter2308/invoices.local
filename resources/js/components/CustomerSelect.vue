@@ -4,8 +4,9 @@
         <div class="form-group">
             <select class="custom-select"  v-model="customer" @change="toggleActive">
                 <option selected :value="emptyObj">New Customer ...</option>
-                <option v-for="customer of customers" :value="customer" :key="customer.id">{{ customer.name
-                    }}</option>
+                <option v-for="customer of customers"
+                        :value="customer"
+                        :key="customer.id">{{ customer.name }}</option>
             </select>
         </div>
         <div class="form-group" v-if="editing">
@@ -39,6 +40,10 @@
     export default {
         inheritAttrs: false,
         props: {
+            currentCustomer: {
+                type: Object,
+                required: true,
+            },
             customers: {
                 type: Array,
                 required: true
@@ -53,9 +58,9 @@
         },
         data() {
             return {
-                customer: {},
-                address: '',
-                editing: true,
+                customer: this.currentCustomer || {},
+                address: this.currentCustomer.address || '',
+                editing: this.isEditing(),
                 emptyObj: {},
                 enteredname: null,
                 enteredaddress: null,
@@ -98,7 +103,8 @@
         computed: {
             isEmpty() {
                 return Object.keys(this.customer).length === 0
-            }
+            },
+
         },
         validations: {
             enteredname: {
@@ -108,7 +114,7 @@
                 /*        required: requiredIf(function() {
                             return this.isEmpty
                         })*/
-                required
+            required
             }
         },
         mounted() {
@@ -124,6 +130,9 @@
                 } else {
                     this.editing = false
                 }
+            },
+            isEditing() {
+                return this.currentCustomer.id ? false : true;
             }
         }
     }

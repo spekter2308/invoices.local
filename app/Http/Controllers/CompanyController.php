@@ -28,6 +28,12 @@ class CompanyController extends Controller
 
     public function create()
     {
+        if(\Gate::denies('create', Company::class)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t create company.']);
+        }
+
         return view('company.create')->with([
             'company' => $this->company
         ]);
@@ -68,6 +74,13 @@ class CompanyController extends Controller
 
     public function updateSave($id, Request $request)
     {
+        $company = $this->company->findOrFail($id);
+        if(\Gate::denies('update', $company)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t update company.']);
+        }
+
         $data = $request->all();
         $validator = $this->validateCompany($data);
 
@@ -81,7 +94,7 @@ class CompanyController extends Controller
             $request->file('logo_img')->move(public_path(self::UPLOAD_PATH), $data['logo_img']);
         }
 
-        if (!$this->company->find($id)->update($data)) {
+        if (!$company->update($data)) {
             abort(500);
         }
 

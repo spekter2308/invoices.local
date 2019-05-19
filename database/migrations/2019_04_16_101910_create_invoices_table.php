@@ -17,6 +17,7 @@ class CreateInvoicesTable extends Migration
             $table->bigIncrements('id');
 
             $table->string('number')->unique();
+            $table->integer('user_id')->unsigned();
             $table->integer('customer_id')->unsigned();
             $table->integer('company_id')->unsigned();
 

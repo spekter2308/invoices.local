@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Helper\HasManyRelation;
 use App\Http\Requests\CreateInvoiceRequest;
+use App\Http\Requests\UpdateInvoiceRequest;
+use App\InvoiceHistory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Invoice;
 use App\Customer;
 use App\Company;
+use App\Events\NewInvoiceCreatedEvent;
 use App\Item;
 use Http\Env\Response;
 use App\Http\Controllers\Controller;
@@ -23,6 +26,10 @@ class InvoiceController extends Controller
 {
     use HasManyRelation;
 
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['show', 'generatePdf']]);
+    }
 
     public function index(Request $request, InvoiceFilters $filters)
     {
@@ -43,49 +50,38 @@ class InvoiceController extends Controller
         return view('invoices.index', compact('invoices'));
     }
 
-    protected function getInvoices($filters)
-    {
-        $invoices = Invoice::latest()->filter($filters);
-
-        $invoices = $invoices->get();
-        return $invoices;
-    }
-
     public function create()
     {
-        if (auth()->check()) {
-            //check for unique invoice number
-            $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
-            $counter = Counter::where(['user_id' => auth()->id()])->first();
-            $prefix = $counter->prefix;
-            $start = $counter->start;
-            $increment = $counter->increment;
-            $postfix = $counter->postfix;
-
-            $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
-
-            $customers = Customer::latest()->get();
-            $companies = Company::latest()->get();
-
-            return view('invoices.create', [
-                'invoiceCustomer' => '',
-                'invoiceCompany' => '',
-                'invoiceItems' => collect(),
-                'invoiceNumber' => $invoiceNumber,
-                'invoiceFormatNumber' => $counter,
-                'invoiceNumbers' => $invoiceNumbers,
-                'customers' => $customers,
-                'companies' => $companies,
-                'mode' => 'create'
-            ]);
+        if(\Gate::denies('create', Invoice::class)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t create invoice.']);
         }
 
-        return view('auth.login', ['registerMessage' => 'If tou does not have account, please Register']);
-    }
+        if(session()->get('id')) {
+            $id = session()->get('id');
+            $invoice = Invoice::findOrFail($id);
 
-    public function store(CreateInvoiceRequest $request)
-    {
-        $data = $request->input();
+            $invoiceCustomer = $invoice->customer;
+            $invoiceCompany = $invoice->company;
+            foreach ($invoice->items as $item) {
+                $items = [
+                    'item' => $item->item,
+                    'description' => $item->description,
+                    'quantity' => $item->quantity,
+                    'unitprice' => $item->unitprice,
+                    'dirty' => $item->dirty,
+                    'correct' => $item->correct
+                ];
+                $invoiceItems[] = $items;
+            }
+            //return $invoiceItems;
+            session()->forget('id');
+        } else {
+            $invoiceCustomer = '{}';
+            $invoiceCompany = '{}';
+            $invoiceItems = [['item' => '', 'description' => '', 'quantity' => 1, 'unitprice' => 1, 'dirty' => false, 'correct' => false]];
+        }
 
         //check for unique invoice number
         $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
@@ -95,9 +91,31 @@ class InvoiceController extends Controller
         $increment = $counter->increment;
         $postfix = $counter->postfix;
 
-        if(in_array($data['selectedInvoiceNumber'], $invoiceNumbers)) {
-            $data['selectedInvoiceNumber'] = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
-        }
+        $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
+
+        $customers = Customer::latest()->get();
+        $companies = Company::latest()->get();
+
+        return view('invoices.edit', [
+            'invoiceId' => '',
+            'invoiceCustomer' => $invoiceCustomer,
+            'invoiceCompany' => $invoiceCompany,
+            'invoiceItems' => $invoiceItems,
+            'invoiceNumber' => $invoiceNumber,
+            'invoiceFormatNumber' => $counter,
+            'invoiceNumbers' => $invoiceNumbers,
+            'customers' => $customers,
+            'companies' => $companies,
+            'mode' => 'create'
+        ]);
+    }
+
+    public function store(CreateInvoiceRequest $request)
+    {
+        $data = $request->input();
+
+        //check for unique invoice number
+        $data['selectedInvoiceNumber'] = $this->checkInvoiceNumber($data['selectedInvoiceNumber']);
 
         if (is_array($data['selectedCustomer'])) {
             $customer = (new Customer())->create([
@@ -115,6 +133,7 @@ class InvoiceController extends Controller
 
         $invoice = Invoice::create([
             'number' => $data['selectedInvoiceNumber'],
+            'user_id' => auth()->id(),
             'customer_id' => $customerId,
             'company_id' => \request('selectedCompany'),
             'invoice_date' => \request('selectedDateFrom'),
@@ -126,16 +145,23 @@ class InvoiceController extends Controller
             'status' => 'Draft'
         ]);
 
+        InvoiceHistory::create([
+            'invoice_id' => $invoice->id,
+            'user_id' => auth()->id(),
+            'changes' => "Invoice created, amount $invoice->balance"
+        ]);
+
         $invoice = DB::transaction(function () use ($invoice, $request) {
             $invoice->storeHasMany([
                 'items' => $request->selectedItems
             ]);
 
+
+
             return $invoice;
         });
 
         return $invoice;
-
     }
 
     public function show($id)
@@ -149,6 +175,12 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
+        if(\Gate::denies('update', $invoice)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t edit invoice.']);
+        }
+
         $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
         $counter = Counter::where(['user_id' => auth()->id()])->first();
 
@@ -159,6 +191,7 @@ class InvoiceController extends Controller
 
         return view('invoices.edit', [
             'invoice' => $invoice,
+            'invoiceId' => $invoice->id,
             'invoiceCustomer' => $invoice->customer,
             'invoiceCompany' => $invoice->company,
             'invoiceItems' => $invoiceItems,
@@ -171,14 +204,85 @@ class InvoiceController extends Controller
         ]);
     }
 
+    public function update($id, UpdateInvoiceRequest $request)
+    {
+        $invoice = Invoice::findOrFail($id);
+
+        $data = $request->input();
+
+        //check for unique invoice number
+        $data['selectedInvoiceNumber'] = $this->checkInvoiceNumber($data['selectedInvoiceNumber']);
+
+        if (is_array($data['selectedCustomer'])) {
+            $customer = (new Customer())->create([
+                'name' => $data['selectedCustomer']['name'],
+                'address' => $data['selectedCustomer']['address']
+            ]);
+            $customerId = $customer->id;
+        } else {
+            $customerId = $data['selectedCustomer'];
+        }
+
+        $total = collect($data['selectedItems'])->sum(function ($item) {
+            return $item['quantity'] * $item['unitprice'];
+        });
+
+        $old_total = $invoice->total;
+
+        $invoice->update([
+            'number' => $data['selectedInvoiceNumber'],
+            'customer_id' => $customerId,
+            'company_id' => \request('selectedCompany'),
+            'invoice_date' => \request('selectedDateFrom'),
+            'due_date' => \request('selectedDateTo'),
+            'amount_paid' => 0,
+            'subtotal' => $total,
+            'total' => $total,
+            'balance' => $total,
+        ]);
+
+        InvoiceHistory::create([
+            'invoice_id' => $invoice->id,
+            'user_id' => auth()->id(),
+            'changes' => "Total changed from $old_total to $invoice->total"
+        ]);
+
+        $invoice = DB::transaction(function () use ($invoice, $request) {
+            $invoice->updateHasMany([
+                'items' => $request->selectedItems
+            ]);
+
+            return $invoice;
+        });
+
+        return $invoice;
+    }
+
+    public function duplicate($id)
+    {
+        return redirect('/invoices/create')->with(['id' => $id]);
+    }
+
     public function markAsPaid($id)
     {
         $invoice = Invoice::findOrFail($id);
+
+        if(\Gate::denies('update', $invoice)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t change statuses.']);
+        }
 
         $invoice->update([
             'status' => 'Paid',
             'balance' => 0,
             'amount_paid' => $invoice->total
+        ]);
+
+        InvoiceHistory::create([
+            'invoice_id' => $invoice->id,
+            'user_id' => auth()->id(),
+            'changes' => "Invoice marked as paid"
         ]);
 
         return redirect()->back();
@@ -208,6 +312,20 @@ class InvoiceController extends Controller
 
     public function saveSelectItem($id = false, Request $request, InvoiceItemName $invoiceItem)
     {
+        if ($id) {
+            $item = InvoiceItemName::find($id);
+            $msg = 'update';
+        } else {
+            $item = $invoiceItem;
+            $msg = 'create';
+        }
+
+        if(\Gate::denies($msg, $item)){
+            return redirect()
+                ->back()
+                ->with(['flash' => "Access denied. You cann\'t $msg items."]);
+        }
+
         $validator = \Validator::make($request->all(), [
             'name' => 'required|min:3|max:100',
         ]);
@@ -229,6 +347,14 @@ class InvoiceController extends Controller
 
     public function deleteSelectItem($id, InvoiceItemName $invoiceItem)
     {
+        $item = $invoiceItem->find($id);
+
+        if(\Gate::denies('delete', $item)){
+            return redirect()
+                ->back()
+                ->with(['flash' => "Access denied. You cann\'t delete items."]);
+        }
+
         $status = $invoiceItem->destroy($id);
 
         if (!$status) {
@@ -236,6 +362,30 @@ class InvoiceController extends Controller
         }
 
         return redirect(route('select-item'))->with(['success' => 'Item has been delete']);
+    }
+
+    protected function getInvoices($filters)
+    {
+        $invoices = Invoice::latest()->filter($filters);
+
+        $invoices = $invoices->get();
+        return $invoices;
+    }
+
+    protected function checkInvoiceNumber($value)
+    {
+        $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
+        $counter = Counter::where(['user_id' => auth()->id()])->first();
+        $prefix = $counter->prefix;
+        $start = $counter->start;
+        $increment = $counter->increment;
+        $postfix = $counter->postfix;
+
+        if(in_array($value, $invoiceNumbers)) {
+            $value = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
+        }
+
+        return $value;
     }
 
     protected function checkInArray($prefix, $start, $increment, $postfix, $array, $old_increment)

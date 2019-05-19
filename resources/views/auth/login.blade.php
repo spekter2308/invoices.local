@@ -66,7 +66,7 @@
                         </div>
                     </form>
                     
-                    @if ($registerMessage)
+                    @if (isset($registerMessage))
                         <div class="d-flex justify-content-center mt-3">
                             <a href="{{ route('register') }}">{{ $registerMessage }}</a>
                         </div>

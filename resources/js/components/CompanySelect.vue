@@ -3,7 +3,7 @@
         <h4>From</h4>
         <div class="form-group">
             <select class="custom-select" :value="value" v-on="listeners">
-                <option selected :value="NaN" disabled>Choose company ...</option>
+                <option disabled :value="NaN">Choose company...</option>
                 <option v-for="company of companies" :value="company.id">{{ company.name }}</option>
             </select>
         </div>
@@ -22,6 +22,10 @@
     export default {
         inheritProps: false,
         props: {
+            currentCompany: {
+                type: Object,
+                required: true
+            },
             companies: {
                 type: Array,
                 required: true
@@ -33,7 +37,7 @@
         },
         data() {
             return {
-                address: '',
+                address: this.currentCompany.address || ''
             }
         },
         computed: {

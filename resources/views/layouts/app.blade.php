@@ -47,8 +47,9 @@
         </div>
 
         <main class="py-4">
-             @yield('content')
+            @yield('content')
+            <flash message="{{ session('flash') }}"></flash>
         </main>
-    </div>
+</div>
 </body>
 </html>

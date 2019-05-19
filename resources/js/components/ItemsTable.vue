@@ -38,7 +38,7 @@
                           :table-item="el"
                   ></TableItem>
               </div>
-                         </template>
+           </template>
         <br>
         <button type="button" class="btn" @click="addNewLine()">New Line</button>
 

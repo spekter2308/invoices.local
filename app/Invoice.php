@@ -28,6 +28,11 @@ class Invoice extends Model
         return $this->belongsTo(Company::class);
     }
 
+    public function histories()
+    {
+        return $this->hasMany(InvoiceHistory::class);
+    }
+
     public function sentMails()
     {
         return $this->hasMany(InvoiceMail::class);
