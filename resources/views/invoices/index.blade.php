@@ -24,6 +24,8 @@
                         </div>
 
                     </div>
+                    @include('errors')
+                    @include('success')
                 </div>
                 <div class="card-body">
                     <div class="level">
@@ -41,16 +43,7 @@
                         <thead class="bg-primary text-white">
                         <tr>
                             <th scope="col">
-                                <div class="dropdown">
-                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a class="dropdown-item" href="#">Action</a>
-                                        <a class="dropdown-item" href="#">Another action</a>
-                                    </div>
-
-                                </div>
+                                <change-status></change-status>
                             </th>
                             <th scope="col">
                                 Invoices

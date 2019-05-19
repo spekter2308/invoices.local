@@ -29,6 +29,9 @@ Vue.component('invoice-form', require('./components/InvoiceForm.vue').default);
 Vue.component('items-table', require('./components/ItemsTable.vue').default);
 Vue.component('datapicker', require('vuejs-datepicker').default);
 Vue.component('invoices-filter', require('./components/Invoices-filter.vue').default);
+Vue.component('change-status', require('./components/ChangeStatus').default);
+Vue.component('edit-item', require('./components/EditSelectItem').default);
+Vue.component('payment-details', require('./components/PaymentDetails').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -40,17 +43,21 @@ Vue.component('invoices-filter', require('./components/Invoices-filter.vue').def
 /*import Vue from 'vue'*/
 import Vuelidate from 'vuelidate'
 import router from './routes'
-
+import store from './store'
+import BootstrapVue from 'bootstrap-vue'
 
 Vue.use(Vuelidate)
 Vue.use(router)
+Vue.use(BootstrapVue)
 
 window.eventBus = new Vue()
 const app = new Vue({
     el: '#app',
     router,
+    store,
     data() {
-        return {}
+        return {
+        }
     }
 });
 

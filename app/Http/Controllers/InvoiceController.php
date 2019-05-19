@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helper\HasManyRelation;
 use App\Http\Requests\CreateInvoiceRequest;
+use App\PaymentInvoice;
 use App\Http\Requests\UpdateInvoiceRequest;
 use App\InvoiceHistory;
 use Carbon\Carbon;
@@ -11,7 +12,6 @@ use Illuminate\Http\Request;
 use App\Invoice;
 use App\Customer;
 use App\Company;
-use App\Events\NewInvoiceCreatedEvent;
 use App\Item;
 use Http\Env\Response;
 use App\Http\Controllers\Controller;
@@ -19,6 +19,7 @@ use App\Counter;
 use App\InvoiceItemName;
 use DB;
 use App\Filters\InvoiceFilters;
+use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Expr\Cast\Object_;
 use PDF;
 
@@ -37,8 +38,8 @@ class InvoiceController extends Controller
 
         if ($request->has(['from', 'to'])) {
 
-            $from = Carbon::createFromTimeString($request->from)->format('Y-m-d');
-            $to = Carbon::createFromTimeString($request->to)->format('Y-m-d');
+            $from = Carbon::createFromTimeString($request->from)->setTimezone('Europe/Kiev')->format('Y-m-d H:i:s');
+            $to = Carbon::createFromTimeString($request->to)->setTimezone('Europe/Kiev')->format('Y-m-d H:i:s');
 
             $invoices = $invoices->where('invoice_date', '>=', $from)->where('invoice_date', '<=', $to);
         }
@@ -50,7 +51,7 @@ class InvoiceController extends Controller
         return view('invoices.index', compact('invoices'));
     }
 
-    public function create()
+       public function create()
     {
         if(\Gate::denies('create', Invoice::class)){
             return redirect()
@@ -156,12 +157,11 @@ class InvoiceController extends Controller
                 'items' => $request->selectedItems
             ]);
 
-
-
             return $invoice;
         });
 
         return $invoice;
+
     }
 
     public function show($id)
@@ -327,12 +327,12 @@ class InvoiceController extends Controller
         }
 
         $validator = \Validator::make($request->all(), [
-            'name' => 'required|min:3|max:100',
+            'name' => 'required|max:100',
         ]);
 
         if ($validator->fails()) {
             $request->flash();
-            return redirect(route('create-select-item'))->withErrors($validator);
+            return redirect()->back()->withErrors($validator);
         }
 
         $status = (!$id) ? $invoiceItem->create($request->all()) : $invoiceItem->find($id)->update($request->all());
@@ -361,7 +361,7 @@ class InvoiceController extends Controller
             abort(500);
         }
 
-        return redirect(route('select-item'))->with(['success' => 'Item has been delete']);
+        return redirect(route('get-select-item'))->with(['success' => 'Item has been delete']);
     }
 
     protected function getInvoices($filters)
@@ -432,7 +432,7 @@ class InvoiceController extends Controller
 
         return \response()->json($response);
     }
-    
+
     public function generatePdf($invoice, $print = false)
     {
 
@@ -444,5 +444,92 @@ class InvoiceController extends Controller
             $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice]);
             return $pdf->download('I-' . $invoice->number . '.pdf');
         }
+    }
+
+    public function changeInvoicesStatus(Request $request, Invoice $invoice)
+    {
+        if (!$request->has(['status', 'invoices']))
+            abort(500);
+
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|numeric|min:1|max:3',
+            'invoices' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+
+        }
+
+        $invoices = $invoice->whereIn('id', json_decode($request->invoices))->get();
+
+        switch ($request->status) {
+            case 1 :
+                $invoices->map(function ($row) {
+                    $row->update([
+                        'status' => 'Paid',
+                        'balance' => 0,
+                        'amount_paid' => $row->total
+                    ]);
+                });
+                break;
+            case 2 :
+
+                break;
+            case 3 :
+                $invoices->map(function ($row) {
+                    $row->update([
+                        'status' => 'Sent',
+                    ]);
+                });
+                break;
+            default:
+        }
+
+        return redirect(route('invoice-index'))->with(['success' => 'Status has been save']);
+    }
+
+    public function recordPayment($invoice)
+    {
+
+        $invoice = Invoice::with('customer')->findOrFail($invoice);
+
+        return view('invoices.record-payment')->with([
+            'invoice' => $invoice
+        ]);
+    }
+
+    public function recordPaymentSave($id, Request $request, Invoice $invoice, PaymentInvoice $paymentInvoice)
+    {
+        $validator = Validator::make($request->all(), [
+            'date' => 'required|date',
+            'amount' => 'required|numeric|min:0.01',
+            'receiving_account' => 'required|string|max:255',
+            'notes' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator);
+        }
+
+        $paymentInvoice->invoice_id = $id;
+        $paymentInvoice->date = Carbon::parse($request->date)->format(('Y-m-d'));
+        $paymentInvoice->amount = $request->amount;
+        $paymentInvoice->receiving_account = $request->receiving_account;
+        $paymentInvoice->notes = $request->notes;
+
+        $status = $paymentInvoice->save();
+
+        if (!$status)
+            abort(500);
+
+        $findInvoice = $invoice->findOrFail($id);
+        $findInvoice->update([
+            'status' => 'Partial',
+            'balance' => $findInvoice->total - $request->amount,
+            'amount_paid' => $findInvoice->amount_paid + $request->amount,
+        ]);
+
+        return redirect()->back()->with(['success' => 'Status has been save']);
     }
 }

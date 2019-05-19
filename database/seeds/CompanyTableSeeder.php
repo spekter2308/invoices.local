@@ -1,5 +1,6 @@
 <?php
 
+use App\Counter;
 use Illuminate\Database\Seeder;
 use Faker\Factory;
 use App\Company;

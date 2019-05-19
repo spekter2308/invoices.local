@@ -7,12 +7,17 @@
 
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
+@import '~bootstrap-vue/dist/bootstrap-vue.min.css';
 
 // Invoice create '/invoices/create
 @import "invoice_create";
 
 // Customer all styles
 @import "customer";
+
+// Invoice index '/invoices
+@import "~@fortawesome/fontawesome-free/css/all.css";
+@import "invoice_action";
 
 .navbar-laravel {
   //background-color: #fff;

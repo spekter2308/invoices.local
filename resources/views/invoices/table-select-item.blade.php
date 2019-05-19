@@ -46,13 +46,12 @@
                                 <form method="POST" action="{{route('delete-select-item', ['id' => $item->id])}}">
                                     @method('DELETE')
                                     @csrf
-                                    <a class="btn-link btn" href="{{route('create-select-item', ['id' => $item->id])}}">Edit</a>
+                                    <span class="btn-save-edit"><edit-item name="{{$item->name}}" id="{{$item->id}}"></edit-item></span>
                                     <button type="submit" class="text-danger btn btn-link">Delete</button>
                                 </form>
                             </td>
                         </tr>
                     @endforeach
-
                     </tbody>
                 </table>
             </div>
