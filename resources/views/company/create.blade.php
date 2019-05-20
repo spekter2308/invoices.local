@@ -74,14 +74,18 @@
                                 </div>
                             @endif
                         @endempty
-    
-                        <div class="form-group">
-                            <input type="file" name="logo_img"
-                                   class="form-control {{ $errors->has ('logo_img') ? 'error' : '' }}"
-                                   placeholder="Logo"
-                                   value="{{ old('logo_img') ?? $company->logo_img }}"/>
+
+                        <div class="{{ $errors->has ('logo_img') ? 'error' : '' }}">
+                            <div class="input-group input-file" name="logo_img">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary btn-choose" type="button">Choose</button>
+                                </span>
+                                    <input type="text" class="form-control" placeholder='Choose a file...'/>
+                                    <span class="input-group-btn">
+                                    <button class="btn btn-danger btn-reset" type="button">Clear</button>
+                                </span>
+                            </div>
                         </div>
-    
                     </div>
                 </div>
             </div>

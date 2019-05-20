@@ -312,6 +312,7 @@ class InvoiceController extends Controller
 
     public function saveSelectItem($id = false, Request $request, InvoiceItemName $invoiceItem)
     {
+
         if ($id) {
             $item = InvoiceItemName::find($id);
             $msg = 'update';
@@ -326,16 +327,22 @@ class InvoiceController extends Controller
                 ->with(['flash' => "Access denied. You cann\'t $msg items."]);
         }
 
+        $status = ($id) ? $invoiceItem->find($id)->update($request->all()) : $invoiceItem->create($request->all());
+
         $validator = \Validator::make($request->all(), [
             'name' => 'required|max:100',
         ]);
 
-        if ($validator->fails()) {
+        /*if ($validator->fails()) {
             $request->flash();
             return redirect()->back()->withErrors($validator);
-        }
+        }*/
 
-        $status = (!$id) ? $invoiceItem->create($request->all()) : $invoiceItem->find($id)->update($request->all());
+        dd($status);
+
+
+
+
 
         if (!$status) {
             abort(500);

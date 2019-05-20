@@ -15316,6 +15316,17 @@ a.btn-secondary:hover {
   background-color: #f3f3f3;
 }
 
+.input-file .btn {
+  font-size: 14px;
+  line-height: 17px;
+  padding: 10px 6px;
+}
+
+.input-file input {
+  height: 38px;
+  line-height: 38px;
+}
+
 .error {
   border: 1px solid red;
 }
