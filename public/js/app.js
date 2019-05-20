@@ -4845,6 +4845,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       type: [Number, String],
       required: true
     },
+    invoicePaid: {
+      type: [Number, String],
+      required: true
+    },
     invoiceCustomer: {
       type: Object,
       required: true
@@ -5162,6 +5166,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         return acc + curr.unitprice * curr.quantity;
       }, 0);
     },
+    balance: function balance() {
+      return this.total - this.amount_paid;
+    },
+    amount_paid: function amount_paid() {
+      return this.invoicePaid === '0' ? 0 : this.invoicePaid;
+    },
     invoiceNum: function invoiceNum() {
       return this.checkInArray(this.selectedNumber.prefix, this.selectedNumber.start, this.selectedNumber.increment, this.selectedNumber.postfix, this.invoiceNumbers, this.selectedNumber.increment);
     }
@@ -5460,6 +5470,16 @@ var id = 1;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 //
 //
 //
@@ -5510,44 +5530,113 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     invoice: {
-      required: true,
-      type: String
+      type: Object,
+      required: true
     },
-    action: {
-      required: true,
-      type: String
+    paymentHistory: {
+      type: Array,
+      required: true
     }
   },
   data: function data() {
     return {
+      histories: this.paymentHistory,
+      id: null,
       dataForm: {
-        date: '',
-        amout: 0,
-        receivingAccoun: null,
-        notes: ''
+        date: new Date().toISOString().slice(0, 10),
+        amount: this.invoice.balance,
+        receiving_account: null,
+        notes: '',
+        invoice_id: this.invoice.id
       },
       token_csrf: window.Laravel.csrfToken
     };
   },
   methods: {
-    send: function send() {
-      console.log(this.dataForm);
-    }
+    onSubmit: function () {
+      var _onSubmit = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        var _this = this;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                console.log(JSON.stringify(this.dataForm));
+                _context.next = 4;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices/record-payment/save/' + this.invoice.id, this.dataForm).then(function (response) {
+                  _this.id = response.data.id;
+                });
+
+              case 4:
+                ;
+                location.href = '/invoices/' + this.id;
+                _context.next = 11;
+                break;
+
+              case 8:
+                _context.prev = 8;
+                _context.t0 = _context["catch"](0);
+                // this.resetInvoice()
+                // this.$v.$reset()
+                console.log('some error');
+
+              case 11:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this, [[0, 8]]);
+      }));
+
+      function onSubmit() {
+        return _onSubmit.apply(this, arguments);
+      }
+
+      return onSubmit;
+    }()
   },
   computed: {
-    getInvoice: function getInvoice() {
-      return JSON.parse(this.invoice);
-    },
-    setReceivingAccoun: function setReceivingAccoun() {
+    setReceivingAccount: function setReceivingAccount() {
       return [{
         value: 'cash',
         text: 'Cash'
       }, {
         value: 'credit',
-        text: 'Credit: ' + this.getInvoice.customer.name
+        text: 'Credit: ' + this.invoice.customer.name
       }, {
         value: 'new_account',
         text: 'New Account'
@@ -72821,7 +72910,11 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
-          _vm._m(5),
+          _c("div", { staticClass: "level" }, [
+            _c("h5", { staticClass: "flex" }, [_vm._v("Amount Paid")]),
+            _vm._v(" "),
+            _c("span", [_vm._v(_vm._s(_vm.amount_paid))])
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
@@ -72913,16 +73006,6 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "col-md-4" }, [
       _c("h6", { staticClass: "font-weight-bold" }, [_vm._v("Due Date")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "level" }, [
-      _c("h5", { staticClass: "flex" }, [_vm._v("Amount Paid")]),
-      _vm._v(" "),
-      _c("span", [_vm._v("0")])
     ])
   }
 ]
@@ -73252,18 +73335,24 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
-    _c("div", { staticClass: "card-header" }, [
-      _c(
-        "div",
-        { staticClass: "level" },
-        [
-          _c(
-            "b-container",
-            [
+  return _c("div", [
+    _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card-header" }, [
+        _c(
+          "div",
+          { staticClass: "level" },
+          [
+            _c("b-container", [
               _c(
-                "b-form",
-                { attrs: { action: _vm.action, method: "post" } },
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.onSubmit($event)
+                    }
+                  }
+                },
                 [
                   _c(
                     "b-row",
@@ -73276,7 +73365,7 @@ var render = function() {
                           _vm._v(" "),
                           _c("datapicker", {
                             staticClass: "datapicker",
-                            attrs: { format: "MM/dd/yyyy", name: "date" },
+                            attrs: { format: "yyyy-MM-dd", name: "date" },
                             model: {
                               value: _vm.dataForm.date,
                               callback: function($$v) {
@@ -73302,11 +73391,11 @@ var render = function() {
                               step: "0.01"
                             },
                             model: {
-                              value: _vm.dataForm.amout,
+                              value: _vm.dataForm.amount,
                               callback: function($$v) {
-                                _vm.$set(_vm.dataForm, "amout", $$v)
+                                _vm.$set(_vm.dataForm, "amount", $$v)
                               },
-                              expression: "dataForm.amout"
+                              expression: "dataForm.amount"
                             }
                           }),
                           _vm._v(" "),
@@ -73323,20 +73412,20 @@ var render = function() {
                         { attrs: { col: "", md: "2" } },
                         [
                           _c("div", [
-                            _c("label", [_vm._v("Receiving Accoun")])
+                            _c("label", [_vm._v("Receiving Account")])
                           ]),
                           _vm._v(" "),
                           _c("b-form-select", {
                             attrs: {
                               name: "receiving_account",
-                              options: _vm.setReceivingAccoun
+                              options: _vm.setReceivingAccount
                             },
                             model: {
-                              value: _vm.dataForm.receivingAccoun,
+                              value: _vm.dataForm.receiving_account,
                               callback: function($$v) {
-                                _vm.$set(_vm.dataForm, "receivingAccoun", $$v)
+                                _vm.$set(_vm.dataForm, "receiving_account", $$v)
                               },
-                              expression: "dataForm.receivingAccoun"
+                              expression: "dataForm.receiving_account"
                             }
                           })
                         ],
@@ -73372,10 +73461,10 @@ var render = function() {
                           _c(
                             "b-button",
                             {
-                              attrs: { type: "submit", variant: "primary" },
-                              on: { click: _vm.send }
+                              staticClass: "btn btn-primary",
+                              attrs: { type: "submit", variant: "primary" }
                             },
-                            [_vm._v("Button")]
+                            [_vm._v("Save")]
                           )
                         ],
                         1
@@ -73386,16 +73475,65 @@ var render = function() {
                 ],
                 1
               )
-            ],
-            1
-          )
-        ],
-        1
-      )
+            ])
+          ],
+          1
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row mt-2" }, [
+      _c("div", { staticClass: "col-12" }, [
+        _c(
+          "table",
+          {
+            staticClass: "table table-bordered",
+            attrs: { striped: "", hover: "" }
+          },
+          [
+            _vm._m(0),
+            _vm._v(" "),
+            _c(
+              "tbody",
+              _vm._l(_vm.histories, function(history) {
+                return _c("tr", [
+                  _c("td", [_vm._v(_vm._s(history.created_at))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(history.amount))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(history.receiving_account))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(history.notes))])
+                ])
+              }),
+              0
+            )
+          ]
+        ),
+        _vm._v(" "),
+        _c("hr")
+      ])
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "bg-primary text-white" }, [
+      _c("tr", [
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Date")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Amount")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Receiving Account")]),
+        _vm._v(" "),
+        _c("th", { attrs: { scope: "col" } }, [_vm._v("Notes")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 

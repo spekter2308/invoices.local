@@ -33,7 +33,6 @@
                     <a href="#" class="btn btn-secondary">PDF</a>
                     <a href="/invoice-mail/create/{{ $invoice->id }}" class="btn btn-secondary">Send</a>
                     <a href="#" class="btn btn-secondary">Mark as Paid</a>
-                    <a href="#" class="btn btn-secondary">Record Payment</a>
                     <a href="#" class="btn btn-secondary">Duplicate</a>
                @else
                     <button class="btn btn-outline-secondary" disabled>View</button>
@@ -41,7 +40,6 @@
                     <button class="btn btn-outline-secondary" disabled>PDF</button>
                     <button class="btn btn-outline-secondary" disabled>Send</button>
                     <button class="btn btn-outline-secondary" disabled>Mark as Paid</button>
-                    <button class="btn btn-outline-secondary" disabled>Record Payment</button>
                     <button class="btn btn-outline-secondary" disabled>Duplicate</button>
                @endif
                     </div>
@@ -51,6 +49,7 @@
                 <div class="mt-3 invoice-create-body">
                     <invoice-form
                             invoice-id="{{ $invoiceId }}"
+                            invoice-paid="{{ $invoice->amount_paid ?? 0 }}"
                             :invoice-company="{{ $invoiceCompany }}"
                             :invoice-customer="{{ $invoiceCustomer }}"
                             :invoice-items="{{ json_encode($invoiceItems) }}"

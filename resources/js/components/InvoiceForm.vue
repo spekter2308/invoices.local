@@ -227,7 +227,7 @@
                 <div class="border-top pb-2"></div>
                 <div class="level">
                     <h5 class="flex" >Amount Paid</h5>
-                    <span>0</span>
+                    <span>{{amount_paid}}</span>
                 </div>
                 <div class="border-top pb-2"></div>
                 <div class="level">
@@ -250,6 +250,10 @@
          },*/
         props: {
             invoiceId: {
+                type: [Number, String],
+                required: true
+            },
+            invoicePaid: {
                 type: [Number, String],
                 required: true
             },
@@ -487,6 +491,12 @@
             },
             total() {
                 return this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0)
+            },
+            balance() {
+                return this.total - this.amount_paid;
+            },
+            amount_paid(){
+                return (this.invoicePaid === '0') ? 0 : this.invoicePaid;
             },
             invoiceNum(){
                 return this.checkInArray(this.selectedNumber.prefix, this.selectedNumber.start,

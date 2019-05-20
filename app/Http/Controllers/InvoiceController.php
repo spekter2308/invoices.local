@@ -410,47 +410,50 @@ class InvoiceController extends Controller
         return redirect(route('invoice-index'))->with(['success' => 'Status has been save']);
     }
 
-    public function recordPayment($invoice)
+    public function recordPayment($id)
     {
 
-        $invoice = Invoice::with('customer')->findOrFail($invoice);
+        $invoice = Invoice::findOrFail($id);
 
-        return view('invoices.record-payment')->with([
-            'invoice' => $invoice
+        return view('invoices.record-payment', [
+            'invoice' => $invoice,
+            'paymentHistory' => $invoice->payments
         ]);
     }
 
-    public function recordPaymentSave($id, Request $request, Invoice $invoice, PaymentInvoice $paymentInvoice)
+    public function recordPaymentSave($id)
     {
-        $validator = Validator::make($request->all(), [
+        $attributes = \request()->validate([
+            'invoice_id' => 'required|numeric',
             'date' => 'required|date',
             'amount' => 'required|numeric|min:0.01',
             'receiving_account' => 'required|string|max:255',
-            'notes' => 'required|string|max:255',
+            'notes' => 'nullable|string|max:255',
         ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator);
+        $paymentData = PaymentInvoice::create($attributes);
+
+        $invoice = Invoice::find($id);
+
+        $old_paid = $invoice->amount_paid;
+        $old_balance = $invoice->balance;
+
+        $invoice->update([
+            'status' => 'Partial',
+            'balance' => $old_balance - $paymentData->amount ,
+            'amount_paid' => $paymentData->amount + $old_paid,
+        ]);
+
+        InvoiceHistory::create([
+            'invoice_id' => $invoice->id,
+            'user_id' => auth()->id(),
+            'changes' => "Amount changed from $old_balance to $invoice->balance"
+        ]);
+
+        if (\request()->wantsJson()) {
+            return $invoice;
         }
 
-        $paymentInvoice->invoice_id = $id;
-        $paymentInvoice->date = Carbon::parse($request->date)->format(('Y-m-d'));
-        $paymentInvoice->amount = $request->amount;
-        $paymentInvoice->receiving_account = $request->receiving_account;
-        $paymentInvoice->notes = $request->notes;
-
-        $status = $paymentInvoice->save();
-
-        if (!$status)
-            abort(500);
-
-        $findInvoice = $invoice->findOrFail($id);
-        $findInvoice->update([
-            'status' => 'Partial',
-            'balance' => $findInvoice->total - $request->amount,
-            'amount_paid' => $findInvoice->amount_paid + $request->amount,
-        ]);
-
-        return redirect()->back()->with(['success' => 'Status has been save']);
+        return redirect('/invoices/' . $invoice->id);
     }
 }

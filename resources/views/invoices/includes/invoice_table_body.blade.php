@@ -20,7 +20,7 @@
                     <ul class="action-list list-group list-group-flush">
                         <li class="list-group-item"><i class="far fa-edit"></i><a
                                     href="/invoices/{{ $invoice->id }}/edit">Edit</a></li>
-                        <li class="list-group-item"><i class="far fa-copy"></i><a href="#">Duplicate</a></li>
+                        <li class="list-group-item"><i class="far fa-copy"></i><a href="/invoices/duplicate/{{ $invoice->id }}">Duplicate</a></li>
                         <li class="list-group-item"><i class="far fa-paper-plane"></i><a
                                     href="/invoice-mail/create/{{ $invoice->id }}">Send</a></li>
                         <li class="list-group-item"><i class="far fa-money-bill-alt"></i><a href="#">RecordPayment</a>

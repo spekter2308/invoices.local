@@ -33,6 +33,11 @@ class Invoice extends Model
         return $this->hasMany(InvoiceHistory::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(PaymentInvoice::class);
+    }
+
     public function sentMails()
     {
         return $this->hasMany(InvoiceMail::class);
