@@ -42,7 +42,7 @@
                     <table class="table">
                         <thead class="bg-primary text-white">
                         <tr>
-                            <th scope="col">
+                            <th>
                                 <change-status></change-status>
                             </th>
                             <th scope="col">

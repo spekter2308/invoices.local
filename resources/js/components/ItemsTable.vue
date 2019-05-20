@@ -33,6 +33,7 @@
                       </div>
                   </template>
                   <TableItem
+                          :table-items="name"
                           :is-dirty="isDirty"
                           :key="index"
                           :table-item="el"
@@ -47,10 +48,16 @@
 
 <script>
     import TableItem from './TableItem.vue';
+    import axios from 'axios'
 
     let id = 1;
 
     export default {
+        data() {
+            return {
+                name: []
+            }
+        },
         props: {
             items: {
                 type: Array
@@ -119,6 +126,8 @@
             }
         },*/
         mounted() {
+            axios.get('/items/select-items').then(response => (this.name = response.data));
+
             eventBus.$on('touch', _ => {
               /*  this.$v.items.$touch()
                 this.$v.$touch()*/

@@ -234,6 +234,12 @@ a.btn-secondary {
   box-shadow: 0 1px darken($color-primary, 15%);
 }
 
+.btn-dropdown {
+  background: #3490dc;
+  color: #fff;
+  border: none;
+}
+
 .btn-danger {
   background: $color-error;
   color: #fff;

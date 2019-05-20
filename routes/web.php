@@ -31,14 +31,16 @@ Route::patch('invoices/{invoice}', 'InvoiceController@update');
 Route::get('invoices/mark-as-paid/{invoice}', 'InvoiceController@markAsPaid')->name('mark-as-paid');
 Route::get('invoices/record-payment/{id}', 'InvoiceController@recordPayment')->where(['id' => '[0-9]+'])->name('record-payment');
 Route::post('invoices/record-payment/save/{id}', 'InvoiceController@recordPaymentSave')->where(['id' => '[0-9]+'])->name('record-payment-save');
-
-Route::get('invoices/select/select-item', 'InvoiceController@selectItem')->name('select-item');
-Route::get('invoices/get/select-item', 'InvoiceController@getSelectItem')->name('get-select-item');
-Route::get('invoices/create/select-item/{id?}', 'InvoiceController@createSelectItem')->name('create-select-item')->where(['id' => '[0-9]+']);
-Route::get('invoices/update/ststus', 'InvoiceController@changeInvoicesStatus')->name('update-status');
-Route::post('invoices/save/select-item/{id?}', 'InvoiceController@saveSelectItem')->name('save-select-item')->where(['id' => '[0-9]+']);
-Route::delete('invoices/destroy/select-item/{id}', 'InvoiceController@deleteSelectItem')->name('delete-select-item')->where(['id' => '[0-9]+']);
 Route::post('invoices/get/date', 'InvoiceController@getDate')->name('get-date-for-filter');
+Route::get('invoices/update/status', 'InvoiceController@changeInvoicesStatus')->name('update-status');
+
+
+//Invoice items part
+Route::get('items/select-items', 'InvoiceItemController@selectItems');
+Route::get('items', 'InvoiceItemController@index');
+Route::post('items', 'InvoiceItemController@store');
+Route::post('items/{item}', 'InvoiceItemController@update');
+Route::delete('items/destroy/{item}', 'InvoiceItemController@destroy');
 
 //invoice email part
 Route::get('invoice-mail/create/{invoice}', 'InvoiceMailController@create');

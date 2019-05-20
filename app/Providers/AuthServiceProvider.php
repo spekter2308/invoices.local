@@ -5,7 +5,9 @@ namespace App\Providers;
 use App\Company;
 use App\Customer;
 use App\Invoice;
+use App\InvoiceItemName;
 use App\Policies\CustomerPolice;
+use App\Policies\InvoiceItemPolicy;
 use App\Policies\InvoicePolicy;
 use App\Policies\ProfilePolice;
 use App\Policies\UserPolicy;
@@ -24,6 +26,7 @@ class AuthServiceProvider extends ServiceProvider
         Invoice::class => InvoicePolicy::class,
         Company::class => ProfilePolice::class,
         Customer::class => CustomerPolice::class,
+        InvoiceItemName::class => InvoiceItemPolicy::class,
     ];
 
     /**

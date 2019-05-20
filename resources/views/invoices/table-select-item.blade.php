@@ -8,10 +8,10 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <form method="POST" action="{{route('save-select-item')}}">
+                        <form method="POST" action="/items">
+                            @csrf
                             <div class="row p-3">
                                 <div class="col-md-10">
-                                    @csrf
                                     <div class="">
                                         <input type="text" name="name"
                                                class="form-control {{ $errors->has ('name') ? 'error' : '' }}"
@@ -34,7 +34,7 @@
                     <thead class="bg-primary text-white">
                     <tr>
                         <th scope="col">Name</th>
-                        <th scope="col">Delete</th>
+                        <th scope="col" class="text-right pr-5">Delete</th>
                         {{--<th scope="col">Mark Paid</th>--}}
                     </tr>
                     </thead>
@@ -42,12 +42,12 @@
                     @foreach ($items as $item)
                         <tr>
                             <td>{{ $item->name }}</td>
-                            <td class="text-center">
-                                <form method="POST" action="{{route('delete-select-item', ['id' => $item->id])}}">
+                            <td class="text-right">
+                                <form method="POST" action="/items/destroy/{{$item->id}}">
                                     @method('DELETE')
                                     @csrf
                                     <span class="btn-save-edit"><edit-item name="{{$item->name}}" id="{{$item->id}}"></edit-item></span>
-                                    <button type="submit" class="text-danger btn btn-link">Delete</button>
+                                    <button type="submit" class="btn-danger btn">Delete</button>
                                 </form>
                             </td>
                         </tr>
@@ -55,8 +55,7 @@
                     </tbody>
                 </table>
             </div>
-            {{ $items->links() }}
-
+            
         </div>
     </div>
     </div>

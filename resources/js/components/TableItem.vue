@@ -6,7 +6,7 @@
                <div class="form-group-table">
                    <select class="form-control" v-model="tableItem.item"
                            @blur="makeDirty">
-                       <option v-for="item in name.data">{{item.name}}</option>
+                       <option v-for="item in tableItems">{{item.name}}</option>
                    </select>
                    <template v-if="isDirty && tableItem.dirty">
                        <small class="error-control" v-if="!itemRequired">Item name is required</small>
@@ -64,16 +64,11 @@
 </template>
 
 <script>
-    import axios from 'axios'
     import { required, integer } from 'vuelidate/lib/validators'
 
     export default {
         name: "TableItem",
-        data() {
-            return {
-                name: []
-            }
-        },
+
         props: {
             isDirty: {
                 required: true,
@@ -82,13 +77,13 @@
             tableItem: {
                 type: Object,
                 required: true
+            },
+            tableItems: {
+                type: Array,
+                required: true
             }
         },
         mounted() {
-            axios
-                .get('/invoices/select/select-item')
-                .then(response => (this.name = response));
-
             eventBus.$on('touch', () => {
                 this.tableItem.dirty = true
             })

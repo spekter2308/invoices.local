@@ -288,89 +288,6 @@ class InvoiceController extends Controller
         return redirect()->back();
     }
 
-    public function selectItem()
-    {
-        $items = InvoiceItemName::latest()->get();
-
-        return $items;
-    }
-
-    public function getSelectItem(InvoiceItemName $invoiceItem)
-    {
-        $items = $invoiceItem->latest()->paginate(15);
-        return view('invoices.table-select-item', ['items' => $items]);
-    }
-
-    public function createSelectItem($id = false, InvoiceItemName $invoiceItem)
-    {
-        $item = (!$id) ? $invoiceItem : $invoiceItem->find($id);
-
-        return view('invoices.create-select-item')->with([
-            'item' => $item
-        ]);
-    }
-
-    public function saveSelectItem($id = false, Request $request, InvoiceItemName $invoiceItem)
-    {
-
-        if ($id) {
-            $item = InvoiceItemName::find($id);
-            $msg = 'update';
-        } else {
-            $item = $invoiceItem;
-            $msg = 'create';
-        }
-
-        if(\Gate::denies($msg, $item)){
-            return redirect()
-                ->back()
-                ->with(['flash' => "Access denied. You cann\'t $msg items."]);
-        }
-
-        $status = ($id) ? $invoiceItem->find($id)->update($request->all()) : $invoiceItem->create($request->all());
-
-        $validator = \Validator::make($request->all(), [
-            'name' => 'required|max:100',
-        ]);
-
-        /*if ($validator->fails()) {
-            $request->flash();
-            return redirect()->back()->withErrors($validator);
-        }*/
-
-        dd($status);
-
-
-
-
-
-        if (!$status) {
-            abort(500);
-        }
-
-        return redirect(route('get-select-item'))->with(['success' => 'Item has been save']);
-
-    }
-
-    public function deleteSelectItem($id, InvoiceItemName $invoiceItem)
-    {
-        $item = $invoiceItem->find($id);
-
-        if(\Gate::denies('delete', $item)){
-            return redirect()
-                ->back()
-                ->with(['flash' => "Access denied. You cann\'t delete items."]);
-        }
-
-        $status = $invoiceItem->destroy($id);
-
-        if (!$status) {
-            abort(500);
-        }
-
-        return redirect(route('get-select-item'))->with(['success' => 'Item has been delete']);
-    }
-
     protected function getInvoices($filters)
     {
         $invoices = Invoice::latest()->filter($filters);
@@ -481,9 +398,6 @@ class InvoiceController extends Controller
                 });
                 break;
             case 2 :
-
-                break;
-            case 3 :
                 $invoices->map(function ($row) {
                     $row->update([
                         'status' => 'Sent',

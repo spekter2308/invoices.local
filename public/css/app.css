@@ -15230,6 +15230,12 @@ a.btn-secondary:hover {
   box-shadow: 0 1px #1a7bb7;
 }
 
+.btn-dropdown {
+  background: #3490dc;
+  color: #fff;
+  border: none;
+}
+
 .btn-danger {
   background: #e75650;
   color: #fff;
@@ -15354,7 +15360,7 @@ a.btn-secondary:hover {
 }
 
 .action-list i {
-  font-size: 18px;
+  font-size: 14px;
 }
 
 .icon-rigth {

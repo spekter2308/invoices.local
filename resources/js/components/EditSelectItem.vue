@@ -39,7 +39,7 @@
                 return 'modal-edit-' + this.id;
             },
             setAction() {
-                return '/invoices/save/select-item/' + this.id;
+                return '/items/' + this.id;
             }
         }
     }
