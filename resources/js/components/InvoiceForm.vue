@@ -47,10 +47,7 @@
             <!-- {{--Logo part--}} -->
             <div class="invoice-box invoice-logo-box mt-3">
                 <div class="company-logo">
-                    <img v-if="invoiceCompany.logo_img" :src="'upload/company/' + invoiceCompany.logo_img" alt="">
-                </div>
-                <div class="mt-1">
-                    <button v-if="invoiceCompany.logo_img" class="btn btn-danger ml-auto">Delete Logo</button>
+                    <img v-if="invoice.selectedCompany" :src="url" alt="" style="width: 350px; height: 200px;">
                 </div>
                 <!--@change="f => invoice.selectedFile=f"
                 @blur="$v.invoice.selectedFile.$touch()"-->
@@ -491,6 +488,9 @@
             },
         },
         computed: {
+            url() {
+                return '/upload/company/' + this.companies.find(el => el.id === this.invoice.selectedCompany).logo_img
+            },
             isTableRowsInvalid() {
                 return this.invoice.selectedItems.reduce((acc, curr) => {
                     return acc && !curr.correct

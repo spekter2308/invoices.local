@@ -56,6 +56,9 @@
                                             <span>{{ $invoice->company->name }}</span>
                                             <span>{{ $invoice->company->address }}</span>
                                         </div>
+                                        @if ($invoice->status == 'Paid')
+                                            <img src="/img/paid.jpg" alt="">
+                                        @endif
                                         <div class="customer-data-show">
                                             <div><a href="/invoices?byuser={{ $invoice->customer->id }}">{{ $invoice->customer->name }}</a></div>
                                             <div>{{ $invoice->customer->address }}</div>
@@ -69,7 +72,7 @@
                         <div class="invoice-box invoice-logo-box">
                             <div class="company-logo">
                                 @if ($invoice->company->logo_img)
-                                    <img src="upload/company/{{$invoice->company->logo_img}}" alt="">
+                                    <img src="/upload/company/{{$invoice->company->logo_img}}" alt="" style="width: 350px; height: 200px;">
                                 @endif
                             </div>
                         </div>

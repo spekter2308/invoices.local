@@ -9,11 +9,16 @@
 @import '~bootstrap/scss/bootstrap';
 @import '~bootstrap-vue/dist/bootstrap-vue.min.css';
 
+
+//Settings
+@import "settings";
+
 // Invoice create '/invoices/create
 @import "invoice_create";
 
 //Inputs
 @import "inputs";
+@import "buttons";
 
 // Customer all styles
 @import "customer";
@@ -22,10 +27,6 @@
 @import "~@fortawesome/fontawesome-free/css/all.css";
 @import "invoice_action";
 
-.navbar-laravel {
-  //background-color: #fff;
-  //box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
 .js-invoice-filter{
   display: none;
 }

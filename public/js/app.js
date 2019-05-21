@@ -4827,9 +4827,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
 
 
 /*import Items from './ItemsTable.vue'*/
@@ -5163,6 +5160,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   computed: {
+    url: function url() {
+      var _this3 = this;
+
+      return '/upload/company/' + this.companies.find(function (el) {
+        return el.id === _this3.invoice.selectedCompany;
+      }).logo_img;
+    },
     isTableRowsInvalid: function isTableRowsInvalid() {
       return this.invoice.selectedItems.reduce(function (acc, curr) {
         return acc && !curr.correct;
@@ -72436,21 +72440,11 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "invoice-box invoice-logo-box mt-3" }, [
           _c("div", { staticClass: "company-logo" }, [
-            _vm.invoiceCompany.logo_img
+            _vm.invoice.selectedCompany
               ? _c("img", {
-                  attrs: {
-                    src: "upload/company/" + _vm.invoiceCompany.logo_img,
-                    alt: ""
-                  }
+                  staticStyle: { width: "350px", height: "200px" },
+                  attrs: { src: _vm.url, alt: "" }
                 })
-              : _vm._e()
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "mt-1" }, [
-            _vm.invoiceCompany.logo_img
-              ? _c("button", { staticClass: "btn btn-danger ml-auto" }, [
-                  _vm._v("Delete Logo")
-                ])
               : _vm._e()
           ])
         ]),
@@ -94300,8 +94294,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
