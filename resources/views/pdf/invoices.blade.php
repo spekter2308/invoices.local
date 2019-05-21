@@ -52,8 +52,8 @@
                                         <br>
                                         <p id="invoice_headline"
                                            style="vertical-align:top;margin-top:0px;margin-bottom:0px;text-align:right;letter-spacing:5px;font-size:28px;color:#808080;font-weight:bold;font-family:arial;">
-                                            <img src="{{($invoice->logo_img) ? 'upload/company/' . $invoice->company->logo_img : '/img/no_img.png'}}"
-                                                 alt="">
+                                            <img src="{{($invoice->company->logo_img) ? 'upload/company/' . $invoice->company->logo_img : '/img/no_img.png'}}"
+                                                 alt="" style="width: 350px; height: 200px;">
                                         </p><br><br><br><br><br><br><br><br><br><br>
 
                                     </td>
@@ -73,7 +73,7 @@
                                                 <td id="invoice_number_label"
                                                     style="padding-left:0px;padding:0px; margin:0px; text-align:right;font-weight:bold;font-family:verdana;font-size:13px;color:#3c3c3c;">
 
-                                                    Invoice&nbsp;#
+                                                    Invoice&nbsp;№
 
                                                 </td>
 

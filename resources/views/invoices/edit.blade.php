@@ -33,8 +33,8 @@
                     <a href="#" class="btn btn-secondary">PDF</a>
                     <a href="/invoice-mail/create/{{ $invoice->id }}" class="btn btn-secondary">Send</a>
                             <a href="{{route('record-payment', ['invoice' => $invoice->id])}}" class="btn btn-secondary">Record Payment</a>
-                    <a href="#" class="btn btn-secondary">Mark as Paid</a>
-                    <a href="#" class="btn btn-secondary">Duplicate</a>
+                    <a href="/invoices/mark-as-paid/{{$invoice->id}}" class="btn btn-secondary">Mark as Paid</a>
+                    <a href="/invoices/duplicate/{{ $invoice->id }}" class="btn btn-secondary">Duplicate</a>
                @else
                     <button class="btn btn-outline-secondary" disabled>View</button>
                     <button class="btn btn-outline-secondary" disabled>Print</button>
