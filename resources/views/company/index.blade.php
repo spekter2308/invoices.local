@@ -22,7 +22,7 @@
                         <thead class="bg-primary text-white">
                         <tr>
                             <th scope="col">Company</th>
-                            <th scope="col">Short name</th>
+                            <th scope="col" style="white-space: nowrap">Short name</th>
                             <th scope="col">Address</th>
                             <th scope="col">Invoice notes</th>
                             <th scope="col">logo</th>

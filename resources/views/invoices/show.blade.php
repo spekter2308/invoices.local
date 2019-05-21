@@ -30,7 +30,7 @@
                             <a href="{{route('generate-pdf', ['invoice' => $invoice->id, 'print' => 'print'])}}" target="_blank" class="btn btn-secondary">Print</a>
                             <a href="{{route('generate-pdf', ['invoice' => $invoice->id])}}" class="btn btn-secondary">PDF</a>
                             <a href="/invoice-mail/create/{{ $invoice->id }}" class="btn btn-secondary">Send</a>
-                            <a href="#" class="btn btn-secondary">Mark as Paid</a>
+                            <a href="/invoices/mark-as-paid/{{$invoice->id}}" class="btn btn-secondary">Mark as Paid</a>
                             <a href="{{route('record-payment', ['invoice' => $invoice->id])}}" class="btn btn-secondary">Record Payment</a>
                             <a href="/invoices/duplicate/{{ $invoice->id }}" class="btn btn-secondary">Duplicate</a>
                         </div>
@@ -68,9 +68,9 @@
                         <!-- {{--Logo part--}} -->
                         <div class="invoice-box invoice-logo-box">
                             <div class="company-logo">
-                                <a href="#">
-                                    <img src="http://placehold.it/200x50?text=Logo" alt="">
-                                </a>
+                                @if ($invoice->company->logo_img)
+                                    <img src="upload/company/{{$invoice->company->logo_img}}" alt="">
+                                @endif
                             </div>
                         </div>
 

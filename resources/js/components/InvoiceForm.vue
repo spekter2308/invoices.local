@@ -47,12 +47,10 @@
             <!-- {{--Logo part--}} -->
             <div class="invoice-box invoice-logo-box mt-3">
                 <div class="company-logo">
-                    <a href="#">
-                        <img src="http://placehold.it/350x100?text=Logo" alt="">
-                    </a>
+                    <img v-if="invoiceCompany.logo_img" :src="'upload/company/' + invoiceCompany.logo_img" alt="">
                 </div>
                 <div class="mt-1">
-                    <button class="btn btn-danger ml-auto">Delete Logo</button>
+                    <button v-if="invoiceCompany.logo_img" class="btn btn-danger ml-auto">Delete Logo</button>
                 </div>
                 <!--@change="f => invoice.selectedFile=f"
                 @blur="$v.invoice.selectedFile.$touch()"-->
@@ -297,6 +295,7 @@
         data() {
             return {
                 //nextInvoiceNumberResponse: '',
+                spinnerVisible: false,
                 createdInvoiceId: NaN,
                 isTableInvalid: true,
                 invoice: {
@@ -366,9 +365,16 @@
                 if ( v === true) {
                     this.sendButton.disabled = true
                 } else {
-                    if (this.isTableRowsInvalid === false) {
+                    if (this.isTableRowsInvalid === false || this.spinnerVisible) {
                         this.sendButton.disabled = false
                     }
+                }
+            },
+            spinnerVisible(v) {
+                if (v === true) {
+                    this.sendButton.innerHTML = `Save <div disabled="true" class="spinner-border spinner-border-sm" role="status" aria-hidden="true">`
+                } else {
+                    this.sendButton.innerHTML = `Save <div class="" role="status" aria-hidden="true">`
                 }
             },
             isTableRowsInvalid(v) {
@@ -425,10 +431,12 @@
                     this.$v.$touch();
                     eventBus.$emit('touch', true)
                     if (!this.$v.$error && !this.isTableRowsInvalid) {
+                        this.spinnerVisible = true
                         console.log(JSON.stringify(this.invoice));
                         if (this.mode === 'create') {
                             await axios.post('/invoices', this.invoice).then(response => {
                                 this.createdInvoiceId = response.data.id
+                                this.spinnerVisible = false
                             });
                             location.href = '/invoices/' + this.createdInvoiceId;
                         }
@@ -436,6 +444,7 @@
                             console.log(this.invoiceId)
                             await axios.patch('/invoices/' + this.invoiceId, this.invoice).then(response => {
                                 this.createdInvoiceId = response.data.id
+                                this.spinnerVisible = false
                             });
                         }
                         location.href = '/invoices/' + this.createdInvoiceId;
@@ -450,6 +459,7 @@
                     // this.resetInvoice()
                     // this.$v.$reset()
                     console.log('some error')
+                    this.spinnerVisible = false
                 }
             },
             sendForm() {

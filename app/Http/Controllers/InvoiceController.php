@@ -426,7 +426,7 @@ class InvoiceController extends Controller
         $attributes = \request()->validate([
             'invoice_id' => 'required|numeric',
             'date' => 'required|date',
-            'amount' => 'required|numeric|min:0.01',
+            'amount' => 'required|numeric',
             'receiving_account' => 'required|string|max:255',
             'notes' => 'nullable|string|max:255',
         ]);

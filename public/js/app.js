@@ -4830,8 +4830,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
 
 
 /*import Items from './ItemsTable.vue'*/
@@ -4889,6 +4887,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       //nextInvoiceNumberResponse: '',
+      spinnerVisible: false,
       createdInvoiceId: NaN,
       isTableInvalid: true,
       invoice: {
@@ -4960,9 +4959,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       if (v === true) {
         this.sendButton.disabled = true;
       } else {
-        if (this.isTableRowsInvalid === false) {
+        if (this.isTableRowsInvalid === false || this.spinnerVisible) {
           this.sendButton.disabled = false;
         }
+      }
+    },
+    spinnerVisible: function spinnerVisible(v) {
+      if (v === true) {
+        this.sendButton.innerHTML = "Save <div disabled=\"true\" class=\"spinner-border spinner-border-sm\" role=\"status\" aria-hidden=\"true\">";
+      } else {
+        this.sendButton.innerHTML = "Save <div class=\"\" role=\"status\" aria-hidden=\"true\">";
       }
     },
     isTableRowsInvalid: function isTableRowsInvalid(v) {
@@ -5028,40 +5034,43 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 eventBus.$emit('touch', true);
 
                 if (!(!this.$v.$error && !this.isTableRowsInvalid)) {
+                  _context.next = 17;
+                  break;
+                }
+
+                this.spinnerVisible = true;
+                console.log(JSON.stringify(this.invoice));
+
+                if (!(this.mode === 'create')) {
+                  _context.next = 12;
+                  break;
+                }
+
+                _context.next = 9;
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices', this.invoice).then(function (response) {
+                  _this2.createdInvoiceId = response.data.id;
+                  _this2.spinnerVisible = false;
+                });
+
+              case 9:
+                location.href = '/invoices/' + this.createdInvoiceId;
+                _context.next = 16;
+                break;
+
+              case 12:
+                if (!(this.mode === 'edit')) {
                   _context.next = 16;
                   break;
                 }
 
-                console.log(JSON.stringify(this.invoice));
-
-                if (!(this.mode === 'create')) {
-                  _context.next = 11;
-                  break;
-                }
-
-                _context.next = 8;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices', this.invoice).then(function (response) {
-                  _this2.createdInvoiceId = response.data.id;
-                });
-
-              case 8:
-                location.href = '/invoices/' + this.createdInvoiceId;
-                _context.next = 15;
-                break;
-
-              case 11:
-                if (!(this.mode === 'edit')) {
-                  _context.next = 15;
-                  break;
-                }
-
                 console.log(this.invoiceId);
-                _context.next = 15;
+                _context.next = 16;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch('/invoices/' + this.invoiceId, this.invoice).then(function (response) {
                   _this2.createdInvoiceId = response.data.id;
+                  _this2.spinnerVisible = false;
                 });
 
-              case 15:
+              case 16:
                 location.href = '/invoices/' + this.createdInvoiceId; //await this.updateNextNumber();
                 //this.resetInvoice();
                 //eventBus.$emit('update', true)
@@ -5069,23 +5078,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 //eventBus.$emit('reset', true)
                 //console.log('resetting')
 
-              case 16:
-                _context.next = 21;
+              case 17:
+                _context.next = 23;
                 break;
 
-              case 18:
-                _context.prev = 18;
+              case 19:
+                _context.prev = 19;
                 _context.t0 = _context["catch"](0);
                 // this.resetInvoice()
                 // this.$v.$reset()
                 console.log('some error');
+                this.spinnerVisible = false;
 
-              case 21:
+              case 23:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 18]]);
+        }, _callee, this, [[0, 19]]);
       }));
 
       function onSubmit() {
@@ -5474,6 +5484,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__);
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
@@ -5557,6 +5569,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
@@ -5571,6 +5603,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
+      spinnerVisible: false,
       histories: this.paymentHistory,
       id: null,
       dataForm: {
@@ -5582,6 +5615,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       },
       token_csrf: window.Laravel.csrfToken
     };
+  },
+  validations: {
+    dataForm: {
+      date: {
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"]
+      },
+      amount: {
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"]
+      },
+      receiving_account: {
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"]
+      }
+    }
   },
   methods: {
     onSubmit: function () {
@@ -5595,31 +5641,44 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 _context.prev = 0;
+                this.$v.$touch();
+
+                if (!this.$v.$error) {
+                  _context.next = 4;
+                  break;
+                }
+
+                return _context.abrupt("return");
+
+              case 4:
+                this.spinnerVisible = true;
                 console.log(JSON.stringify(this.dataForm));
-                _context.next = 4;
+                _context.next = 8;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices/record-payment/save/' + this.invoice.id, this.dataForm).then(function (response) {
                   _this.id = response.data.id;
                 });
 
-              case 4:
+              case 8:
                 ;
                 location.href = '/invoices/' + this.id;
-                _context.next = 11;
+                this.spinnerVisible = false;
+                _context.next = 17;
                 break;
 
-              case 8:
-                _context.prev = 8;
+              case 13:
+                _context.prev = 13;
                 _context.t0 = _context["catch"](0);
                 // this.resetInvoice()
                 // this.$v.$reset()
                 console.log('some error');
+                this.spinnerVisible = false;
 
-              case 11:
+              case 17:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 8]]);
+        }, _callee, this, [[0, 13]]);
       }));
 
       function onSubmit() {
@@ -38855,7 +38914,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, ".card[data-v-d282faf2] {\n  margin-top: 20px;\n}", ""]);
+exports.push([module.i, ".card[data-v-d282faf2] {\n  margin-top: 20px;\n}\nlabel[data-v-d282faf2] {\n  white-space: nowrap;\n}", ""]);
 
 // exports
 
@@ -72375,11 +72434,30 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _vm._m(0),
+        _c("div", { staticClass: "invoice-box invoice-logo-box mt-3" }, [
+          _c("div", { staticClass: "company-logo" }, [
+            _vm.invoiceCompany.logo_img
+              ? _c("img", {
+                  attrs: {
+                    src: "upload/company/" + _vm.invoiceCompany.logo_img,
+                    alt: ""
+                  }
+                })
+              : _vm._e()
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "mt-1" }, [
+            _vm.invoiceCompany.logo_img
+              ? _c("button", { staticClass: "btn btn-danger ml-auto" }, [
+                  _vm._v("Delete Logo")
+                ])
+              : _vm._e()
+          ])
+        ]),
         _vm._v(" "),
         _c("div", { staticClass: "invoice-box invoice-num-date-box" }, [
           _c("div", { staticClass: "row level" }, [
-            _vm._m(1),
+            _vm._m(0),
             _vm._v(" "),
             _c(
               "div",
@@ -72465,7 +72543,7 @@ var render = function() {
                             },
                             [
                               _c("div", { staticClass: "modal-content" }, [
-                                _vm._m(2),
+                                _vm._m(1),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "modal-body" }, [
                                   _c("p", [
@@ -72786,7 +72864,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "row level" }, [
-            _vm._m(3),
+            _vm._m(2),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-8" }, [
               _c(
@@ -72827,7 +72905,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "row level" }, [
-            _vm._m(4),
+            _vm._m(3),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-8" }, [
               _c(
@@ -72932,26 +73010,6 @@ var render = function() {
   )
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "invoice-box invoice-logo-box mt-3" }, [
-      _c("div", { staticClass: "company-logo" }, [
-        _c("a", { attrs: { href: "#" } }, [
-          _c("img", {
-            attrs: { src: "http://placehold.it/350x100?text=Logo", alt: "" }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "mt-1" }, [
-        _c("button", { staticClass: "btn btn-danger ml-auto" }, [
-          _vm._v("Delete Logo")
-        ])
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -73373,9 +73431,21 @@ var render = function() {
                               },
                               expression: "dataForm.date"
                             }
-                          })
+                          }),
+                          _vm._v(" "),
+                          _vm.$v.dataForm.$error
+                            ? [
+                                !_vm.$v.dataForm.date.required
+                                  ? _c("p", { staticClass: "error-control" }, [
+                                      _vm._v(
+                                        "\n                                        You must select a date\n                                    "
+                                      )
+                                    ])
+                                  : _vm._e()
+                              ]
+                            : _vm._e()
                         ],
-                        1
+                        2
                       ),
                       _vm._v(" "),
                       _c(
@@ -73393,7 +73463,7 @@ var render = function() {
                             model: {
                               value: _vm.dataForm.amount,
                               callback: function($$v) {
-                                _vm.$set(_vm.dataForm, "amount", $$v)
+                                _vm.$set(_vm.dataForm, "amount", _vm._n($$v))
                               },
                               expression: "dataForm.amount"
                             }
@@ -73402,9 +73472,21 @@ var render = function() {
                           _c("input", {
                             attrs: { type: "hidden", name: "_token" },
                             domProps: { value: _vm.token_csrf }
-                          })
+                          }),
+                          _vm._v(" "),
+                          _vm.$v.dataForm.$error
+                            ? [
+                                !_vm.$v.dataForm.amount.required
+                                  ? _c("p", { staticClass: "error-control" }, [
+                                      _vm._v(
+                                        "\n                                        You must type amount\n                                    "
+                                      )
+                                    ])
+                                  : _vm._e()
+                              ]
+                            : _vm._e()
                         ],
-                        1
+                        2
                       ),
                       _vm._v(" "),
                       _c(
@@ -73427,9 +73509,21 @@ var render = function() {
                               },
                               expression: "dataForm.receiving_account"
                             }
-                          })
+                          }),
+                          _vm._v(" "),
+                          _vm.$v.dataForm.$error
+                            ? [
+                                !_vm.$v.dataForm.receiving_account.required
+                                  ? _c("p", { staticClass: "error-control" }, [
+                                      _vm._v(
+                                        "\n                                        Please select receive account\n                                    "
+                                      )
+                                    ])
+                                  : _vm._e()
+                              ]
+                            : _vm._e()
                         ],
-                        1
+                        2
                       ),
                       _vm._v(" "),
                       _c(
@@ -73461,10 +73555,27 @@ var render = function() {
                           _c(
                             "b-button",
                             {
-                              staticClass: "btn btn-primary",
-                              attrs: { type: "submit", variant: "primary" }
+                              staticClass:
+                                "btn btn-primary d-flex align-items-center",
+                              attrs: {
+                                disabled: _vm.$v.$error || _vm.spinnerVisible,
+                                type: "submit",
+                                variant: "primary"
+                              }
                             },
-                            [_vm._v("Save")]
+                            [
+                              _vm._v("Save "),
+                              _vm.spinnerVisible
+                                ? _c("div", {
+                                    staticClass:
+                                      "spinner-border spinner-border-sm",
+                                    attrs: {
+                                      role: "status",
+                                      "aria-hidden": "true"
+                                    }
+                                  })
+                                : _vm._e()
+                            ]
                           )
                         ],
                         1
@@ -94189,8 +94300,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

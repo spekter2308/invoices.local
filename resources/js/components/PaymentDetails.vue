@@ -12,13 +12,23 @@
                                         <label>Date</label>
                                     </div>
                                     <datapicker v-model="dataForm.date" format="yyyy-MM-dd" name="date" class="datapicker"></datapicker>
+                                    <template v-if="$v.dataForm.$error">
+                                        <p class="error-control" v-if="!$v.dataForm.date.required">
+                                            You must select a date
+                                        </p>
+                                    </template>
                                 </b-col>
                                 <b-col col md="2">
                                     <div>
                                         <label>Amount</label>
                                     </div>
-                                    <b-input v-model="dataForm.amount" name="amount" type="number" step="0.01"></b-input>
+                                    <b-input v-model.number="dataForm.amount" name="amount" type="number" step="0.01"></b-input>
                                     <input type="hidden" name="_token" :value="token_csrf">
+                                    <template v-if="$v.dataForm.$error">
+                                        <p class="error-control" v-if="!$v.dataForm.amount.required">
+                                            You must type amount
+                                        </p>
+                                    </template>
                                 </b-col>
                                 <b-col col md="2">
                                     <div>
@@ -26,6 +36,11 @@
                                     </div>
                                     <b-form-select name="receiving_account" :options="setReceivingAccount"
                                                    v-model="dataForm.receiving_account"></b-form-select>
+                                    <template v-if="$v.dataForm.$error">
+                                        <p class="error-control" v-if="!$v.dataForm.receiving_account.required">
+                                            Please select receive account
+                                        </p>
+                                    </template>
                                 </b-col>
                                 <b-col col md="4">
                                     <div>
@@ -37,8 +52,12 @@
                                     <div>
                                         <label><br></label>
                                     </div>
-                                    <b-button class="btn btn-primary" type="submit" variant="primary">Save</b-button>
-
+                                    <b-button
+                                            :disabled="$v.$error || spinnerVisible"
+                                            class="btn btn-primary d-flex align-items-center"
+                                            type="submit"
+                                            variant="primary"
+                                    >Save <div v-if="spinnerVisible" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div></b-button>
                                 </b-col>
                             </b-row>
                         </form>
@@ -77,7 +96,7 @@
 
 <script>
     import axios from 'axios';
-
+    import { required,  } from 'vuelidate/lib/validators'
     export default {
         props: {
             invoice: {
@@ -91,6 +110,7 @@
         },
         data() {
             return {
+                spinnerVisible: false,
                 histories: this.paymentHistory,
                 id: null,
                 dataForm: {
@@ -103,19 +123,37 @@
                 token_csrf: window.Laravel.csrfToken
             }
         },
+        validations: {
+            dataForm: {
+                date: {
+                    required
+                },
+                amount: {
+                    required
+                },
+                receiving_account: {
+                    required
+                }
+            }
+        },
         methods: {
             async onSubmit() {
                 try {
+                    this.$v.$touch()
+                    if (this.$v.$error) return
+                    this.spinnerVisible = true
                     console.log(JSON.stringify(this.dataForm));
                         await axios.post('/invoices/record-payment/save/' + this.invoice.id, this.dataForm).then(response => {
                             this.id = response.data.id
                         });;
 
                     location.href = '/invoices/' + this.id;
+                    this.spinnerVisible = false
                 } catch(e) {
                     // this.resetInvoice()
                     // this.$v.$reset()
                     console.log('some error')
+                    this.spinnerVisible = false
                 }
             },
         },
@@ -134,5 +172,8 @@
 <style scoped lang="scss">
     .card {
         margin-top: 20px;
+    }
+    label {
+        white-space: nowrap;
     }
 </style>

@@ -28,7 +28,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">E-mail \ Login</th>
                         <th scope="col">Role</th>
-                        <th scope="col">Actions</th>
+                        <th scope="col" class="text-right pr-5">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -39,14 +39,14 @@
                             <td>
                                 {{$user->roles->first()->name ?? ''}}
                             </td>
-                            <td>
+                            <td class="text-right">
 
                                 <form action="{{route('user-destroy', ['id' => $user->id])}}"  method="POST" >
                                     @method('DELETE')
                                     @csrf
-                                    <a class="btn btn-link"
+                                    <a class="btn btn-primary"
                                        href="{{route('users-create', ['id' => $user->id])}}">Edit</a>
-                                    <button type="submit" class="text-danger btn btn-link">Delete</button>
+                                    <button type="submit" class="btn btn-danger">Delete</button>
                                 </form>
                             </td>
                         </tr>

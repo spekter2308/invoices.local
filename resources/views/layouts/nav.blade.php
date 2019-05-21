@@ -13,7 +13,7 @@
                 <ul class="navbar-nav mr-auto">
                     <div class="container">
                         <a class="navbar-brand" href="/invoices">
-                            <img src="http://placehold.it/150x50?text=Logo" alt="">
+                            <img src="/img/logo2.svg" alt="softgroup" style="width: 200px; height: 50px;">
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>
@@ -23,10 +23,9 @@
                 </ul>
 
                 <!-- Right Side Of Navbar -->
-                <ul class="navbar-nav ml-auto">
+                <ul class="navbar-nav navbar-expand-lg ml-auto">
                     <div class="collapse navbar-collapse" id="navbarResponsive">
                         <ul class="navbar-nav ml-auto">
-                            <a class="nav-link" href="#">sometest@gmail.com</a>
                             <ul class="navbar-nav mr-auto">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"

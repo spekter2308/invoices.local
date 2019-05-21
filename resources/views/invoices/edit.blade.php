@@ -16,9 +16,9 @@
                         <div class="level">
                            <span class="flex">
                                <h1>New Invoice</h1>
-                               <button class="btn btn-link">
+                              {{-- <button class="btn btn-link">
                                    Show Customization Options
-                               </button>
+                               </button>--}}
                            </span>
                         
                         </div>
@@ -32,6 +32,7 @@
                     <a href="#" class="btn btn-secondary">Print</a>
                     <a href="#" class="btn btn-secondary">PDF</a>
                     <a href="/invoice-mail/create/{{ $invoice->id }}" class="btn btn-secondary">Send</a>
+                            <a href="{{route('record-payment', ['invoice' => $invoice->id])}}" class="btn btn-secondary">Record Payment</a>
                     <a href="#" class="btn btn-secondary">Mark as Paid</a>
                     <a href="#" class="btn btn-secondary">Duplicate</a>
                @else
