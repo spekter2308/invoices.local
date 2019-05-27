@@ -22,6 +22,7 @@ use App\Filters\InvoiceFilters;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Expr\Cast\Object_;
 use PDF;
+use App;
 
 class InvoiceController extends Controller
 {
@@ -368,7 +369,11 @@ class InvoiceController extends Controller
             return view('pdf.invoices', ['invoice' => $invoice]);
         } else {
             $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice]);
-            return $pdf->download('Invoice ' . $invoice->number . '.pdf');
+            $pdf->SetWatermarkText("Paid");
+            //return $pdf->download('Invoice ' . $invoice->number . '.pdf');
+            //$pdf = App::make('dompdf.wrapper');
+            //$pdf->loadHTML('pdf.invoices', ['invoice' => $invoice]);
+            return $pdf->stream('document.pdf');
         }
     }
 
