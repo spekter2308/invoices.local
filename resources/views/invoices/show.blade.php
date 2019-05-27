@@ -53,15 +53,15 @@
                                 <div class="row justify-content">
                                     <div class="col-md-12">
                                         <div class="company-data-show">
-                                            <span>{{ $invoice->company->name }}</span>
-                                            <span>{{ $invoice->company->address }}</span>
+                                            <span><a href="/invoices?bycompany={{ $invoice->company->id }}">{{ $invoice->company->name }}</a></span>
+                                            <span>{!! nl2br(str_replace(" ", " &nbsp;", $invoice->company->address))  !!}</span>
                                         </div>
                                         @if ($invoice->status == 'Paid')
                                             <img src="/img/paid.jpg" alt="">
                                         @endif
                                         <div class="customer-data-show">
                                             <div><a href="/invoices?byuser={{ $invoice->customer->id }}">{{ $invoice->customer->name }}</a></div>
-                                            <div>{{ $invoice->customer->address }}</div>
+                                            <div>{!! nl2br(str_replace(" ", " &nbsp;", $invoice->customer->address))  !!}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -168,7 +168,7 @@
                                     @endforeach
                                     <div class="invoice-table-row-notes">
                                         <div class="form-group">
-                                            <p> NOTES: {{ $invoice->company->invoice_notes }}</p>
+                                            <p> NOTES: {!! nl2br(str_replace(" ", " &nbsp;", $invoice->company->invoice_notes))  !!}</p>
                                         </div>
                                     </div>
                                 </div>

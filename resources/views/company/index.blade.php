@@ -35,7 +35,7 @@
                                 <td><a href="{{route('company-update', ['id' => $item->id])}}">{{ $item->name }}</a></td>
                                 <td>{{ $item->short_name }}</td>
                                 <td>{{ $item->address }}</td>
-                                <td>{{ $item->invoice_notes }}</td>
+                                <td>{!! nl2br(str_replace(" ", " &nbsp;", $item->invoice_notes))  !!}</td>
                                 <td><img width="100" src="{{($item->logo_img) ? 'upload/company/' . $item->logo_img : '/img/no_img.png'}}" alt="{{$item->short_name}}"></td>
                             </tr>
                         @endforeach

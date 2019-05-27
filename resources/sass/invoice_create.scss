@@ -29,6 +29,14 @@
       display: block;
     }
   }
+  .company-data-show {
+    a {
+      text-decoration: none;
+      color: grey;
+      font-weight: bold;
+    }
+  }
+  
   .customer-data-show {
     display: flex;
     flex-direction: column;

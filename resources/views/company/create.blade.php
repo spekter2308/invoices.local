@@ -52,6 +52,7 @@
                                 <div class="form-group">
                                     <label for="invoice_notes" class="font-weight-bold">Invoice notes</label>
                                     <textarea name="invoice_notes"
+                                              spellcheck="true"
                                               class="form-control {{ $errors->has ('invoice_notes') ? 'error' : '' }}"
                                               rows="6"
                                               placeholder="Invoice notes...">{{ old('address') ?? $company->invoice_notes }}</textarea>

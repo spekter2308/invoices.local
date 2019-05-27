@@ -168,6 +168,8 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
+        //dd($invoice->company->invoice_notes);
+
         return view('invoices.show', compact('invoice'));
     }
 
@@ -366,7 +368,7 @@ class InvoiceController extends Controller
             return view('pdf.invoices', ['invoice' => $invoice]);
         } else {
             $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice]);
-            return $pdf->download('I-' . $invoice->number . '.pdf');
+            return $pdf->download('Invoice ' . $invoice->number . '.pdf');
         }
     }
 
@@ -438,8 +440,14 @@ class InvoiceController extends Controller
         $old_paid = $invoice->amount_paid;
         $old_balance = $invoice->balance;
 
+        if ($invoice->balance <= $paymentData->amount) {
+            $status = 'Paid';
+        } else {
+            $status = 'Partial';
+        }
+
         $invoice->update([
-            'status' => 'Partial',
+            'status' => $status,
             'balance' => $old_balance - $paymentData->amount ,
             'amount_paid' => $paymentData->amount + $old_paid,
         ]);

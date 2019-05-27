@@ -15029,6 +15029,12 @@ a.text-dark:focus {
   display: block;
 }
 
+.invoice-from-to-customer-box .company-data-show a {
+  text-decoration: none;
+  color: grey;
+  font-weight: bold;
+}
+
 .invoice-from-to-customer-box .customer-data-show {
   display: flex;
   flex-direction: column;
