@@ -57,7 +57,7 @@
                                             <span>{!! nl2br(str_replace(" ", " &nbsp;", $invoice->company->address))  !!}</span>
                                         </div>
                                         @if ($invoice->status == 'Paid')
-                                            <img src="/img/paid.jpg" alt="">
+                                            <div class="paid"></div>
                                         @endif
                                         <div class="customer-data-show">
                                             <div><a href="/invoices?byuser={{ $invoice->customer->id }}">{{ $invoice->customer->name }}</a></div>
@@ -72,40 +72,40 @@
                         <div class="invoice-box invoice-logo-box">
                             <div class="company-logo">
                                 @if ($invoice->company->logo_img)
-                                    <img src="/upload/company/{{$invoice->company->logo_img}}" alt="" style="width: 350px; height: 200px;">
+                                    <img src="/upload/company/{{$invoice->company->logo_img}}" class="logo">
                                 @endif
                             </div>
                         </div>
 
                         <!-- {{--Date and Nubmer part--}} -->
                         <div class="invoice-box invoice-num-date-box">
-                            <div class="row level">
-                                <div class="col-md-4">
+                            <div class="row level text-right">
+                                <div class="col-md-6">
                                     <h6 class="font-weight-bold">Invoice #</h6>
                                 </div>
-                                <div class="col-md-8">
-                                    <div class="form-group d-flex">
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <span>{{ $invoice->number }}</span>
                                     </div>
                                 </div>
                             </div>
                             <!--Invoice Date-->
-                            <div class="row level">
-                                <div class="col-md-4">
+                            <div class="row level text-right">
+                                <div class="col-md-6">
                                     <h6 class="font-weight-bold">Invoice Date</h6>
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                        <span>{{ Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}</span>
                                     </div>
                                 </div>
                             </div>
                             <!--Due Date-->
-                            <div class="row level">
-                                <div class="col-md-4">
+                            <div class="row level text-right">
+                                <div class="col-md-6">
                                     <h6 class="font-weight-bold">Due Date</h6>
                                 </div>
-                                <div class="col-md-8">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <span>{{ Carbon\Carbon::parse($invoice->due_date)->format('d/m/Y') }}</span>
                                     </div>
@@ -168,7 +168,7 @@
                                     @endforeach
                                     <div class="invoice-table-row-notes">
                                         <div class="form-group">
-                                            <p> NOTES: {!! nl2br(str_replace(" ", " &nbsp;", $invoice->company->invoice_notes))  !!}</p>
+                                            <p> <span style="text-decoration: underline">NOTES</span>: {!! nl2br(str_replace(" ", " &nbsp;", $invoice->company->invoice_notes))  !!}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -200,10 +200,35 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
+            
+            @if (auth()->check())
+                <hr>
+                <h4>Invoice history</h4>
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">User</th>
+                        <th scope="col">Changes</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @forelse($invoice->histories as $history)
+                        <tr>
+                            <td>{{ $history->created_at }}</td>
+                            <td>{{ $history->user->name }}</td>
+                            <td>{{ $history->changes  }}</td>
+                        </tr>
+                    @empty
+                        <p>History is empty</p>
+                    @endforelse
+                    </tbody>
+                </table>
+            @endif
+            
         </div>
     </div>
 

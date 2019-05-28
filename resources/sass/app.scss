@@ -27,6 +27,10 @@
 @import "~@fortawesome/fontawesome-free/css/all.css";
 @import "invoice_action";
 
+//Invoice images part
+@import "invoice_logo";
+@import "paid";
+
 .js-invoice-filter{
   display: none;
 }

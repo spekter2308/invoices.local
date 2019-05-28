@@ -15008,7 +15008,7 @@ a.text-dark:focus {
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 1em;
   grid-row-gap: 1em;
-  grid-auto-rows: minmax(100px, auto);
+  grid-auto-rows: minmax(10px, auto);
   grid-template-areas: "invoice-box-1 invoice-box-2" "invoice-box-1 invoice-box-3" "invoice-box-4 invoice-box-4" "invoice-box-5 invoice-box-6";
 }
 
@@ -15377,6 +15377,25 @@ a.btn-secondary:hover {
 
 .btn-save-edit div {
   display: inline-block;
+}
+
+.logo {
+  -o-object-fit: contain;
+     object-fit: contain;
+  height: 80px;
+  width: 300px;
+}
+
+.paid {
+  display: block;
+  position: relative;
+  background-image: url("/img/paid.jpg");
+  height: 60px;
+  width: 100px;
+  margin: -30px 20% 0;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .js-invoice-filter {

@@ -369,7 +369,7 @@ class InvoiceController extends Controller
             return view('pdf.invoices', ['invoice' => $invoice]);
         } else {
             $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice]);
-            $pdf->SetWatermarkText("Paid");
+            //$pdf->SetWatermarkText("Paid");
             //return $pdf->download('Invoice ' . $invoice->number . '.pdf');
             //$pdf = App::make('dompdf.wrapper');
             //$pdf->loadHTML('pdf.invoices', ['invoice' => $invoice]);
