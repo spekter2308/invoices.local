@@ -65,8 +65,8 @@
                     <div class="col-md-4 text-center" style="margin-top: 100px;">
                         @empty(!$company->logo_img)
                             <div class="p-4">
-                                <img src="/upload/company/{{$company->logo_img}}" height="150"
-                                     class="rounded mx-auto d-block" alt="{{$company->short_name}}">
+                                <img src="/upload/company/{{$company->logo_img}}"
+                                     class="logo" alt="{{$company->short_name}}">
                             </div>
                             @if($company->logo_img != 'no_image.png')
                                 <div class="form-group">

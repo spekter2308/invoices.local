@@ -23,7 +23,7 @@
                         <li class="list-group-item"><i class="far fa-copy"></i><a href="/invoices/duplicate/{{ $invoice->id }}">Duplicate</a></li>
                         <li class="list-group-item"><i class="far fa-paper-plane"></i><a
                                     href="/invoice-mail/create/{{ $invoice->id }}">Send</a></li>
-                        <li class="list-group-item"><i class="far fa-money-bill-alt"></i><a href="#">RecordPayment</a>
+                        <li class="list-group-item"><i class="far fa-money-bill-alt"></i><a href="/invoices/record-payment/{{ $invoice->id }}">RecordPayment</a>
                         </li>
                         <li class="list-group-item"><i class="far fa-file-pdf"></i><a
                                     href="{{route('generate-pdf', ['invoice' => $invoice->id])}}">Download</a> <a
@@ -59,14 +59,16 @@
             </a>
         </td>
         <td>{{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}</td>
-        <td
-                @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))
-                style="color: green"
-                @else
-                style="color: red"
+            <td
+                @if ($invoice->status != 'Paid')
+                    @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))
+                    style="color: green"
+                    @else
+                    style="color: red"
+                    @endif
                 @endif>
-            {{ \Carbon\Carbon::parse($invoice->due_date)->diffInDays(\Carbon\Carbon::now()) }}
-        </td>
+                {{ \Carbon\Carbon::parse($invoice->due_date)->diffInDays(\Carbon\Carbon::now()) }}
+            </td>
         <td>{{ $invoice->total }}</td>
         <td>{{ $invoice->balance }}</td>
         <td

@@ -46,8 +46,13 @@
 
             <!-- {{--Logo part--}} -->
             <div class="invoice-box invoice-logo-box mt-3">
-                <div class="company-logo">
-                    <img v-if="invoice.selectedCompany" :src="url" alt="" style="width: 350px; height: 200px;">
+                <div v-if="invoice.selectedCompany && url" class="company-logo">
+                    <img :src="'/upload/company/' + url" class="logo">
+                    <h3 style="letter-spacing: 6px; margin-top: 20px;">INVOICE</h3>
+                </div>
+
+                <div v-else>
+                    <h1 style="letter-spacing: 6px; float: right;">INVOICE</h1>
                 </div>
                 <!--@change="f => invoice.selectedFile=f"
                 @blur="$v.invoice.selectedFile.$touch()"-->
@@ -489,8 +494,11 @@
         },
         computed: {
             url() {
-                return '/upload/company/' + this.companies.find(el => el.id === this.invoice.selectedCompany).logo_img
+                return this.companies.find(el => el.id === this.invoice.selectedCompany).logo_img
             },
+           /* urlExists() {
+                return this.companies.find(el => el.id === this.invoice.selectedCompany).logo_img ? true : false;
+            },*/
             isTableRowsInvalid() {
                 return this.invoice.selectedItems.reduce((acc, curr) => {
                     return acc && !curr.correct

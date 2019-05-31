@@ -261,6 +261,23 @@ class InvoiceController extends Controller
         return $invoice;
     }
 
+    public function destroy($id)
+    {
+        return $id;
+        $invoice = findOrFail($id);
+
+        $invoice->items()->delete();
+
+        $invoice->delete();
+
+        if (\request()->wantsJson()) {
+            return response([], 204);
+        }
+        return redirect()
+            ->back()
+            ->with(['flash' => 'Access denied. You cann\'t edit invoice.']);
+    }
+
     public function duplicate($id)
     {
         return redirect('/invoices/create')->with(['id' => $id]);
@@ -369,11 +386,8 @@ class InvoiceController extends Controller
             return view('pdf.invoices', ['invoice' => $invoice]);
         } else {
             $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice]);
-            //$pdf->SetWatermarkText("Paid");
-            //return $pdf->download('Invoice ' . $invoice->number . '.pdf');
-            //$pdf = App::make('dompdf.wrapper');
-            //$pdf->loadHTML('pdf.invoices', ['invoice' => $invoice]);
-            return $pdf->stream('document.pdf');
+            return $pdf->download('Invoice ' . $invoice->number . '.pdf');
+            //return $pdf->stream('document.pdf');
         }
     }
 
@@ -383,7 +397,7 @@ class InvoiceController extends Controller
             abort(500);
 
         $validator = Validator::make($request->all(), [
-            'status' => 'required|numeric|min:1|max:3',
+            'status' => 'required|numeric|min:1|max:4',
             'invoices' => 'required|string',
         ]);
 
@@ -392,7 +406,8 @@ class InvoiceController extends Controller
 
         }
 
-        $invoices = $invoice->whereIn('id', json_decode($request->invoices))->get();
+        $ids = $request->invoices;
+        $invoices = $invoice->whereIn('id', json_decode($ids))->get();
 
         switch ($request->status) {
             case 1 :
@@ -411,6 +426,15 @@ class InvoiceController extends Controller
                     ]);
                 });
                 break;
+            case 3 :
+                $invoices->map(function ($row) {
+                    $row->update([
+                        'status' => 'Archived',
+                    ]);
+                });
+                break;
+            case 4 :
+                return redirect()->route('invoice-delete', compact($ids));
             default:
         }
 

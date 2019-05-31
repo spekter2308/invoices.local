@@ -30,7 +30,7 @@
                 <div class="card-body">
                     <div class="level">
                         <h5 class="mr-3">Status:</h5>
-                        <a href="/invoices" class="pd-1 border-right">All</a>
+                        <a href="/invoices?status=" class="pd-1 border-right">All</a>
                         <a href="/invoices?status=Late" class="pd-1 pdl-1 border-right">Late</a>
                         <a href="/invoices?status=Draft" class="pd-1 pdl-1 border-right">Draft</a>
                         <a href="/invoices?status=Sent" class="pd-1 pdl-1 border-right">Sent</a>

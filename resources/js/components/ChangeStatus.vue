@@ -1,14 +1,16 @@
 <template>
     <div>
-        <li class="nav-item dropdown">
-            <button @click="updateStatus" class="btn-dropdown nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
-               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" :href="url + 1">Paid</a>
-                <a class="dropdown-item" :href="url + 2">Sent</a>
-            </div>
-        </li>
+        <b-dropdown drop text="" variant="primary">
+            <b-dropdown-item href="#">Paid</b-dropdown-item>
+            <b-dropdown-item href="#">Sent</b-dropdown-item>
+            <b-dropdown-item href="#">Archive</b-dropdown-item>
 
+            <b-dropdown-divider></b-dropdown-divider>
+
+            <b-dropdown-item-button>
+                <strong>Delete</strong>
+            </b-dropdown-item-button>
+        </b-dropdown>
     </div>
 </template>
 
@@ -16,7 +18,7 @@
     export default {
         data(){
             return{
-                url: null
+                selected: null
             }
         },
         methods: {
@@ -31,15 +33,7 @@
 </script>
 
 <style scoped>
-    li {
-        list-style: none;
-        height: 20px;
-    }
-    button {
-        padding: 0 0 0 8px;
-        margin: 0;
-    }
-    .dropdown-menu {
-        min-width: 40px;
+    strong {
+        color: #dc3545;
     }
 </style>

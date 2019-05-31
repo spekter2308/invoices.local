@@ -39,7 +39,11 @@ class InvoiceFilters extends Filters
     protected function status($status)
     {
         if ($status == 'Late') {
-            return $this->builder->where('status', '!=', 'Paid');
+            return $this->builder->where('due_date', '<', \Carbon\Carbon::now())->where('status', '!=', 'Paid')->where('status', '!=', 'Archived');
+        }
+
+        if (!$status) {
+            return $this->builder->where('status', '!=', 'Archived');
         }
 
         return $this->builder->where('status', $status);

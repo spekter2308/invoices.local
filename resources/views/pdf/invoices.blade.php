@@ -19,7 +19,7 @@
         background-image: url("/upload/company/{{$invoice->company->logo_img}}");
         float: right;
         height: 80px; width: 300px;
-        background-size: cover;
+        background-size: contain;
         background-repeat: no-repeat;
         background-position: center;
     }
