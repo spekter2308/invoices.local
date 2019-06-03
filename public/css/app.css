@@ -15258,6 +15258,13 @@ a.text-dark:focus {
   background-color: #f3f3f3;
 }
 
+.b-dropdown .dropdown-toggle {
+  background: #3490dc;
+  color: #fff;
+  box-shadow: none;
+  height: 20px;
+}
+
 .btn {
   border: none;
   border-radius: 2px;
@@ -15377,6 +15384,10 @@ a.btn-secondary:hover {
 
 .btn-save-edit div {
   display: inline-block;
+}
+
+.form-check-invoice > label {
+  margin-left: 8px;
 }
 
 .logo {

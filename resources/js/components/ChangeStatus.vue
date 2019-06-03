@@ -1,13 +1,13 @@
 <template>
     <div>
-        <b-dropdown drop text="" variant="primary">
-            <b-dropdown-item href="#">Paid</b-dropdown-item>
-            <b-dropdown-item href="#">Sent</b-dropdown-item>
-            <b-dropdown-item href="#">Archive</b-dropdown-item>
+        <b-dropdown drop text="" variant="primary" split-variant="outline-primary">
+            <b-dropdown-item :href="url + 'Paid'">Paid</b-dropdown-item>
+            <b-dropdown-item :href="url + 'Paid'">Sent</b-dropdown-item>
+            <b-dropdown-item :href="url + 'Paid'">Archive</b-dropdown-item>
 
             <b-dropdown-divider></b-dropdown-divider>
 
-            <b-dropdown-item-button>
+            <b-dropdown-item-button @click="deleteInvoice">
                 <strong>Delete</strong>
             </b-dropdown-item-button>
         </b-dropdown>
@@ -15,16 +15,22 @@
 </template>
 
 <script>
+    import axios from 'axios'
+
     export default {
         data(){
             return{
-                selected: null
+                selected: null,
+                status: null,
             }
         },
         methods: {
-            updateStatus(){
-                this.url = '/invoices/update/status?invoices=' + JSON.stringify(this.$store.state.checkbox) + '&status=';
-            }
+            deleteInvoice() {
+                console.log(JSON.stringify(this.$store.state.checkbox));
+                axios.post('/invoices/multiDelete', {parameters: this.$store.state.checkbox}).then(response => location.reload());
+            },
+            changeStatus() {
+                console.log(JSON.stringify(this.$store.state.checkbox));
         },
         computed:{
 

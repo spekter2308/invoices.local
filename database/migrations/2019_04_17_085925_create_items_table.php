@@ -15,8 +15,7 @@ class CreateItemsTable extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->bigIncrements('id');
-
-            $table->unsignedInteger('invoice_id');
+            $table->bigInteger('invoice_id')->unsigned();
             $table->string('item');
             $table->string('description')->nullable();
             $table->float('unitprice');
@@ -27,8 +26,16 @@ class CreateItemsTable extends Migration
             $table->boolean('dirty')->nullable();
             $table->boolean('correct')->nullable();
 
+
             $table->timestamps();
+
+            $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
+
         });
+        /*       Schema::table('items', function (Blueprint $table) {
+                    $table->foreign('invoice_id')->references('id')->on('invoices')->onDelete('cascade');
+                });*/
+
     }
 
     /**

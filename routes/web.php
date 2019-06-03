@@ -27,7 +27,7 @@ Route::get('invoices/{invoice}', 'InvoiceController@show');
 Route::post('invoices', 'InvoiceController@store');
 Route::get('invoices/{invoice}/edit', 'InvoiceController@edit');
 Route::patch('invoices/{invoice}', 'InvoiceController@update');
-Route::delete('invoices/{invoice}', 'InvoiceController@destroy')->name('invoice-delete');
+Route::post('invoices/multiDelete', 'InvoiceController@multiDelete');
 Route::get('invoices/pdf/{invoice}/{print?}', 'InvoiceController@generatePdf')->where(['id' => '[0-9]+', 'print' => 'print'])->name('generate-pdf');
 Route::get('invoices/mark-as-paid/{invoice}', 'InvoiceController@markAsPaid')->name('mark-as-paid');
 Route::get('invoices/record-payment/{id}', 'InvoiceController@recordPayment')->where(['id' => '[0-9]+'])->name('record-payment');

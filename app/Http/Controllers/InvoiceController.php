@@ -261,21 +261,18 @@ class InvoiceController extends Controller
         return $invoice;
     }
 
-    public function destroy($id)
+    public function multiDelete()
     {
-        return $id;
-        $invoice = findOrFail($id);
+        $ids = \request()->all();
 
-        $invoice->items()->delete();
-
-        $invoice->delete();
+        DB::table('invoices')->whereIn('id', $ids['parameters'])->delete();
 
         if (\request()->wantsJson()) {
-            return response([], 204);
+            return response(['success'], 204);
         }
         return redirect()
             ->back()
-            ->with(['flash' => 'Access denied. You cann\'t edit invoice.']);
+            ->with(['flash' => 'Invoice has been deleted success.']);
     }
 
     public function duplicate($id)
