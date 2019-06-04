@@ -275,6 +275,73 @@ class InvoiceController extends Controller
             ->with(['flash' => 'Invoice has been deleted success.']);
     }
 
+    public function changeInvoicesStatus()
+    {
+        $attributes = \request()->input('params');
+
+        Invoice::whereIn('id', $attributes['ids'])->update(['status' => $attributes['status']]);
+
+        if (\request()->wantsJson()) {
+            return response(['success'], 204);
+        }
+        return redirect()
+            ->back()
+            ->with(['flash' => 'Status changed']);
+    }
+
+    public function recordPayment($id)
+    {
+
+        $invoice = Invoice::findOrFail($id);
+
+        return view('invoices.record-payment', [
+            'invoice' => $invoice,
+            'paymentHistory' => $invoice->payments
+        ]);
+    }
+
+    public function recordPaymentSave($id)
+    {
+        $attributes = \request()->validate([
+            'invoice_id' => 'required|numeric',
+            'date' => 'required|date',
+            'amount' => 'required|numeric',
+            'receiving_account' => 'required|string|max:255',
+            'notes' => 'nullable|string|max:255',
+        ]);
+
+        $paymentData = PaymentInvoice::create($attributes);
+
+        $invoice = Invoice::find($id);
+
+        $old_paid = $invoice->amount_paid;
+        $old_balance = $invoice->balance;
+
+        if ($invoice->balance <= $paymentData->amount) {
+            $status = 'Paid';
+        } else {
+            $status = 'Partial';
+        }
+
+        $invoice->update([
+            'status' => $status,
+            'balance' => $old_balance - $paymentData->amount ,
+            'amount_paid' => $paymentData->amount + $old_paid,
+        ]);
+
+        InvoiceHistory::create([
+            'invoice_id' => $invoice->id,
+            'user_id' => auth()->id(),
+            'changes' => "Amount changed from $old_balance to $invoice->balance"
+        ]);
+
+        if (\request()->wantsJson()) {
+            return $invoice;
+        }
+
+        return redirect('/invoices/' . $invoice->id);
+    }
+
     public function duplicate($id)
     {
         return redirect('/invoices/create')->with(['id' => $id]);
@@ -388,106 +455,5 @@ class InvoiceController extends Controller
         }
     }
 
-    public function changeInvoicesStatus(Request $request, Invoice $invoice)
-    {
-        if (!$request->has(['status', 'invoices']))
-            abort(500);
 
-        $validator = Validator::make($request->all(), [
-            'status' => 'required|numeric|min:1|max:4',
-            'invoices' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator);
-
-        }
-
-        $ids = $request->invoices;
-        $invoices = $invoice->whereIn('id', json_decode($ids))->get();
-
-        switch ($request->status) {
-            case 1 :
-                $invoices->map(function ($row) {
-                    $row->update([
-                        'status' => 'Paid',
-                        'balance' => 0,
-                        'amount_paid' => $row->total
-                    ]);
-                });
-                break;
-            case 2 :
-                $invoices->map(function ($row) {
-                    $row->update([
-                        'status' => 'Sent',
-                    ]);
-                });
-                break;
-            case 3 :
-                $invoices->map(function ($row) {
-                    $row->update([
-                        'status' => 'Archived',
-                    ]);
-                });
-                break;
-            case 4 :
-                return redirect()->route('invoice-delete', compact($ids));
-            default:
-        }
-
-        return redirect(route('invoice-index'))->with(['success' => 'Status has been save']);
-    }
-
-    public function recordPayment($id)
-    {
-
-        $invoice = Invoice::findOrFail($id);
-
-        return view('invoices.record-payment', [
-            'invoice' => $invoice,
-            'paymentHistory' => $invoice->payments
-        ]);
-    }
-
-    public function recordPaymentSave($id)
-    {
-        $attributes = \request()->validate([
-            'invoice_id' => 'required|numeric',
-            'date' => 'required|date',
-            'amount' => 'required|numeric',
-            'receiving_account' => 'required|string|max:255',
-            'notes' => 'nullable|string|max:255',
-        ]);
-
-        $paymentData = PaymentInvoice::create($attributes);
-
-        $invoice = Invoice::find($id);
-
-        $old_paid = $invoice->amount_paid;
-        $old_balance = $invoice->balance;
-
-        if ($invoice->balance <= $paymentData->amount) {
-            $status = 'Paid';
-        } else {
-            $status = 'Partial';
-        }
-
-        $invoice->update([
-            'status' => $status,
-            'balance' => $old_balance - $paymentData->amount ,
-            'amount_paid' => $paymentData->amount + $old_paid,
-        ]);
-
-        InvoiceHistory::create([
-            'invoice_id' => $invoice->id,
-            'user_id' => auth()->id(),
-            'changes' => "Amount changed from $old_balance to $invoice->balance"
-        ]);
-
-        if (\request()->wantsJson()) {
-            return $invoice;
-        }
-
-        return redirect('/invoices/' . $invoice->id);
-    }
 }

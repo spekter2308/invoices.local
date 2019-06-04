@@ -16,9 +16,8 @@
                         <div class="level">
                            <span class="flex">
                                <h1>New Invoice</h1>
-                              {{-- <button class="btn btn-link">
-                                   Show Customization Options
-                               </button>--}}
+                             <customization-options>
+                               </customization-options>
                            </span>
                         
                         </div>

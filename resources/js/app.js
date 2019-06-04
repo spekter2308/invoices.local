@@ -32,6 +32,7 @@ Vue.component('invoices-filter', require('./components/Invoices-filter.vue').def
 Vue.component('change-status', require('./components/ChangeStatus').default);
 Vue.component('edit-item', require('./components/EditSelectItem').default);
 Vue.component('payment-details', require('./components/PaymentDetails').default);
+Vue.component('customization-options', require('./components/CustomizationOptions').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

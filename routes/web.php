@@ -33,7 +33,7 @@ Route::get('invoices/mark-as-paid/{invoice}', 'InvoiceController@markAsPaid')->n
 Route::get('invoices/record-payment/{id}', 'InvoiceController@recordPayment')->where(['id' => '[0-9]+'])->name('record-payment');
 Route::post('invoices/record-payment/save/{id}', 'InvoiceController@recordPaymentSave');
 Route::post('invoices/get/date', 'InvoiceController@getDate')->name('get-date-for-filter');
-Route::get('invoices/update/status', 'InvoiceController@changeInvoicesStatus')->name('update-status');
+Route::post('invoices/update/status', 'InvoiceController@changeInvoicesStatus')->name('update-status');
 
 
 //Invoice items part

@@ -1,9 +1,7 @@
 <template>
     <div>
         <b-dropdown drop text="" variant="primary" split-variant="outline-primary">
-            <b-dropdown-item :href="url + 'Paid'">Paid</b-dropdown-item>
-            <b-dropdown-item :href="url + 'Paid'">Sent</b-dropdown-item>
-            <b-dropdown-item :href="url + 'Paid'">Archive</b-dropdown-item>
+            <b-dropdown-item v-for="status in statuses" v-bind:key="status" :value="status" @click="changeStatus(status)">{{ status }}</b-dropdown-item>
 
             <b-dropdown-divider></b-dropdown-divider>
 
@@ -18,23 +16,27 @@
     import axios from 'axios'
 
     export default {
-        data(){
-            return{
-                selected: null,
-                status: null,
+        data() {
+            return {
+                statuses: ['Paid', 'Sent', 'Archive'],
             }
         },
         methods: {
             deleteInvoice() {
-                console.log(JSON.stringify(this.$store.state.checkbox));
+                //console.log(JSON.stringify(this.$store.state.checkbox));
                 axios.post('/invoices/multiDelete', {parameters: this.$store.state.checkbox}).then(response => location.reload());
             },
-            changeStatus() {
-                console.log(JSON.stringify(this.$store.state.checkbox));
+            changeStatus(status) {
+                //console.log(JSON.stringify(this.$store.state.checkbox));
+                //console.log(JSON.stringify(status));
+                axios.post('/invoices/update/status',
+                    {params: {
+                        ids: this.$store.state.checkbox,
+                        status: status}
+                    }).then(response => location.reload());
+            }
         },
-        computed:{
 
-        }
     }
 </script>
 
