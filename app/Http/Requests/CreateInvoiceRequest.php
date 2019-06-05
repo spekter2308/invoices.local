@@ -26,8 +26,8 @@ class CreateInvoiceRequest extends FormRequest
         return [
             'selectedCompany' => 'required|integer',
             'selectedCustomer' => 'required',
-            'selectedDateFrom' => 'required|date|date_format:Y-m-d',
-            'selectedDateTo' => 'required|date|date_format:Y-m-d',
+            'selectedDateFrom' => 'required|date',
+            'selectedDateTo' => 'required|date',
             'selectedInvoiceNumber' => 'required|string',
             'selectedItems' => 'required|array|min:1',
             'selectedItems.*.item' => 'required|string',

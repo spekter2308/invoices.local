@@ -4,20 +4,52 @@
             <button @click="showOptions" class="btn btn-link">Hide Customization Options</button>
             <div class="options_table">
                 <div>
-                    <b-form-checkbox
-                            id="checkbox-1"
-                            v-model="status"
-                            name="checkbox-1"
-                            value="accepted"
-                            unchecked-value="not_accepted"
-                    >
-                        I accept the terms and use
-                    </b-form-checkbox>
-
-                    <div>State: <strong>{{ status }}</strong></div>
+                    <div class="currency">
+                        <label>Currency</label>
+                        <select v-model="settings.currency">
+                            <option value="usd">$ USD</option>
+                            <option value="euro">€ EURO</option>
+                        </select>
+                    </div>
+                    <div>
+                        <b-form-checkbox
+                                id="checkbox-1"
+                                v-model="settings.payment"
+                                name="checkbox-1"
+                        >
+                            Show Payment
+                        </b-form-checkbox>
+                    </div>
                 </div>
-                <div>second column</div>
-                <div>third column</div>
+                <div>
+                    <div class="date_language">
+                        <label>Date Format</label>
+                        <select v-model="settings.format">
+                            <option value="dd.MM.yyyy">DD.MM.YYYY</option>
+                            <option value="dd/MM/yyyy">DD/MM/YYYY</option>
+                            <option value="MM/dd/yyyy">MM/DD/YYYY</option>
+                            <option value="dd-MM-yyyy">DD-MM-YYYY</option>
+                            <option value="yyyy-MM-dd">YYYY-MM-DD</option>
+                        </select>
+                    </div>
+                    <div class="date_language">
+                        <label>Language</label>
+                        <select v-model="settings.language">
+                            <option value="english">English</option>
+                            <option value="spain">Spain</option>
+                            <option value="germany">Germany</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <b-form-checkbox
+                            id="checkbox-2"
+                            v-model="settings.tax"
+                            name="checkbox-2"
+                    >
+                        Show Tax Column
+                    </b-form-checkbox>
+                </div>
             </div>
         </div>
         <div v-else>
@@ -32,7 +64,19 @@
         data() {
             return {
                 editing: false,
-                status: 'not_accepted'
+
+                settings: {
+                    payment: false,
+                    tax: false,
+                    format: "dd.MM.yyyy",
+                    language: 'english',
+                    currency: 'usd',
+                },
+
+                changed() {
+                    $bus.$on('sendinvoicesettings', d => { this.settings = d })
+
+                }
             }
         },
         methods: {
@@ -51,5 +95,16 @@
         margin-top: 20px;
         display: flex;
         justify-content: space-around;
+        align-items: center;
     }
+    .date_language {
+        margin: 15px 0;
+        display: block;
+    }
+    .date_language label {
+        display: block;
+        margin: 0;
+        padding: 0;
+    }
+    
 </style>

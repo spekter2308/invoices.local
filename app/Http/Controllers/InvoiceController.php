@@ -99,7 +99,7 @@ class InvoiceController extends Controller
         $companies = Company::latest()->get();
 
         return view('invoices.edit', [
-            'invoiceId' => '',
+            'invoice' => '{}',
             'invoiceCustomer' => $invoiceCustomer,
             'invoiceCompany' => $invoiceCompany,
             'invoiceItems' => $invoiceItems,
@@ -118,6 +118,8 @@ class InvoiceController extends Controller
 
         //check for unique invoice number
         $data['selectedInvoiceNumber'] = $this->checkInvoiceNumber($data['selectedInvoiceNumber']);
+        $data['selectedDateFrom'] = Carbon::parse($data['selectedDateFrom']);
+        $data['selectedDateTo'] = Carbon::parse($data['selectedDateTo']);
 
         if (is_array($data['selectedCustomer'])) {
             $customer = (new Customer())->create([
@@ -138,8 +140,8 @@ class InvoiceController extends Controller
             'user_id' => auth()->id(),
             'customer_id' => $customerId,
             'company_id' => \request('selectedCompany'),
-            'invoice_date' => \request('selectedDateFrom'),
-            'due_date' => \request('selectedDateTo'),
+            'invoice_date' => $data['selectedDateFrom'],
+            'due_date' => $data['selectedDateTo'],
             'amount_paid' => 0,
             'subtotal' => $total,
             'total' => $total,
@@ -194,7 +196,6 @@ class InvoiceController extends Controller
 
         return view('invoices.edit', [
             'invoice' => $invoice,
-            'invoiceId' => $invoice->id,
             'invoiceCustomer' => $invoice->customer,
             'invoiceCompany' => $invoice->company,
             'invoiceItems' => $invoiceItems,
@@ -216,6 +217,9 @@ class InvoiceController extends Controller
         //check for unique invoice number
         $data['selectedInvoiceNumber'] = $this->checkInvoiceNumber($data['selectedInvoiceNumber']);
 
+        $data['selectedDateFrom'] = Carbon::parse($data['selectedDateFrom']);
+        $data['selectedDateTo'] = Carbon::parse($data['selectedDateTo']);
+
         if (is_array($data['selectedCustomer'])) {
             $customer = (new Customer())->create([
                 'name' => $data['selectedCustomer']['name'],
@@ -236,8 +240,8 @@ class InvoiceController extends Controller
             'number' => $data['selectedInvoiceNumber'],
             'customer_id' => $customerId,
             'company_id' => \request('selectedCompany'),
-            'invoice_date' => \request('selectedDateFrom'),
-            'due_date' => \request('selectedDateTo'),
+            'invoice_date' => $data['selectedDateFrom'],
+            'due_date' => $data['selectedDateTo'],
             'amount_paid' => 0,
             'subtotal' => $total,
             'total' => $total,

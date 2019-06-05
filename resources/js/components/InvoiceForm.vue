@@ -166,12 +166,16 @@
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <input type="date" name="invoice_date" id="invoice_date"
+                            <datapicker :format="dateFormat"
+                                        @blur="$v.invoice.selectedDateFrom.$touch()"
+                                        v-model="invoice.selectedDateFrom"
+                                        class=""></datapicker>
+                           <!-- <input type="date" name="invoice_date" id="invoice_date"
                                    class="form-control"
                                    :value="currentDate"
                                    @blur="$v.invoice.selectedDateFrom.$touch()"
                                    @input="invoice.selectedDateFrom=$event.target.value"
-                            >
+                            >-->
                             <template v-if="$v.invoice.selectedDateFrom.$error">
                                 <small class="error-control" v-if="!$v.invoice.selectedDateFrom.required"
                                 >Please fill the date field</small>
@@ -186,12 +190,16 @@
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <input type="date" name="due_date" id="due_date"
+                            <datapicker :format="dateFormat"
+                                        @blur="$v.invoice.selectedDateFrom.$touch()"
+                                        v-model="invoice.selectedDateTo"
+                                        class=""></datapicker>
+                           <!-- <input type="date" name="due_date" id="due_date"
                                    class="form-control"
                                    @blur="$v.invoice.selectedDateTo.$touch()"
                                    :value="currentDate"
                                    @input="invoice.selectedDateTo=$event.target.value"
-                            >
+                            >-->
                             <template v-if="$v.invoice.selectedDateTo.$error">
                                 <small class="error-control" v-if="!$v.invoice.selectedDateTo.required"
                                 >Please fill the date field</small>
@@ -249,8 +257,8 @@
              'items-table': Items
          },*/
         props: {
-            invoiceId: {
-                type: [Number, String],
+            currentInvoice: {
+                type: [Object, String],
                 required: true
             },
             invoicePaid: {
@@ -296,6 +304,9 @@
         },
         data() {
             return {
+                dateFormat: "dd.MM.yyyy",
+                currentDateFrom: this.currentInvoice.invoice_date,
+                currentDateTo: this.currentInvoice.due_date,
                 //nextInvoiceNumberResponse: '',
                 spinnerVisible: false,
                 createdInvoiceId: NaN,
@@ -304,8 +315,8 @@
                     selectedCompany: this.invoiceCompany.id || NaN,
                     selectedCustomer: this.invoiceCustomer.id || {},
                     //selectedFile: null,
-                    selectedDateFrom: new Date().toISOString().slice(0,10),
-                    selectedDateTo: new Date().toISOString().slice(0,10),
+                    selectedDateFrom: this.currentInvoice.invoice_date || new Date().toISOString().slice(0,10),
+                    selectedDateTo: this.currentInvoice.due_date || new Date().toISOString().slice(0,10),
                     selectedInvoiceNumber: this.invoiceNumber,
                     selectedItems: this.invoiceItems
                 },
@@ -443,8 +454,8 @@
                             location.href = '/invoices/' + this.createdInvoiceId;
                         }
                         else if(this.mode === 'edit') {
-                            console.log(this.invoiceId)
-                            await axios.patch('/invoices/' + this.invoiceId, this.invoice).then(response => {
+                            console.log(this.currentInvoice.id)
+                            await axios.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(response => {
                                 this.createdInvoiceId = response.data.id
                                 this.spinnerVisible = false
                             });
@@ -503,9 +514,6 @@
                 return this.invoice.selectedItems.reduce((acc, curr) => {
                     return acc && !curr.correct
                 }, true)
-            },
-            currentDate() {
-                return new Date().toISOString().slice(0,10);
             },
             total() {
                 return this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0)

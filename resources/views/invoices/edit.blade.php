@@ -16,7 +16,7 @@
                         <div class="level">
                            <span class="flex">
                                <h1>New Invoice</h1>
-                             <customization-options>
+                             <customization-options @sendinvoicesettings="getInvoicesSettings">
                                </customization-options>
                            </span>
                         
@@ -48,7 +48,7 @@
         
                 <div class="mt-3 invoice-create-body">
                     <invoice-form
-                            invoice-id="{{ $invoiceId }}"
+                            :current-invoice="{{ $invoice }}"
                             invoice-paid="{{ $invoice->amount_paid ?? 0 }}"
                             :invoice-company="{{ $invoiceCompany }}"
                             :invoice-customer="{{ $invoiceCustomer }}"

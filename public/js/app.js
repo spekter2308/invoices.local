@@ -4517,12 +4517,57 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CustomizationOptions",
   data: function data() {
     return {
       editing: false,
-      status: 'not_accepted'
+      settings: {
+        payment: false,
+        tax: false,
+        format: "dd.MM.yyyy",
+        language: 'english',
+        currency: 'usd'
+      },
+      changed: function changed() {
+        var _this = this;
+
+        $bus.$on('sendinvoicesettings', function (d) {
+          _this.settings = d;
+        });
+      }
     };
   },
   methods: {
@@ -4908,6 +4953,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /*import Items from './ItemsTable.vue'*/
@@ -4917,8 +4970,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
        'items-table': Items
    },*/
   props: {
-    invoiceId: {
-      type: [Number, String],
+    currentInvoice: {
+      type: [Object, String],
       required: true
     },
     invoicePaid: {
@@ -4964,6 +5017,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
+      dateFormat: "dd.MM.yyyy",
+      currentDateFrom: this.currentInvoice.invoice_date,
+      currentDateTo: this.currentInvoice.due_date,
       //nextInvoiceNumberResponse: '',
       spinnerVisible: false,
       createdInvoiceId: NaN,
@@ -4972,8 +5028,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         selectedCompany: this.invoiceCompany.id || NaN,
         selectedCustomer: this.invoiceCustomer.id || {},
         //selectedFile: null,
-        selectedDateFrom: new Date().toISOString().slice(0, 10),
-        selectedDateTo: new Date().toISOString().slice(0, 10),
+        selectedDateFrom: this.currentInvoice.invoice_date || new Date().toISOString().slice(0, 10),
+        selectedDateTo: this.currentInvoice.due_date || new Date().toISOString().slice(0, 10),
         selectedInvoiceNumber: this.invoiceNumber,
         selectedItems: this.invoiceItems
       },
@@ -5141,9 +5197,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   break;
                 }
 
-                console.log(this.invoiceId);
+                console.log(this.currentInvoice.id);
                 _context.next = 16;
-                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch('/invoices/' + this.invoiceId, this.invoice).then(function (response) {
+                return axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(function (response) {
                   _this2.createdInvoiceId = response.data.id;
                   _this2.spinnerVisible = false;
                 });
@@ -5256,9 +5312,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return this.invoice.selectedItems.reduce(function (acc, curr) {
         return acc && !curr.correct;
       }, true);
-    },
-    currentDate: function currentDate() {
-      return new Date().toISOString().slice(0, 10);
     },
     total: function total() {
       return this.invoice.selectedItems.reduce(function (acc, curr) {
@@ -37637,7 +37690,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.options_table {\n    margin-top: 20px;\n    display: flex;\n    justify-content: space-around;\n}\n", ""]);
+exports.push([module.i, "\n.options_table {\n    margin-top: 20px;\n    display: flex;\n    justify-content: space-around;\n    align-items: center;\n}\n.date_language {\n    margin: 15px 0;\n    display: block;\n}\n.date_language label {\n    display: block;\n    margin: 0;\n    padding: 0;\n}\n\n", ""]);
 
 // exports
 
@@ -70952,44 +71005,213 @@ var render = function() {
           ),
           _vm._v(" "),
           _c("div", { staticClass: "options_table" }, [
+            _c("div", [
+              _c("div", { staticClass: "currency" }, [
+                _c("label", [_vm._v("Currency")]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.settings.currency,
+                        expression: "settings.currency"
+                      }
+                    ],
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.settings,
+                          "currency",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "usd" } }, [
+                      _vm._v("$ USD")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "euro" } }, [
+                      _vm._v("€ EURO")
+                    ])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                [
+                  _c(
+                    "b-form-checkbox",
+                    {
+                      attrs: { id: "checkbox-1", name: "checkbox-1" },
+                      model: {
+                        value: _vm.settings.payment,
+                        callback: function($$v) {
+                          _vm.$set(_vm.settings, "payment", $$v)
+                        },
+                        expression: "settings.payment"
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                        Show Payment\n                    "
+                      )
+                    ]
+                  )
+                ],
+                1
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", [
+              _c("div", { staticClass: "date_language" }, [
+                _c("label", [_vm._v("Date Format")]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.settings.format,
+                        expression: "settings.format"
+                      }
+                    ],
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.settings,
+                          "format",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "dd.MM.yyyy" } }, [
+                      _vm._v("DD.MM.YYYY")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "dd/MM/yyyy" } }, [
+                      _vm._v("DD/MM/YYYY")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "MM/dd/yyyy" } }, [
+                      _vm._v("MM/DD/YYYY")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "dd-MM-yyyy" } }, [
+                      _vm._v("DD-MM-YYYY")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "yyyy-MM-dd" } }, [
+                      _vm._v("YYYY-MM-DD")
+                    ])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "date_language" }, [
+                _c("label", [_vm._v("Language")]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.settings.language,
+                        expression: "settings.language"
+                      }
+                    ],
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.settings,
+                          "language",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  [
+                    _c("option", { attrs: { value: "english" } }, [
+                      _vm._v("English")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "spain" } }, [
+                      _vm._v("Spain")
+                    ]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "germany" } }, [
+                      _vm._v("Germany")
+                    ])
+                  ]
+                )
+              ])
+            ]),
+            _vm._v(" "),
             _c(
               "div",
               [
                 _c(
                   "b-form-checkbox",
                   {
-                    attrs: {
-                      id: "checkbox-1",
-                      name: "checkbox-1",
-                      value: "accepted",
-                      "unchecked-value": "not_accepted"
-                    },
+                    attrs: { id: "checkbox-2", name: "checkbox-2" },
                     model: {
-                      value: _vm.status,
+                      value: _vm.settings.tax,
                       callback: function($$v) {
-                        _vm.status = $$v
+                        _vm.$set(_vm.settings, "tax", $$v)
                       },
-                      expression: "status"
+                      expression: "settings.tax"
                     }
                   },
                   [
                     _vm._v(
-                      "\n                    I accept the terms and use\n                "
+                      "\n                    Show Tax Column\n                "
                     )
                   ]
-                ),
-                _vm._v(" "),
-                _c("div", [
-                  _vm._v("State: "),
-                  _c("strong", [_vm._v(_vm._s(_vm.status))])
-                ])
+                )
               ],
               1
-            ),
-            _vm._v(" "),
-            _c("div", [_vm._v("second column")]),
-            _vm._v(" "),
-            _c("div", [_vm._v("third column")])
+            )
           ])
         ])
       : _c("div", [
@@ -71697,21 +71919,19 @@ var render = function() {
                 "div",
                 { staticClass: "form-group" },
                 [
-                  _c("input", {
-                    staticClass: "form-control",
-                    attrs: {
-                      type: "date",
-                      name: "invoice_date",
-                      id: "invoice_date"
-                    },
-                    domProps: { value: _vm.currentDate },
+                  _c("datapicker", {
+                    attrs: { format: _vm.dateFormat },
                     on: {
                       blur: function($event) {
                         return _vm.$v.invoice.selectedDateFrom.$touch()
-                      },
-                      input: function($event) {
-                        _vm.invoice.selectedDateFrom = $event.target.value
                       }
+                    },
+                    model: {
+                      value: _vm.invoice.selectedDateFrom,
+                      callback: function($$v) {
+                        _vm.$set(_vm.invoice, "selectedDateFrom", $$v)
+                      },
+                      expression: "invoice.selectedDateFrom"
                     }
                   }),
                   _vm._v(" "),
@@ -71738,17 +71958,19 @@ var render = function() {
                 "div",
                 { staticClass: "form-group" },
                 [
-                  _c("input", {
-                    staticClass: "form-control",
-                    attrs: { type: "date", name: "due_date", id: "due_date" },
-                    domProps: { value: _vm.currentDate },
+                  _c("datapicker", {
+                    attrs: { format: _vm.dateFormat },
                     on: {
                       blur: function($event) {
-                        return _vm.$v.invoice.selectedDateTo.$touch()
-                      },
-                      input: function($event) {
-                        _vm.invoice.selectedDateTo = $event.target.value
+                        return _vm.$v.invoice.selectedDateFrom.$touch()
                       }
+                    },
+                    model: {
+                      value: _vm.invoice.selectedDateTo,
+                      callback: function($$v) {
+                        _vm.$set(_vm.invoice, "selectedDateTo", $$v)
+                      },
+                      expression: "invoice.selectedDateTo"
                     }
                   }),
                   _vm._v(" "),
@@ -92160,15 +92382,14 @@ if (token) {
 /*!**************************************************!*\
   !*** ./resources/js/components/ChangeStatus.vue ***!
   \**************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ChangeStatus_vue_vue_type_template_id_d607e2a6_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ChangeStatus.vue?vue&type=template&id=d607e2a6&scoped=true& */ "./resources/js/components/ChangeStatus.vue?vue&type=template&id=d607e2a6&scoped=true&");
 /* harmony import */ var _ChangeStatus_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ChangeStatus.vue?vue&type=script&lang=js& */ "./resources/js/components/ChangeStatus.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _ChangeStatus_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _ChangeStatus_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _ChangeStatus_vue_vue_type_style_index_0_id_d607e2a6_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChangeStatus.vue?vue&type=style&index=0&id=d607e2a6&scoped=true&lang=css& */ "./resources/js/components/ChangeStatus.vue?vue&type=style&index=0&id=d607e2a6&scoped=true&lang=css&");
+/* empty/unused harmony star reexport *//* harmony import */ var _ChangeStatus_vue_vue_type_style_index_0_id_d607e2a6_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ChangeStatus.vue?vue&type=style&index=0&id=d607e2a6&scoped=true&lang=css& */ "./resources/js/components/ChangeStatus.vue?vue&type=style&index=0&id=d607e2a6&scoped=true&lang=css&");
 /* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
@@ -92200,7 +92421,7 @@ component.options.__file = "resources/js/components/ChangeStatus.vue"
 /*!***************************************************************************!*\
   !*** ./resources/js/components/ChangeStatus.vue?vue&type=script&lang=js& ***!
   \***************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
