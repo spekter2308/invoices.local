@@ -58,6 +58,12 @@ const app = new Vue({
     store,
     data() {
         return {
+            invoiceSettings: {},
+        }
+    },
+    methods: {
+        getInvoicesSettings(variable) {
+            this.invoiceSettings = variable;
         }
     }
 });

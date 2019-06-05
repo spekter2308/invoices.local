@@ -257,6 +257,10 @@
              'items-table': Items
          },*/
         props: {
+            settings: {
+                type: Object,
+                required: true
+            },
             currentInvoice: {
                 type: [Object, String],
                 required: true

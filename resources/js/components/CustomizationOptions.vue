@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="editing">
+        <div v-if="editing" v-on="listeners">
             <button @click="showOptions" class="btn btn-link">Hide Customization Options</button>
             <div class="options_table">
                 <div>
@@ -72,14 +72,20 @@
                     language: 'english',
                     currency: 'usd',
                 },
-
-                changed() {
-                    $bus.$on('sendinvoicesettings', d => { this.settings = d })
-
+            }
+        },
+        computed: {
+            listeners() {
+                return {
+                    change: this.invoiceSettings
                 }
             }
         },
         methods: {
+            invoiceSettings() {
+                console.log(this.settings);
+                this.$emit('sendinvoicesettings', this.settings);
+            },
             showOptions() {
                 this.editing = false;
             },
