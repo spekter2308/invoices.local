@@ -240,7 +240,7 @@
                 <div class="border-top pb-2"></div>
                 <div class="level">
                     <h5 class="flex" >Balance Due</h5>
-                    <span>{{total}}</span>
+                    <span>{{total + ' ' + currency}}</span>
                 </div>
                 <div class="border-top"></div>
             </div>
@@ -259,6 +259,15 @@
         props: {
             settings: {
                 type: Object,
+                default: () => {
+                    return {
+                        payment: false,
+                        tax: false,
+                        format: "dd.MM.yyyy",
+                        language: 'english',
+                        currency: 'usd',
+                    }
+                },
                 required: true
             },
             currentInvoice: {
@@ -508,6 +517,9 @@
             },
         },
         computed: {
+            currency() {
+                return this.settings.currency === "usd" ? "$" : "€";
+            },
             url() {
                 return this.companies.find(el => el.id === this.invoice.selectedCompany).logo_img
             },
