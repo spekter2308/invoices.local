@@ -62,8 +62,15 @@
                         @include('invoices/includes/invoice_table_body')
                         </tbody>
                     </table>
+    
+                    @if($invoices->total() > $invoices->count())
+                        <br>
+                        <nav class="pagination" role="navigation" aria-label="pagination">
+                            {{ $invoices->appends($filters)->links() }}
+                        </nav>
+                    @endif
+                    
                 </div>
-
             </div>
         </div>
     </div>

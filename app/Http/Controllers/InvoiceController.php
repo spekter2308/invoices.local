@@ -24,6 +24,7 @@ use PhpParser\Node\Expr\Cast\Object_;
 use PDF;
 use App;
 
+
 class InvoiceController extends Controller
 {
     use HasManyRelation;
@@ -37,6 +38,15 @@ class InvoiceController extends Controller
     {
         $invoices = $this->getInvoices($filters);
 
+        //dd($request->query);
+
+        $getFilters = [];
+        foreach ($request->query as $key => $filter) {
+            $getFilters[$key] = $filter;
+        }
+
+        //return $getFilters;
+
         if ($request->has(['from', 'to'])) {
 
             $from = Carbon::createFromTimeString($request->from)->setTimezone('Europe/Kiev')->format('Y-m-d H:i:s');
@@ -45,11 +55,18 @@ class InvoiceController extends Controller
             $invoices = $invoices->where('invoice_date', '>=', $from)->where('invoice_date', '<=', $to);
         }
 
+        $invoices = $invoices->paginate(15);
+
         if (\request()->wantsJson()) {
             return $invoices;
         }
 
-        return view('invoices.index', compact('invoices'));
+        //$invoices = $invoices->paginate(2);
+
+        return view('invoices.index', [
+            'invoices' => $invoices,
+            'filters' => $getFilters
+        ]);
     }
 
        public function create()
@@ -380,7 +397,7 @@ class InvoiceController extends Controller
     {
         $invoices = Invoice::latest()->filter($filters);
 
-        $invoices = $invoices->get();
+        //$invoices = $invoices->paginate(2);
         return $invoices;
     }
 
