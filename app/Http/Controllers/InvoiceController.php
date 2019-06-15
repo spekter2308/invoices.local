@@ -21,6 +21,7 @@ use DB;
 use App\Filters\InvoiceFilters;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Expr\Cast\Object_;
+use App\InvoiceSettings;
 use PDF;
 use App;
 
@@ -125,7 +126,8 @@ class InvoiceController extends Controller
             'invoiceNumbers' => $invoiceNumbers,
             'customers' => $customers,
             'companies' => $companies,
-            'mode' => 'create'
+            'mode' => 'create',
+            'settings' => '{}'
         ]);
     }
 
@@ -180,7 +182,21 @@ class InvoiceController extends Controller
             return $invoice;
         });
 
-        return $invoice;
+        foreach ($data['selectedSettings'] as $setting) {
+            $settings = InvoiceSettings::create([
+                'invoice_id' => $invoice->id,
+                'currency' => $setting['currency'],
+                'show_payment' => $setting['payment'],
+                'date_format' => $setting['format'],
+                'language' => $setting['language'],
+                'show_tax' => $setting['tax']
+            ]);
+        }
+
+        return [
+            'invoice' => $invoice,
+            'settings' => $settings
+        ];
 
     }
 
@@ -221,7 +237,8 @@ class InvoiceController extends Controller
             'invoiceNumbers' => $invoiceNumbers,
             'customers' => $customers,
             'companies' => $companies,
-            'mode' => 'edit'
+            'mode' => 'edit',
+            'settings' => $invoice->settings
         ]);
     }
 
@@ -279,7 +296,22 @@ class InvoiceController extends Controller
             return $invoice;
         });
 
-        return $invoice;
+        $settings = $invoice->settings;
+        foreach ($data['selectedSettings'] as $setting) {
+            $settings->update([
+                'invoice_id' => $invoice->id,
+                'currency' => $setting['currency'],
+                'show_payment' => $setting['payment'],
+                'date_format' => $setting['format'],
+                'language' => $setting['language'],
+                'show_tax' => $setting['tax']
+            ]);
+        }
+
+        return [
+            'invoice' => $invoice,
+            'settings' => $settings
+        ];
     }
 
     public function multiDelete()

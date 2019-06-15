@@ -17,6 +17,7 @@
                            <span class="flex">
                                <h1>New Invoice</h1>
                              <customization-options
+                                     :default-options="{{ $settings }}"
                                      @sendinvoicesettings="getInvoicesSettings">
                                </customization-options>
                            </span>
@@ -49,6 +50,7 @@
         
                 <div class="mt-3 invoice-create-body">
                     <invoice-form
+                            :default-options="{{ $settings }}"
                             :settings="invoiceSettings"
                             :current-invoice="{{ $invoice }}"
                             invoice-paid="{{ $invoice->amount_paid ?? 0 }}"

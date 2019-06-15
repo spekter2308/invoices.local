@@ -1,7 +1,73 @@
 <template>
 
-   <div>
-       <div class="items-table-row" id="items-row" item-list>
+   <div id="items-row">
+       <div v-if="this.showTax" class="items-table-row-with-tax" item-list>
+           <div class="item-name">
+               <div class="form-group-table">
+                   <select class="form-control" v-model="tableItem.item"
+                           @blur="makeDirty">
+                       <option v-for="item in tableItems">{{item.name}}</option>
+                   </select>
+                   <template v-if="isDirty && tableItem.dirty">
+                       <small class="error-control" v-if="!itemRequired">Item name is required</small>
+                   </template>
+               </div>
+           </div>
+           <div class="item-description">
+               <div class="form-group-table">
+                <textarea class="form-control"
+                          rows="1" name="item-description[]"
+                          @blur="makeDirty"
+                          v-model="tableItem.description">
+                </textarea>
+               </div>
+           </div>
+           <div class="item-unit-price">
+               <div class="form-group-table">
+                   <input type="number" class="form-control"
+                          name="item-unit-price[]" placeholder="1.0"
+                          min="1"
+                          step="1"
+                          @keypress="checkForFloats"
+                          @blur="makeDirty"
+                          v-model.number="tableItem.unitprice">
+                   <template v-if="isDirty && tableItem.dirty">
+                       <small v-if="!unitPriceFloat" class="error-control">Uniprice must be floating number</small>
+                       <small v-if="!unitPriceRequired" class="error-control">Uniprice is required</small>
+                   </template>
+               </div>
+           </div>
+           <div class="item-quantity">
+               <div class="form-group-table">
+                   <input type="number" class="form-control"
+                          min="1"
+                          step="1"
+                          @keypress="checkForIntegers"
+                          name="item-quantity[]" placeholder="1"
+                          @blur="makeDirty"
+                          v-model.number="tableItem.quantity">
+                   <template v-if="isDirty && tableItem.dirty">
+                       <small v-if="!quantityRequired" class="error-control">Quantity is required</small>
+                       <small v-if="!quantityInteger" class="error-control">Quantity must be integer number</small>
+                   </template>
+               </div>
+           </div>
+           <div class="item-tax">
+               <div class="form-group-table">
+                   <input type="number" class="form-control"
+                          name="item-tax[]" placeholder="1">
+               </div>
+           </div>
+           <div class="item-total">
+               <div class="form-group-table">
+                   <input type="number" class="form-control"
+                          name="item-total[]" placeholder="0.00" disabled
+                          :value="total">
+               </div>
+           </div>
+       </div>
+
+       <div v-else class="items-table-row" item-list>
            <div class="item-name">
                <div class="form-group-table">
                    <select class="form-control" v-model="tableItem.item"
@@ -80,6 +146,10 @@
             },
             tableItems: {
                 type: Array,
+                required: true
+            },
+            showTax: {
+                type: Boolean,
                 required: true
             }
         },

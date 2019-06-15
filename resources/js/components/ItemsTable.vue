@@ -1,7 +1,28 @@
 <template>
     <div class="items-wrapper">
 
-        <div class="items-table-header">
+        <div v-if="this.tax" class="items-table-header-with-tax">
+            <div class="item-name">
+                Item
+            </div>
+            <div class="item-description">
+                Description
+            </div>
+            <div class="item-unit-price" style="white-space: nowrap; padding-left: 10px">
+                Unit Price
+            </div>
+            <div class="item-quantity" style="padding-left: 10px">
+                Quantity
+            </div>
+            <div v-if="this.tax" class="item-tax" style="padding-left: 20px;">
+                Tax
+            </div>
+            <div class="item-amount" >
+                Amount
+            </div>
+        </div>
+
+        <div v-else class="items-table-header">
 
             <div class="item-name">
                 Item
@@ -9,16 +30,21 @@
             <div class="item-description">
                 Description
             </div>
-            <div class="item-unit-price" style="white-space: nowrap">
+            <div class="item-unit-price" style="white-space: nowrap; padding-left: 10px">
                 Unit Price
             </div>
-            <div class="item-quantity">
+            <div class="item-quantity" style="padding-left: 10px">
                 Quantity
             </div>
-            <div class="item-amount">
+            <div v-if="this.tax" class="item-tax" style="padding-left: 20px;">
+                Tax
+            </div>
+            <div class="item-amount" >
                 Amount
             </div>
         </div>
+
+
            <!-- <template v-for="(child, index) of children">
                 <component :is="child" :key="child.index" @input="selectedItems"></component>
             </template>-->
@@ -35,6 +61,7 @@
                   <TableItem
                           :table-items="name"
                           :is-dirty="isDirty"
+                          :show-tax="showTax"
                           :key="index"
                           :table-item="el"
                   ></TableItem>
@@ -55,7 +82,7 @@
     export default {
         data() {
             return {
-                name: []
+                name: [],
             }
         },
         props: {
@@ -65,11 +92,22 @@
             isDirty: {
                 required: true,
                 type: Boolean
+            },
+            tax: {
+                required: true,
+                type: Boolean
+            },
+            payment: {
+                required: true,
+                type: Boolean
             }
         },
         computed: {
             showDelete() {
                 return this.items.length > 1;
+            },
+            showTax() {
+                return this.tax;
             }
         },
         methods: {

@@ -166,7 +166,7 @@
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <datapicker :format="dateFormat"
+                            <datapicker :format="defaultSettings.format"
                                         @blur="$v.invoice.selectedDateFrom.$touch()"
                                         v-model="invoice.selectedDateFrom"
                                         class=""></datapicker>
@@ -190,7 +190,7 @@
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <datapicker :format="dateFormat"
+                            <datapicker :format="defaultSettings.format"
                                         @blur="$v.invoice.selectedDateFrom.$touch()"
                                         v-model="invoice.selectedDateTo"
                                         class=""></datapicker>
@@ -212,6 +212,8 @@
 
             <div class="invoice-box invoice-item-box">
                 <items-table :items="invoice.selectedItems"
+                             :tax="defaultSettings.tax"
+                             :payment="defaultSettings.payment"
                              :is-dirty="$v.$dirty"
                 ></items-table>
                 <small v-if="isTableRowsInvalid && $v.$dirty" class="error-control-table">Please type table data</small>
@@ -251,11 +253,8 @@
 <script>
     import axios from 'axios'
     import { required, integer, minValue } from 'vuelidate/lib/validators'
-    /*import Items from './ItemsTable.vue'*/
+
     export default {
-        /* comments: {
-             'items-table': Items
-         },*/
         props: {
             settings: {
                 type: Object,
@@ -268,6 +267,10 @@
                         currency: 'usd',
                     }
                 },
+                required: true
+            },
+            defaultOptions: {
+                type: Object,
                 required: true
             },
             currentInvoice: {
@@ -317,21 +320,19 @@
         },
         data() {
             return {
-                dateFormat: "dd.MM.yyyy",
                 currentDateFrom: this.currentInvoice.invoice_date,
                 currentDateTo: this.currentInvoice.due_date,
-                //nextInvoiceNumberResponse: '',
                 spinnerVisible: false,
                 createdInvoiceId: NaN,
                 isTableInvalid: true,
                 invoice: {
                     selectedCompany: this.invoiceCompany.id || NaN,
                     selectedCustomer: this.invoiceCustomer.id || {},
-                    //selectedFile: null,
                     selectedDateFrom: this.currentInvoice.invoice_date || new Date().toISOString().slice(0,10),
                     selectedDateTo: this.currentInvoice.due_date || new Date().toISOString().slice(0,10),
                     selectedInvoiceNumber: this.invoiceNumber,
-                    selectedItems: this.invoiceItems
+                    selectedItems: this.invoiceItems,
+                    selectedSettings: []
                 },
                 selectedNumber: {
                     prefix: this.formatNumber.prefix || '',
@@ -458,18 +459,20 @@
                     eventBus.$emit('touch', true)
                     if (!this.$v.$error && !this.isTableRowsInvalid) {
                         this.spinnerVisible = true
+                        this.invoice.selectedSettings = [this.defaultSettings];
                         console.log(JSON.stringify(this.invoice));
                         if (this.mode === 'create') {
                             await axios.post('/invoices', this.invoice).then(response => {
-                                this.createdInvoiceId = response.data.id
+                                this.createdInvoiceId = response.data.invoice.id
                                 this.spinnerVisible = false
                             });
+                            console.log(this.createdInvoiceId)
                             location.href = '/invoices/' + this.createdInvoiceId;
                         }
                         else if(this.mode === 'edit') {
                             console.log(this.currentInvoice.id)
                             await axios.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(response => {
-                                this.createdInvoiceId = response.data.id
+                                this.createdInvoiceId = response.data.invoice.id
                                 this.spinnerVisible = false
                             });
                         }
@@ -517,8 +520,17 @@
             },
         },
         computed: {
+            defaultSettings() {
+                return Object.assign({
+                    payment: this.defaultOptions.show_payment || false,
+                    tax: this.defaultOptions.show_tax || false,
+                    format: this.defaultOptions.date_format || "dd.MM.yyyy",
+                    language: this.defaultOptions.language || 'english',
+                    currency: this.defaultOptions.currency || 'usd',
+                }, this.settings);
+            },
             currency() {
-                return this.settings.currency === "usd" ? "$" : "€";
+                return this.defaultSettings.currency === "usd" ? "$" : "€";
             },
             url() {
                 return this.companies.find(el => el.id === this.invoice.selectedCompany).logo_img

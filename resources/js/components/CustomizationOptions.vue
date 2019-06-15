@@ -61,16 +61,22 @@
 <script>
     export default {
         name: "CustomizationOptions",
+        props: {
+            defaultOptions: {
+                type: Object,
+                required: true
+            }
+        },
         data() {
             return {
                 editing: false,
 
                 settings: {
-                    payment: false,
-                    tax: false,
-                    format: "dd.MM.yyyy",
-                    language: 'english',
-                    currency: 'usd',
+                    payment: this.defaultOptions.show_payment || false,
+                    tax: this.defaultOptions.show_tax || false,
+                    format: this.defaultOptions.date_format || "dd.MM.yyyy",
+                    language: this.defaultOptions.language || 'english',
+                    currency: this.defaultOptions.currency || 'usd',
                 },
             }
         },

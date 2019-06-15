@@ -15089,13 +15089,21 @@ a.text-dark:focus {
   grid-template-columns: 1.5fr 3fr 1fr 1fr 1fr;
 }
 
-.invoice-item-box .items-table-header {
+.invoice-item-box .items-table-header-with-tax,
+.invoice-item-box .items-table-row-with-tax {
+  display: grid;
+  grid-template-columns: 1.5fr 3fr 1fr 1fr 1fr 1fr;
+}
+
+.invoice-item-box .items-table-header,
+.invoice-item-box .items-table-header-with-tax {
   margin-left: 18px;
   background-color: #54A0E7;
   color: #eee;
 }
 
-.invoice-item-box .items-table-header > div {
+.invoice-item-box .items-table-header > div,
+.invoice-item-box .items-table-header-with-tax > div {
   padding: 3px 14px;
 }
 

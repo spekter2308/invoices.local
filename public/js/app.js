@@ -4551,15 +4551,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CustomizationOptions",
+  props: {
+    defaultOptions: {
+      type: Object,
+      required: true
+    }
+  },
   data: function data() {
     return {
       editing: false,
       settings: {
-        payment: false,
-        tax: false,
-        format: "dd.MM.yyyy",
-        language: 'english',
-        currency: 'usd'
+        payment: this.defaultOptions.show_payment || false,
+        tax: this.defaultOptions.show_tax || false,
+        format: this.defaultOptions.date_format || "dd.MM.yyyy",
+        language: this.defaultOptions.language || 'english',
+        currency: this.defaultOptions.currency || 'usd'
       }
     };
   },
@@ -4965,14 +4971,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
-
-/*import Items from './ItemsTable.vue'*/
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  /* comments: {
-       'items-table': Items
-   },*/
   props: {
     settings: {
       type: Object,
@@ -4985,6 +4988,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           currency: 'usd'
         };
       },
+      required: true
+    },
+    defaultOptions: {
+      type: Object,
       required: true
     },
     currentInvoice: {
@@ -5034,21 +5041,19 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
-      dateFormat: "dd.MM.yyyy",
       currentDateFrom: this.currentInvoice.invoice_date,
       currentDateTo: this.currentInvoice.due_date,
-      //nextInvoiceNumberResponse: '',
       spinnerVisible: false,
       createdInvoiceId: NaN,
       isTableInvalid: true,
       invoice: {
         selectedCompany: this.invoiceCompany.id || NaN,
         selectedCustomer: this.invoiceCustomer.id || {},
-        //selectedFile: null,
         selectedDateFrom: this.currentInvoice.invoice_date || new Date().toISOString().slice(0, 10),
         selectedDateTo: this.currentInvoice.due_date || new Date().toISOString().slice(0, 10),
         selectedInvoiceNumber: this.invoiceNumber,
-        selectedItems: this.invoiceItems
+        selectedItems: this.invoiceItems,
+        selectedSettings: []
       },
       selectedNumber: {
         prefix: this.formatNumber.prefix || '',
@@ -5185,43 +5190,45 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 eventBus.$emit('touch', true);
 
                 if (!(!this.$v.$error && !this.isTableRowsInvalid)) {
-                  _context.next = 17;
+                  _context.next = 19;
                   break;
                 }
 
                 this.spinnerVisible = true;
+                this.invoice.selectedSettings = [this.defaultSettings];
                 console.log(JSON.stringify(this.invoice));
 
                 if (!(this.mode === 'create')) {
-                  _context.next = 12;
+                  _context.next = 14;
                   break;
                 }
 
-                _context.next = 9;
+                _context.next = 10;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices', this.invoice).then(function (response) {
-                  _this2.createdInvoiceId = response.data.id;
+                  _this2.createdInvoiceId = response.data.invoice.id;
                   _this2.spinnerVisible = false;
                 });
 
-              case 9:
+              case 10:
+                console.log(this.createdInvoiceId);
                 location.href = '/invoices/' + this.createdInvoiceId;
-                _context.next = 16;
+                _context.next = 18;
                 break;
 
-              case 12:
+              case 14:
                 if (!(this.mode === 'edit')) {
-                  _context.next = 16;
+                  _context.next = 18;
                   break;
                 }
 
                 console.log(this.currentInvoice.id);
-                _context.next = 16;
+                _context.next = 18;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(function (response) {
-                  _this2.createdInvoiceId = response.data.id;
+                  _this2.createdInvoiceId = response.data.invoice.id;
                   _this2.spinnerVisible = false;
                 });
 
-              case 16:
+              case 18:
                 location.href = '/invoices/' + this.createdInvoiceId; //await this.updateNextNumber();
                 //this.resetInvoice();
                 //eventBus.$emit('update', true)
@@ -5229,24 +5236,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 //eventBus.$emit('reset', true)
                 //console.log('resetting')
 
-              case 17:
-                _context.next = 23;
+              case 19:
+                _context.next = 25;
                 break;
 
-              case 19:
-                _context.prev = 19;
+              case 21:
+                _context.prev = 21;
                 _context.t0 = _context["catch"](0);
                 // this.resetInvoice()
                 // this.$v.$reset()
                 console.log('some error');
                 this.spinnerVisible = false;
 
-              case 23:
+              case 25:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 19]]);
+        }, _callee, this, [[0, 21]]);
       }));
 
       function onSubmit() {
@@ -5314,8 +5321,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   computed: {
+    defaultSettings: function defaultSettings() {
+      return Object.assign({
+        payment: this.defaultOptions.show_payment || false,
+        tax: this.defaultOptions.show_tax || false,
+        format: this.defaultOptions.date_format || "dd.MM.yyyy",
+        language: this.defaultOptions.language || 'english',
+        currency: this.defaultOptions.currency || 'usd'
+      }, this.settings);
+    },
     currency: function currency() {
-      return this.settings.currency === "usd" ? "$" : "€";
+      return this.defaultSettings.currency === "usd" ? "$" : "€";
     },
     url: function url() {
       var _this3 = this;
@@ -5539,6 +5555,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 var id = 1;
@@ -5555,11 +5598,22 @@ var id = 1;
     isDirty: {
       required: true,
       type: Boolean
+    },
+    tax: {
+      required: true,
+      type: Boolean
+    },
+    payment: {
+      required: true,
+      type: Boolean
     }
   },
   computed: {
     showDelete: function showDelete() {
       return this.items.length > 1;
+    },
+    showTax: function showTax() {
+      return this.tax;
     }
   },
   methods: {
@@ -5944,6 +5998,72 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "TableItem",
@@ -5958,6 +6078,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     tableItems: {
       type: Array,
+      required: true
+    },
+    showTax: {
+      type: Boolean,
       required: true
     }
   },
@@ -12737,7 +12861,7 @@ var components = {
 /*!***********************************************************!*\
   !*** ./node_modules/bootstrap-vue/es/components/index.js ***!
   \***********************************************************/
-/*! exports provided: default, BVModalPlugin, BVToastPlugin, AlertPlugin, BadgePlugin, BreadcrumbPlugin, ButtonPlugin, ButtonGroupPlugin, ButtonToolbarPlugin, InputGroupPlugin, CardPlugin, CarouselPlugin, LayoutPlugin, CollapsePlugin, DropdownPlugin, EmbedPlugin, FormPlugin, FormGroupPlugin, FormCheckboxPlugin, FormRadioPlugin, FormInputPlugin, FormTextareaPlugin, FormFilePlugin, FormSelectPlugin, ImagePlugin, JumbotronPlugin, LinkPlugin, ListGroupPlugin, MediaPlugin, ModalPlugin, NavPlugin, NavbarPlugin, PaginationPlugin, PaginationNavPlugin, PopoverPlugin, ProgressPlugin, SpinnerPlugin, TablePlugin, TabsPlugin, ToastPlugin, TooltipPlugin, Alert, Badge, Breadcrumb, Button, ButtonGroup, ButtonToolbar, InputGroup, Card, Carousel, Layout, Collapse, Dropdown, Embed, Form, FormGroup, FormCheckbox, FormRadio, FormInput, FormTextarea, FormFile, FormSelect, Image, Jumbotron, Link, ListGroup, Media, Modal, Nav, Navbar, Pagination, PaginationNav, Popover, Progress, Spinner, Table, Tabs, Toast, Tooltip, BAlert, BBadge, BBreadcrumb, BBreadcrumbItem, BBreadcrumbLink, BButton, BButtonClose, BButtonGroup, BButtonToolbar, BInputGroup, BInputGroupAddon, BInputGroupPrepend, BInputGroupAppend, BInputGroupText, BCard, BCardHeader, BCardBody, BCardTitle, BCardSubTitle, BCardFooter, BCardImg, BCardImgLazy, BCardText, BCardGroup, BCarousel, BCarouselSlide, BContainer, BRow, BCol, BFormRow, BCollapse, BDropdown, BDropdownItem, BDropdownItemButton, BDropdownHeader, BDropdownDivider, BDropdownForm, BDropdownText, BDropdownGroup, BEmbed, BForm, BFormDatalist, BFormText, BFormInvalidFeedback, BFormValidFeedback, BFormGroup, BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup, BFormInput, BFormTextarea, BFormFile, BFormSelect, BImg, BImgLazy, BJumbotron, BLink, BListGroup, BListGroupItem, BMedia, BMediaAside, BMediaBody, BModal, BNav, BNavItem, BNavText, BNavForm, BNavItemDropdown, BNavbar, BNavbarNav, BNavbarBrand, BNavbarToggle, BPagination, BPaginationNav, BPopover, BProgress, BProgressBar, BSpinner, BTable, BTabs, BTab, BToast, BToaster, BTooltip */
+/*! exports provided: BVModalPlugin, BVToastPlugin, AlertPlugin, BadgePlugin, BreadcrumbPlugin, ButtonPlugin, ButtonGroupPlugin, ButtonToolbarPlugin, InputGroupPlugin, CardPlugin, CarouselPlugin, LayoutPlugin, CollapsePlugin, DropdownPlugin, EmbedPlugin, FormPlugin, FormGroupPlugin, FormCheckboxPlugin, FormRadioPlugin, FormInputPlugin, FormTextareaPlugin, FormFilePlugin, FormSelectPlugin, ImagePlugin, JumbotronPlugin, LinkPlugin, ListGroupPlugin, MediaPlugin, ModalPlugin, NavPlugin, NavbarPlugin, PaginationPlugin, PaginationNavPlugin, PopoverPlugin, ProgressPlugin, SpinnerPlugin, TablePlugin, TabsPlugin, ToastPlugin, TooltipPlugin, Alert, Badge, Breadcrumb, Button, ButtonGroup, ButtonToolbar, InputGroup, Card, Carousel, Layout, Collapse, Dropdown, Embed, Form, FormGroup, FormCheckbox, FormRadio, FormInput, FormTextarea, FormFile, FormSelect, Image, Jumbotron, Link, ListGroup, Media, Modal, Nav, Navbar, Pagination, PaginationNav, Popover, Progress, Spinner, Table, Tabs, Toast, Tooltip, BAlert, BBadge, BBreadcrumb, BBreadcrumbItem, BBreadcrumbLink, BButton, BButtonClose, BButtonGroup, BButtonToolbar, BInputGroup, BInputGroupAddon, BInputGroupPrepend, BInputGroupAppend, BInputGroupText, BCard, BCardHeader, BCardBody, BCardTitle, BCardSubTitle, BCardFooter, BCardImg, BCardImgLazy, BCardText, BCardGroup, BCarousel, BCarouselSlide, BContainer, BRow, BCol, BFormRow, BCollapse, BDropdown, BDropdownItem, BDropdownItemButton, BDropdownHeader, BDropdownDivider, BDropdownForm, BDropdownText, BDropdownGroup, BEmbed, BForm, BFormDatalist, BFormText, BFormInvalidFeedback, BFormValidFeedback, BFormGroup, BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup, BFormInput, BFormTextarea, BFormFile, BFormSelect, BImg, BImgLazy, BJumbotron, BLink, BListGroup, BListGroupItem, BMedia, BMediaAside, BMediaBody, BModal, BNav, BNavItem, BNavText, BNavForm, BNavItemDropdown, BNavbar, BNavbarNav, BNavbarBrand, BNavbarToggle, BPagination, BPaginationNav, BPopover, BProgress, BProgressBar, BSpinner, BTable, BTabs, BTab, BToast, BToaster, BTooltip, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23342,7 +23466,7 @@ var NAME = 'BTooltip'; // @vue/component
 /*!***********************************************************!*\
   !*** ./node_modules/bootstrap-vue/es/directives/index.js ***!
   \***********************************************************/
-/*! exports provided: default, VBTogglePlugin, VBModalPlugin, VBScrollspyPlugin, VBTooltipPlugin, VBPopoverPlugin, BToggle, BModal, BScrollspy, BTooltip, BPopover, VBToggle, VBModal, VBScrollspy, VBTooltip, VBPopover */
+/*! exports provided: VBTogglePlugin, VBModalPlugin, VBScrollspyPlugin, VBTooltipPlugin, VBPopoverPlugin, BToggle, BModal, BScrollspy, BTooltip, BPopover, VBToggle, VBModal, VBScrollspy, VBTooltip, VBPopover, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -71940,7 +72064,7 @@ var render = function() {
                 { staticClass: "form-group" },
                 [
                   _c("datapicker", {
-                    attrs: { format: _vm.dateFormat },
+                    attrs: { format: _vm.defaultSettings.format },
                     on: {
                       blur: function($event) {
                         return _vm.$v.invoice.selectedDateFrom.$touch()
@@ -71979,7 +72103,7 @@ var render = function() {
                 { staticClass: "form-group" },
                 [
                   _c("datapicker", {
-                    attrs: { format: _vm.dateFormat },
+                    attrs: { format: _vm.defaultSettings.format },
                     on: {
                       blur: function($event) {
                         return _vm.$v.invoice.selectedDateFrom.$touch()
@@ -72017,6 +72141,8 @@ var render = function() {
             _c("items-table", {
               attrs: {
                 items: _vm.invoice.selectedItems,
+                tax: _vm.defaultSettings.tax,
+                payment: _vm.defaultSettings.payment,
                 "is-dirty": _vm.$v.$dirty
               }
             }),
@@ -72343,7 +72469,91 @@ var render = function() {
     "div",
     { staticClass: "items-wrapper" },
     [
-      _vm._m(0),
+      this.tax
+        ? _c("div", { staticClass: "items-table-header-with-tax" }, [
+            _c("div", { staticClass: "item-name" }, [
+              _vm._v("\n            Item\n        ")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "item-description" }, [
+              _vm._v("\n            Description\n        ")
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "item-unit-price",
+                staticStyle: { "white-space": "nowrap", "padding-left": "10px" }
+              },
+              [_vm._v("\n            Unit Price\n        ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "item-quantity",
+                staticStyle: { "padding-left": "10px" }
+              },
+              [_vm._v("\n            Quantity\n        ")]
+            ),
+            _vm._v(" "),
+            this.tax
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "item-tax",
+                    staticStyle: { "padding-left": "20px" }
+                  },
+                  [_vm._v("\n            Tax\n        ")]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "item-amount" }, [
+              _vm._v("\n            Amount\n        ")
+            ])
+          ])
+        : _c("div", { staticClass: "items-table-header" }, [
+            _c("div", { staticClass: "item-name" }, [
+              _vm._v("\n            Item\n        ")
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "item-description" }, [
+              _vm._v("\n            Description\n        ")
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "item-unit-price",
+                staticStyle: { "white-space": "nowrap", "padding-left": "10px" }
+              },
+              [_vm._v("\n            Unit Price\n        ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "item-quantity",
+                staticStyle: { "padding-left": "10px" }
+              },
+              [_vm._v("\n            Quantity\n        ")]
+            ),
+            _vm._v(" "),
+            this.tax
+              ? _c(
+                  "div",
+                  {
+                    staticClass: "item-tax",
+                    staticStyle: { "padding-left": "20px" }
+                  },
+                  [_vm._v("\n            Tax\n        ")]
+                )
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "item-amount" }, [
+              _vm._v("\n            Amount\n        ")
+            ])
+          ]),
       _vm._v(" "),
       _vm._l(_vm.items, function(el, index) {
         return [
@@ -72379,6 +72589,7 @@ var render = function() {
                 attrs: {
                   "table-items": _vm.name,
                   "is-dirty": _vm.isDirty,
+                  "show-tax": _vm.showTax,
                   "table-item": el
                 }
               })
@@ -72407,39 +72618,7 @@ var render = function() {
     2
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "items-table-header" }, [
-      _c("div", { staticClass: "item-name" }, [
-        _vm._v("\n            Item\n        ")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "item-description" }, [
-        _vm._v("\n            Description\n        ")
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          staticClass: "item-unit-price",
-          staticStyle: { "white-space": "nowrap" }
-        },
-        [_vm._v("\n            Unit Price\n        ")]
-      ),
-      _vm._v(" "),
-      _c("div", { staticClass: "item-quantity" }, [
-        _vm._v("\n            Quantity\n        ")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "item-amount" }, [
-        _vm._v("\n            Amount\n        ")
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -72734,248 +72913,508 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      {
-        staticClass: "items-table-row",
-        attrs: { id: "items-row", "item-list": "" }
-      },
-      [
-        _c("div", { staticClass: "item-name" }, [
-          _c(
-            "div",
-            { staticClass: "form-group-table" },
-            [
+  return _c("div", { attrs: { id: "items-row" } }, [
+    this.showTax
+      ? _c(
+          "div",
+          {
+            staticClass: "items-table-row-with-tax",
+            attrs: { "item-list": "" }
+          },
+          [
+            _c("div", { staticClass: "item-name" }, [
               _c(
-                "select",
-                {
+                "div",
+                { staticClass: "form-group-table" },
+                [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.tableItem.item,
+                          expression: "tableItem.item"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      on: {
+                        blur: _vm.makeDirty,
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.tableItem,
+                            "item",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    _vm._l(_vm.tableItems, function(item) {
+                      return _c("option", [_vm._v(_vm._s(item.name))])
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  _vm.isDirty && _vm.tableItem.dirty
+                    ? [
+                        !_vm.itemRequired
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Item name is required")
+                            ])
+                          : _vm._e()
+                      ]
+                    : _vm._e()
+                ],
+                2
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "item-description" }, [
+              _c("div", { staticClass: "form-group-table" }, [
+                _c("textarea", {
                   directives: [
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.tableItem.item,
-                      expression: "tableItem.item"
+                      value: _vm.tableItem.description,
+                      expression: "tableItem.description"
                     }
                   ],
                   staticClass: "form-control",
+                  attrs: { rows: "1", name: "item-description[]" },
+                  domProps: { value: _vm.tableItem.description },
                   on: {
                     blur: _vm.makeDirty,
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
                       _vm.$set(
                         _vm.tableItem,
-                        "item",
-                        $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
+                        "description",
+                        $event.target.value
                       )
                     }
                   }
-                },
-                _vm._l(_vm.tableItems, function(item) {
-                  return _c("option", [_vm._v(_vm._s(item.name))])
-                }),
-                0
-              ),
-              _vm._v(" "),
-              _vm.isDirty && _vm.tableItem.dirty
-                ? [
-                    !_vm.itemRequired
-                      ? _c("small", { staticClass: "error-control" }, [
-                          _vm._v("Item name is required")
-                        ])
-                      : _vm._e()
-                  ]
-                : _vm._e()
-            ],
-            2
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "item-description" }, [
-          _c("div", { staticClass: "form-group-table" }, [
-            _c("textarea", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.tableItem.description,
-                  expression: "tableItem.description"
-                }
-              ],
-              staticClass: "form-control",
-              attrs: { rows: "1", name: "item-description[]" },
-              domProps: { value: _vm.tableItem.description },
-              on: {
-                blur: _vm.makeDirty,
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.tableItem, "description", $event.target.value)
-                }
-              }
-            })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "item-unit-price" }, [
-          _c(
-            "div",
-            { staticClass: "form-group-table" },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model.number",
-                    value: _vm.tableItem.unitprice,
-                    expression: "tableItem.unitprice",
-                    modifiers: { number: true }
-                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "item-unit-price" }, [
+              _c(
+                "div",
+                { staticClass: "form-group-table" },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model.number",
+                        value: _vm.tableItem.unitprice,
+                        expression: "tableItem.unitprice",
+                        modifiers: { number: true }
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "number",
+                      name: "item-unit-price[]",
+                      placeholder: "1.0",
+                      min: "1",
+                      step: "1"
+                    },
+                    domProps: { value: _vm.tableItem.unitprice },
+                    on: {
+                      keypress: _vm.checkForFloats,
+                      blur: [
+                        _vm.makeDirty,
+                        function($event) {
+                          return _vm.$forceUpdate()
+                        }
+                      ],
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.tableItem,
+                          "unitprice",
+                          _vm._n($event.target.value)
+                        )
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.isDirty && _vm.tableItem.dirty
+                    ? [
+                        !_vm.unitPriceFloat
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Uniprice must be floating number")
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !_vm.unitPriceRequired
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Uniprice is required")
+                            ])
+                          : _vm._e()
+                      ]
+                    : _vm._e()
                 ],
-                staticClass: "form-control",
-                attrs: {
-                  type: "number",
-                  name: "item-unit-price[]",
-                  placeholder: "1.0",
-                  min: "1",
-                  step: "1"
-                },
-                domProps: { value: _vm.tableItem.unitprice },
-                on: {
-                  keypress: _vm.checkForFloats,
-                  blur: [
-                    _vm.makeDirty,
-                    function($event) {
-                      return _vm.$forceUpdate()
+                2
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "item-quantity" }, [
+              _c(
+                "div",
+                { staticClass: "form-group-table" },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model.number",
+                        value: _vm.tableItem.quantity,
+                        expression: "tableItem.quantity",
+                        modifiers: { number: true }
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "number",
+                      min: "1",
+                      step: "1",
+                      name: "item-quantity[]",
+                      placeholder: "1"
+                    },
+                    domProps: { value: _vm.tableItem.quantity },
+                    on: {
+                      keypress: _vm.checkForIntegers,
+                      blur: [
+                        _vm.makeDirty,
+                        function($event) {
+                          return _vm.$forceUpdate()
+                        }
+                      ],
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.tableItem,
+                          "quantity",
+                          _vm._n($event.target.value)
+                        )
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.isDirty && _vm.tableItem.dirty
+                    ? [
+                        !_vm.quantityRequired
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Quantity is required")
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !_vm.quantityInteger
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Quantity must be integer number")
+                            ])
+                          : _vm._e()
+                      ]
+                    : _vm._e()
+                ],
+                2
+              )
+            ]),
+            _vm._v(" "),
+            _vm._m(0),
+            _vm._v(" "),
+            _c("div", { staticClass: "item-total" }, [
+              _c("div", { staticClass: "form-group-table" }, [
+                _c("input", {
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "number",
+                    name: "item-total[]",
+                    placeholder: "0.00",
+                    disabled: ""
+                  },
+                  domProps: { value: _vm.total }
+                })
+              ])
+            ])
+          ]
+        )
+      : _c(
+          "div",
+          { staticClass: "items-table-row", attrs: { "item-list": "" } },
+          [
+            _c("div", { staticClass: "item-name" }, [
+              _c(
+                "div",
+                { staticClass: "form-group-table" },
+                [
+                  _c(
+                    "select",
+                    {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.tableItem.item,
+                          expression: "tableItem.item"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      on: {
+                        blur: _vm.makeDirty,
+                        change: function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.tableItem,
+                            "item",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        }
+                      }
+                    },
+                    _vm._l(_vm.tableItems, function(item) {
+                      return _c("option", [_vm._v(_vm._s(item.name))])
+                    }),
+                    0
+                  ),
+                  _vm._v(" "),
+                  _vm.isDirty && _vm.tableItem.dirty
+                    ? [
+                        !_vm.itemRequired
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Item name is required")
+                            ])
+                          : _vm._e()
+                      ]
+                    : _vm._e()
+                ],
+                2
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "item-description" }, [
+              _c("div", { staticClass: "form-group-table" }, [
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.tableItem.description,
+                      expression: "tableItem.description"
                     }
                   ],
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
+                  staticClass: "form-control",
+                  attrs: { rows: "1", name: "item-description[]" },
+                  domProps: { value: _vm.tableItem.description },
+                  on: {
+                    blur: _vm.makeDirty,
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.tableItem,
+                        "description",
+                        $event.target.value
+                      )
                     }
-                    _vm.$set(
-                      _vm.tableItem,
-                      "unitprice",
-                      _vm._n($event.target.value)
-                    )
                   }
-                }
-              }),
-              _vm._v(" "),
-              _vm.isDirty && _vm.tableItem.dirty
-                ? [
-                    !_vm.unitPriceFloat
-                      ? _c("small", { staticClass: "error-control" }, [
-                          _vm._v("Uniprice must be floating number")
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    !_vm.unitPriceRequired
-                      ? _c("small", { staticClass: "error-control" }, [
-                          _vm._v("Uniprice is required")
-                        ])
-                      : _vm._e()
-                  ]
-                : _vm._e()
-            ],
-            2
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "item-quantity" }, [
-          _c(
-            "div",
-            { staticClass: "form-group-table" },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model.number",
-                    value: _vm.tableItem.quantity,
-                    expression: "tableItem.quantity",
-                    modifiers: { number: true }
-                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "item-unit-price" }, [
+              _c(
+                "div",
+                { staticClass: "form-group-table" },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model.number",
+                        value: _vm.tableItem.unitprice,
+                        expression: "tableItem.unitprice",
+                        modifiers: { number: true }
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "number",
+                      name: "item-unit-price[]",
+                      placeholder: "1.0",
+                      min: "1",
+                      step: "1"
+                    },
+                    domProps: { value: _vm.tableItem.unitprice },
+                    on: {
+                      keypress: _vm.checkForFloats,
+                      blur: [
+                        _vm.makeDirty,
+                        function($event) {
+                          return _vm.$forceUpdate()
+                        }
+                      ],
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.tableItem,
+                          "unitprice",
+                          _vm._n($event.target.value)
+                        )
+                      }
+                    }
+                  }),
+                  _vm._v(" "),
+                  _vm.isDirty && _vm.tableItem.dirty
+                    ? [
+                        !_vm.unitPriceFloat
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Uniprice must be floating number")
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !_vm.unitPriceRequired
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Uniprice is required")
+                            ])
+                          : _vm._e()
+                      ]
+                    : _vm._e()
                 ],
-                staticClass: "form-control",
-                attrs: {
-                  type: "number",
-                  min: "1",
-                  step: "1",
-                  name: "item-quantity[]",
-                  placeholder: "1"
-                },
-                domProps: { value: _vm.tableItem.quantity },
-                on: {
-                  keypress: _vm.checkForIntegers,
-                  blur: [
-                    _vm.makeDirty,
-                    function($event) {
-                      return _vm.$forceUpdate()
+                2
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "item-quantity" }, [
+              _c(
+                "div",
+                { staticClass: "form-group-table" },
+                [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model.number",
+                        value: _vm.tableItem.quantity,
+                        expression: "tableItem.quantity",
+                        modifiers: { number: true }
+                      }
+                    ],
+                    staticClass: "form-control",
+                    attrs: {
+                      type: "number",
+                      min: "1",
+                      step: "1",
+                      name: "item-quantity[]",
+                      placeholder: "1"
+                    },
+                    domProps: { value: _vm.tableItem.quantity },
+                    on: {
+                      keypress: _vm.checkForIntegers,
+                      blur: [
+                        _vm.makeDirty,
+                        function($event) {
+                          return _vm.$forceUpdate()
+                        }
+                      ],
+                      input: function($event) {
+                        if ($event.target.composing) {
+                          return
+                        }
+                        _vm.$set(
+                          _vm.tableItem,
+                          "quantity",
+                          _vm._n($event.target.value)
+                        )
+                      }
                     }
-                  ],
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(
-                      _vm.tableItem,
-                      "quantity",
-                      _vm._n($event.target.value)
-                    )
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _vm.isDirty && _vm.tableItem.dirty
-                ? [
-                    !_vm.quantityRequired
-                      ? _c("small", { staticClass: "error-control" }, [
-                          _vm._v("Quantity is required")
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    !_vm.quantityInteger
-                      ? _c("small", { staticClass: "error-control" }, [
-                          _vm._v("Quantity must be integer number")
-                        ])
-                      : _vm._e()
-                  ]
-                : _vm._e()
-            ],
-            2
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "item-total" }, [
-          _c("div", { staticClass: "form-group-table" }, [
-            _c("input", {
-              staticClass: "form-control",
-              attrs: {
-                type: "number",
-                name: "item-total[]",
-                placeholder: "0.00",
-                disabled: ""
-              },
-              domProps: { value: _vm.total }
-            })
-          ])
-        ])
-      ]
-    )
+                  }),
+                  _vm._v(" "),
+                  _vm.isDirty && _vm.tableItem.dirty
+                    ? [
+                        !_vm.quantityRequired
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Quantity is required")
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        !_vm.quantityInteger
+                          ? _c("small", { staticClass: "error-control" }, [
+                              _vm._v("Quantity must be integer number")
+                            ])
+                          : _vm._e()
+                      ]
+                    : _vm._e()
+                ],
+                2
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "item-total" }, [
+              _c("div", { staticClass: "form-group-table" }, [
+                _c("input", {
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "number",
+                    name: "item-total[]",
+                    placeholder: "0.00",
+                    disabled: ""
+                  },
+                  domProps: { value: _vm.total }
+                })
+              ])
+            ])
+          ]
+        )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "item-tax" }, [
+      _c("div", { staticClass: "form-group-table" }, [
+        _c("input", {
+          staticClass: "form-control",
+          attrs: { type: "number", name: "item-tax[]", placeholder: "1" }
+        })
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -93462,8 +93901,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
