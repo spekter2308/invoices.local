@@ -229,6 +229,10 @@
                     <h5 class="flex" >Subtotal</h5>
                     <span>{{total}}</span>
                 </div>
+                <div class="with-tax level" v-if="defaultSettings.tax">
+                    <h5 class="flex" >+ Tax</h5>
+                    <span>{{withTax}}</span>
+                </div>
                 <div class="border-top pb-2"></div>
                 <div class="level">
                     <h5 class="flex" >Total</h5>
@@ -446,6 +450,7 @@
                         item: null,
                         quantity: 1,
                         unitprice: 1,
+                        tax: 0,
                         dirty: false,
                         correct: false
                     }
@@ -543,8 +548,15 @@
                     return acc && !curr.correct
                 }, true)
             },
+            withTax() {
+                    return this.invoice.selectedItems.reduce((acc, curr) =>
+                    acc+(curr.unitprice*curr.quantity*curr.itemtax/100), 0)
+            },
             total() {
-                return this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0)
+                return (this.defaultSettings.tax) ?
+                    this.invoice.selectedItems.reduce((acc, curr) =>
+                    acc+(curr.unitprice*curr.quantity + curr.unitprice*curr.quantity*curr.itemtax/100), 0) :
+                    this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0)
             },
             balance() {
                 return this.total - this.amount_paid;

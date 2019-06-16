@@ -72,8 +72,8 @@
                 editing: false,
 
                 settings: {
-                    payment: this.defaultOptions.show_payment || false,
-                    tax: this.defaultOptions.show_tax || false,
+                    payment: this.defaultOptions.show_payment ? true : false,
+                    tax: this.defaultOptions.show_tax ? true : false,
                     format: this.defaultOptions.date_format || "dd.MM.yyyy",
                     language: this.defaultOptions.language || 'english',
                     currency: this.defaultOptions.currency || 'usd',

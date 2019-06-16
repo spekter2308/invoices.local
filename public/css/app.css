@@ -15123,15 +15123,33 @@ a.text-dark:focus {
   padding: 3px 14px;
 }
 
+.invoice-item-box .items-table-header-show-with-tax,
+.invoice-item-box .items-table-row-show-with-tax {
+  display: grid;
+  grid-template-columns: 3fr 6fr 1fr 1fr 1fr 1fr;
+}
+
+.invoice-item-box .items-table-header-show-with-tax {
+  margin: 0;
+  background-color: #54A0E7;
+  color: #eee;
+}
+
+.invoice-item-box .items-table-header-show-with-tax > div {
+  padding: 3px 14px;
+}
+
 .invoice-item-box .items-table-body {
   border: 1px solid #ced4da;
 }
 
-.invoice-item-box .items-table-row-show {
+.invoice-item-box .items-table-row-show,
+.invoice-item-box .items-table-row-show-with-tax {
   margin-top: 5px;
 }
 
-.invoice-item-box .items-table-row-show > div {
+.invoice-item-box .items-table-row-show > div,
+.invoice-item-box .items-table-row-show-with-tax > div {
   padding: 3px 14px;
 }
 
@@ -15184,6 +15202,17 @@ a.text-dark:focus {
   grid-area: invoice-box-6;
   margin-top: 30px;
   margin-left: 30px;
+}
+
+.with-tax {
+  font-size: 12px;
+  font-style: italic;
+  margin-top: 10px;
+  margin-left: 40px;
+}
+
+.with-tax > span {
+  font-size: 16px;
 }
 
 .js-invoice-filter {

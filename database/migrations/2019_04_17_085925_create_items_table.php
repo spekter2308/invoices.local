@@ -20,7 +20,7 @@ class CreateItemsTable extends Migration
             $table->string('description')->nullable();
             $table->float('unitprice');
             $table->float('quantity');
-            $table->double('tax')->default(0)->nullable();
+            $table->double('itemtax')->default(0)->nullable();
 
             //for vue validation
             $table->boolean('dirty')->nullable();

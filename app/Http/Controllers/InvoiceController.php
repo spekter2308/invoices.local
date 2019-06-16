@@ -82,6 +82,8 @@ class InvoiceController extends Controller
             $id = session()->get('id');
             $invoice = Invoice::findOrFail($id);
 
+            $settings = $invoice->settings;
+
             $invoiceCustomer = $invoice->customer;
             $invoiceCompany = $invoice->company;
             foreach ($invoice->items as $item) {
@@ -90,6 +92,7 @@ class InvoiceController extends Controller
                     'description' => $item->description,
                     'quantity' => $item->quantity,
                     'unitprice' => $item->unitprice,
+                    'itemtax' => $item->itemtax,
                     'dirty' => $item->dirty,
                     'correct' => $item->correct
                 ];
@@ -98,9 +101,11 @@ class InvoiceController extends Controller
             //return $invoiceItems;
             session()->forget('id');
         } else {
+            $settings = '{}';
             $invoiceCustomer = '{}';
             $invoiceCompany = '{}';
-            $invoiceItems = [['item' => '', 'description' => '', 'quantity' => 1, 'unitprice' => 1, 'dirty' => false, 'correct' => false]];
+            $invoiceItems = [['item' => '', 'description' => '', 'quantity' => 1, 'unitprice' => 1, 'itemtax' => 0, 'dirty' =>
+                false, 'correct' => false]];
         }
 
         //check for unique invoice number
@@ -127,7 +132,7 @@ class InvoiceController extends Controller
             'customers' => $customers,
             'companies' => $companies,
             'mode' => 'create',
-            'settings' => '{}'
+            'settings' => $settings
         ]);
     }
 
@@ -150,8 +155,12 @@ class InvoiceController extends Controller
             $customerId = $data['selectedCustomer'];
         }
 
-        $total = collect($data['selectedItems'])->sum(function ($item) {
+        $subtotal = collect($data['selectedItems'])->sum(function ($item) {
             return $item['quantity'] * $item['unitprice'];
+        });
+
+        $total = collect($data['selectedItems'])->sum(function ($item) {
+            return $item['quantity'] * $item['unitprice'] + $item['quantity'] * $item['unitprice']*$item['itemtax']/100;
         });
 
         $invoice = Invoice::create([
@@ -162,7 +171,7 @@ class InvoiceController extends Controller
             'invoice_date' => $data['selectedDateFrom'],
             'due_date' => $data['selectedDateTo'],
             'amount_paid' => 0,
-            'subtotal' => $total,
+            'subtotal' => $subtotal,
             'total' => $total,
             'balance' => $total,
             'status' => 'Draft'
@@ -205,8 +214,16 @@ class InvoiceController extends Controller
         $invoice = Invoice::findOrFail($id);
 
         //dd($invoice->company->invoice_notes);
+        if ($invoice->settings->show_tax) {
+            $tax = 0;
+            foreach ($invoice->items as $item) {
+                $tax += $item->unitprice * $item->quantity * $item->itemtax/100;
+            }
+            return view('invoices.show-with-tax', compact('invoice', 'tax'));
+        } else {
+            return view('invoices.show', compact('invoice'));
+        }
 
-        return view('invoices.show', compact('invoice'));
     }
 
     public function edit($id)
@@ -264,8 +281,12 @@ class InvoiceController extends Controller
             $customerId = $data['selectedCustomer'];
         }
 
-        $total = collect($data['selectedItems'])->sum(function ($item) {
+        $subtotal = collect($data['selectedItems'])->sum(function ($item) {
             return $item['quantity'] * $item['unitprice'];
+        });
+
+        $total = collect($data['selectedItems'])->sum(function ($item) {
+            return $item['quantity'] * $item['unitprice'] + $item['quantity'] * $item['unitprice']*$item['itemtax']/100;
         });
 
         $old_total = $invoice->total;
@@ -277,7 +298,7 @@ class InvoiceController extends Controller
             'invoice_date' => $data['selectedDateFrom'],
             'due_date' => $data['selectedDateTo'],
             'amount_paid' => 0,
-            'subtotal' => $total,
+            'subtotal' => $subtotal,
             'total' => $total,
             'balance' => $total,
         ]);

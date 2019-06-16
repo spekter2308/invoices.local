@@ -95,11 +95,11 @@
             },
             tax: {
                 required: true,
-                type: Boolean
+                type: [Boolean, Number]
             },
             payment: {
                 required: true,
-                type: Boolean
+                type: [Boolean, Number]
             }
         },
         computed: {
@@ -119,6 +119,7 @@
                         description: null,
                         quantity: 1,
                         unitprice: 1,
+                        itemtax: 0,
                         dirty: false
                     }
                 )
@@ -134,6 +135,7 @@
                     desc: this.description,
                     unitPrice: this.unitprice,
                     count: this.quantity,
+                    itemTax: this.itemtax,
                     total: this.total
                 }
                 this.$emit('change', items)

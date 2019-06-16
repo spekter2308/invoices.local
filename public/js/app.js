@@ -4561,8 +4561,8 @@ __webpack_require__.r(__webpack_exports__);
     return {
       editing: false,
       settings: {
-        payment: this.defaultOptions.show_payment || false,
-        tax: this.defaultOptions.show_tax || false,
+        payment: this.defaultOptions.show_payment ? true : false,
+        tax: this.defaultOptions.show_tax ? true : false,
         format: this.defaultOptions.date_format || "dd.MM.yyyy",
         language: this.defaultOptions.language || 'english',
         currency: this.defaultOptions.currency || 'usd'
@@ -4721,6 +4721,10 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+//
+//
+//
+//
 //
 //
 //
@@ -5170,6 +5174,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         item: null,
         quantity: 1,
         unitprice: 1,
+        tax: 0,
         dirty: false,
         correct: false
       }];
@@ -5349,8 +5354,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         return acc && !curr.correct;
       }, true);
     },
-    total: function total() {
+    withTax: function withTax() {
       return this.invoice.selectedItems.reduce(function (acc, curr) {
+        return acc + curr.unitprice * curr.quantity * curr.itemtax / 100;
+      }, 0);
+    },
+    total: function total() {
+      return this.defaultSettings.tax ? this.invoice.selectedItems.reduce(function (acc, curr) {
+        return acc + (curr.unitprice * curr.quantity + curr.unitprice * curr.quantity * curr.itemtax / 100);
+      }, 0) : this.invoice.selectedItems.reduce(function (acc, curr) {
         return acc + curr.unitprice * curr.quantity;
       }, 0);
     },
@@ -5601,11 +5613,11 @@ var id = 1;
     },
     tax: {
       required: true,
-      type: Boolean
+      type: [Boolean, Number]
     },
     payment: {
       required: true,
-      type: Boolean
+      type: [Boolean, Number]
     }
   },
   computed: {
@@ -5624,6 +5636,7 @@ var id = 1;
         description: null,
         quantity: 1,
         unitprice: 1,
+        itemtax: 0,
         dirty: false
       });
     },
@@ -5636,6 +5649,7 @@ var id = 1;
         desc: this.description,
         unitPrice: this.unitprice,
         count: this.quantity,
+        itemTax: this.itemtax,
         total: this.total
       };
       this.$emit('change', items);
@@ -6064,6 +6078,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "TableItem",
@@ -6081,7 +6097,7 @@ __webpack_require__.r(__webpack_exports__);
       required: true
     },
     showTax: {
-      type: Boolean,
+      type: [Boolean, Number],
       required: true
     }
   },
@@ -6121,7 +6137,7 @@ __webpack_require__.r(__webpack_exports__);
         return 0;
       }
 
-      return this.tableItem.unitprice * this.tableItem.quantity;
+      return this.showTax ? this.tableItem.unitprice * this.tableItem.quantity + this.tableItem.unitprice * this.tableItem.quantity * this.tableItem.itemtax / 100 : this.tableItem.unitprice * this.tableItem.quantity;
     }
   },
   methods: {
@@ -72172,6 +72188,14 @@ var render = function() {
             _c("span", [_vm._v(_vm._s(_vm.total))])
           ]),
           _vm._v(" "),
+          _vm.defaultSettings.tax
+            ? _c("div", { staticClass: "with-tax level" }, [
+                _c("h5", { staticClass: "flex" }, [_vm._v("+ Tax")]),
+                _vm._v(" "),
+                _c("span", [_vm._v(_vm._s(_vm.withTax))])
+              ])
+            : _vm._e(),
+          _vm._v(" "),
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
           _c("div", { staticClass: "level" }, [
@@ -73141,7 +73165,44 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _vm._m(0),
+            _c("div", { staticClass: "item-tax" }, [
+              _c("div", { staticClass: "form-group-table" }, [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model.number",
+                      value: _vm.tableItem.itemtax,
+                      expression: "tableItem.itemtax",
+                      modifiers: { number: true }
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: {
+                    type: "number",
+                    name: "item-tax[]",
+                    placeholder: "0",
+                    min: "0"
+                  },
+                  domProps: { value: _vm.tableItem.itemtax },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(
+                        _vm.tableItem,
+                        "itemtax",
+                        _vm._n($event.target.value)
+                      )
+                    },
+                    blur: function($event) {
+                      return _vm.$forceUpdate()
+                    }
+                  }
+                })
+              ])
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "item-total" }, [
               _c("div", { staticClass: "form-group-table" }, [
@@ -73400,21 +73461,7 @@ var render = function() {
         )
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "item-tax" }, [
-      _c("div", { staticClass: "form-group-table" }, [
-        _c("input", {
-          staticClass: "form-control",
-          attrs: { type: "number", name: "item-tax[]", placeholder: "1" }
-        })
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

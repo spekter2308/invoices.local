@@ -55,7 +55,9 @@
            <div class="item-tax">
                <div class="form-group-table">
                    <input type="number" class="form-control"
-                          name="item-tax[]" placeholder="1">
+                          name="item-tax[]" placeholder="0"
+                          min="0"
+                          v-model.number="tableItem.itemtax">
                </div>
            </div>
            <div class="item-total">
@@ -149,7 +151,7 @@
                 required: true
             },
             showTax: {
-                type: Boolean,
+                type: [Boolean, Number],
                 required: true
             }
         },
@@ -190,7 +192,10 @@
                 if (!this.tableItem.unitprice || !this.tableItem.quantity){
                     return 0;
                 }
-                return this.tableItem.unitprice * this.tableItem.quantity;
+                return (this.showTax) ? this.tableItem.unitprice *
+                    this.tableItem.quantity +
+                    this.tableItem.unitprice * this.tableItem.quantity * this.tableItem.itemtax/100 :
+                    this.tableItem.unitprice * this.tableItem.quantity;
             }
         },
         methods: {
