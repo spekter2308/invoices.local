@@ -19,10 +19,10 @@
                 </div>
                 <payment-details :invoice="{{json_encode($invoice)}}"
                                  :payment-history="{{$paymentHistory}}"></payment-details>
-    
+
                 <div class="mt-3 invoice-create-body">
                     <div class="wrapper-invoice-create">
-        
+
                     <!-- {{--Company and Customer part--}} -->
                         <div class="invoice-box invoice-from-to-customer-box">
                             <div class="container">
@@ -40,7 +40,7 @@
                                 </div>
                             </div>
                         </div>
-        
+
                     <!-- {{--Logo part--}} -->
                         <div class="invoice-box invoice-logo-box">
                             <div class="company-logo">
@@ -49,7 +49,7 @@
                                 </a>
                             </div>
                         </div>
-        
+
                     <!-- {{--Date and Nubmer part--}} -->
                         <div class="invoice-box invoice-num-date-box">
                             <div class="row level">
@@ -85,12 +85,12 @@
                                 </div>
                             </div>
                         </div>
-        
+
                     <!-- {{--Items part--}} -->
                         <div class="invoice-box invoice-item-box">
                             <div class="items-wrapper">
 
-                                <div class="items-table-header-show">
+                                <div class="items-table-header-show-with-tax">
 
                                     <div class="item-name">
                                         Item
@@ -104,6 +104,9 @@
                                     <div class="item-quantity">
                                         Quantity
                                     </div>
+                                    <div class="item-tax">
+                                        Tax
+                                    </div>
                                     <div class="item-amount">
                                         Amount
                                     </div>
@@ -111,7 +114,7 @@
 
                                 <div class="items-table-body">
                                     @foreach ($invoice->items as $item)
-                                        <div class="items-table-row-show">
+                                        <div class="items-table-row-show-with-tax">
                                             <div class="item-name">
                                                 <div class="form-group-table">
                                                     {{ $item->item }}
@@ -132,20 +135,26 @@
                                                     {{ $item->quantity }}
                                                 </div>
                                             </div>
+                                            <div class="item-tax">
+                                                <div class="form-group-table">
+                                                    {{ $item->itemtax }}
+                                                </div>
+                                            </div>
                                             <div class="item-total">
                                                 <div class="form-group-table">
-                                                    {{ $item->unitprice * $item->quantity }}
+                                                    {{ $item->unitprice * $item->quantity + $item->unitprice *
+                                                    $item->quantity * $item->itemtax/100}}
                                                 </div>
                                             </div>
                                         </div>
                                     @endforeach
                                     <div class="invoice-table-row-notes">
                                         <div class="form-group">
-                                            <p> NOTES: {{ $invoice->company->invoice_notes }}</p>
+                                            <p> <span style="text-decoration: underline">NOTES</span>: {!! nl2br(str_replace(" ", " &nbsp;", $invoice->company->invoice_notes))  !!}</p>
                                         </div>
                                     </div>
                                 </div>
-                    
+
                                 <div class="invoice-table-result">
                                     <div class="invoice-empty">
                                     </div>
@@ -153,12 +162,18 @@
                                     <div class="invoice-total">
                                         <div class="level mt-2">
                                             <h6 class="flex" >Subtotal</h6>
-                                            <span>{{ $subtotal }}</span>
+                                            <span>{{ $invoice->subtotal }}</span>
+                                        </div>
+                                        <div class="level mt-2 with-tax">
+                                            <h6 class="flex" >+ Tax</h6>
+                                            <span>
+                                                {{ $tax }}
+                                            </span>
                                         </div>
                                         <div class="border-top pb-2"></div>
                                         <div class="level">
                                             <h6 class="flex" >Total</h6>
-                                            <span>{{ $total }}</span>
+                                            <span>{{ $invoice->total }}</span>
                                         </div>
                                         <div class="level">
                                             <h6 class="flex" >Amount Paid</h6>
@@ -167,13 +182,13 @@
                                         <div class="border-top pb-2"></div>
                                         <div class="level">
                                             <h6 class="flex" >Balance Due</h6>
-                                            <span>{{ $balance }}</span>
+                                            <span>{{ $invoice->balance }}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-        
+
                     </div>
                 </div>
             </div>

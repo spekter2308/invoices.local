@@ -177,12 +177,12 @@
                                     <div class="invoice-total">
                                         <div class="level mt-2">
                                             <h6 class="flex" >Subtotal</h6>
-                                            <span>{{ $invoice->subtotal }}</span>
+                                            <span>{{ $subtotal }}</span>
                                         </div>
                                         <div class="border-top pb-2"></div>
                                         <div class="level">
                                             <h6 class="flex" >Total</h6>
-                                            <span>{{ $invoice->total }}</span>
+                                            <span>{{ $total }}</span>
                                         </div>
                                         <div class="level">
                                             <h6 class="flex" >Amount Paid</h6>
@@ -191,7 +191,7 @@
                                         <div class="border-top pb-2"></div>
                                         <div class="level">
                                             <h6 class="flex" >Balance Due</h6>
-                                            <span>{{ $invoice->balance }}</span>
+                                            <span>{{ $balance }}</span>
                                         </div>
                                     </div>
                                 </div>

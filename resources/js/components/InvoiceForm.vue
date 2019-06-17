@@ -227,7 +227,7 @@
                 <div class="border-top pb-2"></div>
                 <div class="level">
                     <h5 class="flex" >Subtotal</h5>
-                    <span>{{total}}</span>
+                    <span>{{subtotal}}</span>
                 </div>
                 <div class="with-tax level" v-if="defaultSettings.tax">
                     <h5 class="flex" >+ Tax</h5>
@@ -246,7 +246,7 @@
                 <div class="border-top pb-2"></div>
                 <div class="level">
                     <h5 class="flex" >Balance Due</h5>
-                    <span>{{total + ' ' + currency}}</span>
+                    <span>{{balance + ' ' + currency}}</span>
                 </div>
                 <div class="border-top"></div>
             </div>
@@ -551,6 +551,9 @@
             withTax() {
                     return this.invoice.selectedItems.reduce((acc, curr) =>
                     acc+(curr.unitprice*curr.quantity*curr.itemtax/100), 0)
+            },
+            subtotal() {
+                return this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0)
             },
             total() {
                 return (this.defaultSettings.tax) ?

@@ -177,12 +177,6 @@ class InvoiceController extends Controller
             'status' => 'Draft'
         ]);
 
-        InvoiceHistory::create([
-            'invoice_id' => $invoice->id,
-            'user_id' => auth()->id(),
-            'changes' => "Invoice created, amount $invoice->balance"
-        ]);
-
         $invoice = DB::transaction(function () use ($invoice, $request) {
             $invoice->storeHasMany([
                 'items' => $request->selectedItems
@@ -202,6 +196,20 @@ class InvoiceController extends Controller
             ]);
         }
 
+        $tax = $this->getTax($invoice);
+        $totalWithoutTax = $invoice->total - $tax;
+        if ($invoice->settings->show_tax) {
+            $changes = "Invoice created, amount $invoice->balance with tax ($tax)";
+        } else {
+            $changes = "Invoice created, amount $totalWithoutTax without tax";
+        }
+
+        InvoiceHistory::create([
+            'invoice_id' => $invoice->id,
+            'user_id' => auth()->id(),
+            'changes' => $changes
+        ]);
+
         return [
             'invoice' => $invoice,
             'settings' => $settings
@@ -213,15 +221,16 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
-        //dd($invoice->company->invoice_notes);
+        $tax = $invoice->total - $invoice->subtotal;
+
         if ($invoice->settings->show_tax) {
-            $tax = 0;
-            foreach ($invoice->items as $item) {
-                $tax += $item->unitprice * $item->quantity * $item->itemtax/100;
-            }
+
             return view('invoices.show-with-tax', compact('invoice', 'tax'));
         } else {
-            return view('invoices.show', compact('invoice'));
+            $total = $subtotal = $invoice->total - $tax;
+            $balance = $invoice->balance - $tax;
+
+            return view('invoices.show', compact('invoice', 'total', 'subtotal', 'balance'));
         }
 
     }
@@ -290,6 +299,8 @@ class InvoiceController extends Controller
         });
 
         $old_total = $invoice->total;
+        $previous_show_tax = $invoice->settings->show_tax;
+        $old_total_without_tax = $invoice->subtotal;
 
         $invoice->update([
             'number' => $data['selectedInvoiceNumber'],
@@ -301,12 +312,6 @@ class InvoiceController extends Controller
             'subtotal' => $subtotal,
             'total' => $total,
             'balance' => $total,
-        ]);
-
-        InvoiceHistory::create([
-            'invoice_id' => $invoice->id,
-            'user_id' => auth()->id(),
-            'changes' => "Total changed from $old_total to $invoice->total"
         ]);
 
         $invoice = DB::transaction(function () use ($invoice, $request) {
@@ -326,6 +331,37 @@ class InvoiceController extends Controller
                 'date_format' => $setting['format'],
                 'language' => $setting['language'],
                 'show_tax' => $setting['tax']
+            ]);
+        }
+
+        $tax = $invoice->total - $invoice->subtotal;
+        $totalWithoutTax = $invoice->subtotal;
+
+        $wasChanged = true;
+        if ($invoice->settings->show_tax) {
+            if ($previous_show_tax == $invoice->settings->show_tax) {
+                if ($old_total == $invoice->total)
+                    $wasChanged = false;
+                $changes = "Total changed from $old_total to $invoice->total";
+            } else {
+                $changes = "Total changed from $old_total_without_tax to $invoice->total. Tax was included ($tax)";
+            }
+        } else {
+            if ($previous_show_tax == $invoice->settings->show_tax) {
+                if ($old_total_without_tax == $totalWithoutTax)
+                    $wasChanged = false;
+                $changes = "Total changed from $old_total_without_tax to $totalWithoutTax";
+            } else {
+                $wasChanged = true;
+                $changes = "Total changed from $old_total to $totalWithoutTax. Tax($tax) was deleted";
+            }
+        }
+
+        if ($wasChanged) {
+            InvoiceHistory::create([
+                'invoice_id' => $invoice->id,
+                'user_id' => auth()->id(),
+                'changes' => $changes
             ]);
         }
 
@@ -365,13 +401,29 @@ class InvoiceController extends Controller
 
     public function recordPayment($id)
     {
-
         $invoice = Invoice::findOrFail($id);
 
-        return view('invoices.record-payment', [
-            'invoice' => $invoice,
-            'paymentHistory' => $invoice->payments
-        ]);
+        $tax = $invoice->total - $invoice->subtotal;
+
+        if ($invoice->settings->show_tax) {
+
+            return view('invoices.record-payment-with-tax', [
+                'invoice' => $invoice,
+                'tax' => $tax,
+                'paymentHistory' => $invoice->payments
+            ]);
+        } else {
+            $total = $subtotal = $invoice->total - $tax;
+            $balance = $invoice->balance - $tax;
+
+            return view('invoices.record-payment', [
+                'invoice' => $invoice,
+                'total' => $total,
+                'subtotal' => $subtotal,
+                'balance' => $balance,
+                'paymentHistory' => $invoice->payments
+            ]);
+        }
     }
 
     public function recordPaymentSave($id)
@@ -528,6 +580,4 @@ class InvoiceController extends Controller
             //return $pdf->stream('document.pdf');
         }
     }
-
-
 }
