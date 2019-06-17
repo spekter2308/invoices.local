@@ -44,10 +44,6 @@
             </div>
         </div>
 
-
-           <!-- <template v-for="(child, index) of children">
-                <component :is="child" :key="child.index" @input="selectedItems"></component>
-            </template>-->
            <template v-for="(el, index) in items">
               <div class="d-flex flex-row">
                   <template>
@@ -67,6 +63,16 @@
                   ></TableItem>
               </div>
            </template>
+            <template v-if="payment">
+                <div class="show-payment-for-invoice">
+                    <div class="show-payment-head">
+                        Payment
+                    </div>
+                    <div class="show-payment-body">
+                        {{ paymentValue }}
+                    </div>
+                </div>
+            </template>
         <br>
         <button type="button" class="btn" @click="addNewLine()">New Line</button>
 
@@ -100,6 +106,10 @@
             payment: {
                 required: true,
                 type: [Boolean, Number]
+            },
+            paymentValue: {
+                required: true,
+                type: [Number, String]
             }
         },
         computed: {

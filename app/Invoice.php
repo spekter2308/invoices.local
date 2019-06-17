@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Carbon\Carbon;
 use function foo\func;
 use Illuminate\Database\Eloquent\Model;
 use App\Helper\HasManyRelation;
@@ -71,5 +72,43 @@ class Invoice extends Model
     public function scopeFilter($query, $filters)
     {
         return $filters->apply($query);
+    }
+
+    public function getInvoiceDateAttribute($value)
+    {
+        $date = Carbon::parse($value);
+
+        if ($this->settings->date_format == 'dd.MM.yyyy') {
+            $format = 'd.m.Y';
+        } elseif ($this->settings->date_format == 'dd/MM/yyyy') {
+            $format = 'd/m/Y';
+        } elseif ($this->settings->date_format == 'MM/dd/yyyy') {
+            $format = 'm/d/Y';
+        } elseif ($this->settings->date_format == 'dd-MM-yyyy') {
+            $format = 'd-m-Y';
+        } else {
+            $format = 'Y-m-d';
+        }
+
+        return $date->format($format);
+    }
+
+    public function getDueDateAttribute($value)
+    {
+        $date = Carbon::parse($value);
+
+        if ($this->settings->date_format == 'dd.MM.yyyy') {
+            $format = 'd.m.Y';
+        } elseif ($this->settings->date_format == 'dd/MM/yyyy') {
+            $format = 'd/m/Y';
+        } elseif ($this->settings->date_format == 'MM/dd/yyyy') {
+            $format = 'm/d/Y';
+        } elseif ($this->settings->date_format == 'dd-MM-yyyy') {
+            $format = 'd-m-Y';
+        } else {
+            $format = 'Y-m-d';
+        }
+
+        return $date->format($format);
     }
 }

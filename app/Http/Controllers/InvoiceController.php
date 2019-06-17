@@ -196,7 +196,7 @@ class InvoiceController extends Controller
             ]);
         }
 
-        $tax = $this->getTax($invoice);
+        $tax = $invoice->total - $invoice->subtotal;
         $totalWithoutTax = $invoice->total - $tax;
         if ($invoice->settings->show_tax) {
             $changes = "Invoice created, amount $invoice->balance with tax ($tax)";
@@ -572,10 +572,13 @@ class InvoiceController extends Controller
 
         $invoice = Invoice::findOrFail($invoice);
 
+        $tax = $invoice->total - $invoice->subtotal;
+        $balance = $invoice->balance - $tax;
+
         if ($print) {
-            return view('pdf.invoices', ['invoice' => $invoice]);
+            return view('pdf.invoices', ['invoice' => $invoice, 'tax' => $tax, 'balance' => $balance]);
         } else {
-            $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice]);
+            $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice, 'tax' => $tax, 'balance' => $balance]);
             return $pdf->download('Invoice ' . $invoice->number . '.pdf');
             //return $pdf->stream('document.pdf');
         }

@@ -1,4 +1,4 @@
-<template>
+    <template>
     <form id="createInvoice" @submit.prevent="onSubmit">
         <!-- @csrf -->
         <slot></slot>
@@ -48,11 +48,11 @@
             <div class="invoice-box invoice-logo-box mt-3">
                 <div v-if="invoice.selectedCompany && url" class="company-logo">
                     <img :src="'/upload/company/' + url" class="logo">
-                    <h3 style="letter-spacing: 6px; margin-top: 20px;">INVOICE</h3>
+                    <h3 style="letter-spacing: 6px; margin-top: 20px;">{{ $t("message.invoice") }}</h3>
                 </div>
 
                 <div v-else>
-                    <h1 style="letter-spacing: 6px; float: right;">INVOICE</h1>
+                    <h1 style="letter-spacing: 6px; float: right;">{{ $t("message.invoice") }}</h1>
                 </div>
                 <!--@change="f => invoice.selectedFile=f"
                 @blur="$v.invoice.selectedFile.$touch()"-->
@@ -214,6 +214,7 @@
                 <items-table :items="invoice.selectedItems"
                              :tax="defaultSettings.tax"
                              :payment="defaultSettings.payment"
+                             :payment-value="this.amount_paid"
                              :is-dirty="$v.$dirty"
                 ></items-table>
                 <small v-if="isTableRowsInvalid && $v.$dirty" class="error-control-table">Please type table data</small>
@@ -227,21 +228,21 @@
                 <div class="border-top pb-2"></div>
                 <div class="level">
                     <h5 class="flex" >Subtotal</h5>
-                    <span>{{subtotal}}</span>
+                    <span>{{subtotal + ' ' + currency}}</span>
                 </div>
                 <div class="with-tax level" v-if="defaultSettings.tax">
                     <h5 class="flex" >+ Tax</h5>
-                    <span>{{withTax}}</span>
+                    <span>{{withTax + ' ' + currency}}</span>
                 </div>
                 <div class="border-top pb-2"></div>
                 <div class="level">
                     <h5 class="flex" >Total</h5>
-                    <span>{{total}}</span>
+                    <span>{{total + ' ' + currency}}</span>
                 </div>
                 <div class="border-top pb-2"></div>
                 <div class="level">
                     <h5 class="flex" >Amount Paid</h5>
-                    <span>{{amount_paid}}</span>
+                    <span>{{amount_paid + ' ' + currency}}</span>
                 </div>
                 <div class="border-top pb-2"></div>
                 <div class="level">
@@ -268,7 +269,7 @@
                         tax: false,
                         format: "dd.MM.yyyy",
                         language: 'english',
-                        currency: 'usd',
+                        currency: '$',
                     }
                 },
                 required: true
@@ -531,11 +532,21 @@
                     tax: this.defaultOptions.show_tax || false,
                     format: this.defaultOptions.date_format || "dd.MM.yyyy",
                     language: this.defaultOptions.language || 'english',
-                    currency: this.defaultOptions.currency || 'usd',
+                    currency: this.defaultOptions.currency || '$',
                 }, this.settings);
             },
+            locale() {
+                if (this.defaultSettings.language == 'english') {
+                    this.$i18n.locale = 'en';
+                } else if (this.defaultSettings.language == 'germany') {
+                    this.$i18n.locale = 'gr';
+                } else {
+                    this.$i18n.locale = 'sp';
+                }
+                return this.$i18n.locale;
+            },
             currency() {
-                return this.defaultSettings.currency === "usd" ? "$" : "€";
+                return this.defaultSettings.currency;
             },
             url() {
                 return this.companies.find(el => el.id === this.invoice.selectedCompany).logo_img

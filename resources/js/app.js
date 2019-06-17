@@ -46,13 +46,40 @@ import Vuelidate from 'vuelidate'
 import router from './routes'
 import store from './store'
 import BootstrapVue from 'bootstrap-vue'
+import VueI18n from 'vue-i18n'
 
 Vue.use(Vuelidate)
 Vue.use(router)
 Vue.use(BootstrapVue)
+Vue.use(VueI18n)
 
 window.eventBus = new Vue()
+
+const messages = {
+    en: {
+        message: {
+            invoice: 'INVOICE'
+        }
+    },
+    gr: {
+        message: {
+            invoice: 'RECHNUNG'
+        }
+    },
+    sp: {
+        message: {
+            invoice: 'FACTURA'
+        }
+    }
+}
+
+const i18n = new VueI18n({
+    locale: 'en',
+    messages,
+})
+
 const app = new Vue({
+    i18n,
     el: '#app',
     router,
     store,
@@ -67,4 +94,11 @@ const app = new Vue({
         }
     }
 });
+
+/*const i18n = new VueI18n({
+    locale: 'gr', // set locale
+    messages, // set locale messages
+})*/
+
+/*new Vue({ i18n }).$mount('#app')*/
 

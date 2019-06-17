@@ -7,8 +7,8 @@
                     <div class="currency">
                         <label>Currency</label>
                         <select v-model="settings.currency">
-                            <option value="usd">$ USD</option>
-                            <option value="euro">€ EURO</option>
+                            <option value="$">$ USD</option>
+                            <option value="€">€ EURO</option>
                         </select>
                     </div>
                     <div>
@@ -76,7 +76,7 @@
                     tax: this.defaultOptions.show_tax ? true : false,
                     format: this.defaultOptions.date_format || "dd.MM.yyyy",
                     language: this.defaultOptions.language || 'english',
-                    currency: this.defaultOptions.currency || 'usd',
+                    currency: this.defaultOptions.currency || '$',
                 },
             }
         },

@@ -14,7 +14,16 @@ class InvoiceMailController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
-        return view('invoices.send_mail', compact('invoice'));
+        $tax = $invoice->total - $invoice->subtotal;
+
+        if ($invoice->settings->show_tax) {
+            return view('invoices.send_mail-with-tax', compact('invoice', 'tax'));
+        } else {
+            $total = $subtotal = $invoice->total - $tax;
+            $balance = $invoice->balance - $tax;
+
+            return view('invoices.send_mail', compact('invoice', 'total', 'subtotal', 'balance'));
+        }
     }
 
     public function store($id)

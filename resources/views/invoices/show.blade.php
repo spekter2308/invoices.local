@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                       <span>{{ Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}</span>
+                                       <span>{{ $invoice->invoice_date }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -104,7 +104,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <span>{{ Carbon\Carbon::parse($invoice->due_date)->format('d/m/Y') }}</span>
+                                        <span>{{ $invoice->due_date }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -163,6 +163,16 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                    @if ($invoice->settings->show_payment)
+                                        <div class="show-payment-for-invoice" style="margin: 3px;">
+                                            <div class="show-payment-head">
+                                                Payment
+                                            </div>
+                                            <div class="show-payment-body">
+                                                {{ $invoice->amount_paid }}
+                                            </div>
+                                        </div>
+                                    @endif
                                     <div class="invoice-table-row-notes">
                                         <div class="form-group">
                                             <p> <span style="text-decoration: underline">NOTES</span>: {!! nl2br(str_replace(" ", " &nbsp;", $invoice->company->invoice_notes))  !!}</p>
@@ -177,21 +187,21 @@
                                     <div class="invoice-total">
                                         <div class="level mt-2">
                                             <h6 class="flex" >Subtotal</h6>
-                                            <span>{{ $subtotal }}</span>
+                                            <span>{{ $subtotal . ' ' . $invoice->settings->currency }}</span>
                                         </div>
                                         <div class="border-top pb-2"></div>
                                         <div class="level">
                                             <h6 class="flex" >Total</h6>
-                                            <span>{{ $total }}</span>
+                                            <span>{{ $total . ' ' . $invoice->settings->currency }}</span>
                                         </div>
                                         <div class="level">
                                             <h6 class="flex" >Amount Paid</h6>
-                                            <span>{{$invoice->amount_paid}}</span>
+                                            <span>{{$invoice->amount_paid . ' ' . $invoice->settings->currency}}</span>
                                         </div>
                                         <div class="border-top pb-2"></div>
                                         <div class="level">
                                             <h6 class="flex" >Balance Due</h6>
-                                            <span>{{ $balance }}</span>
+                                            <span>{{ $balance . ' ' . $invoice->settings->currency }}</span>
                                         </div>
                                     </div>
                                 </div>

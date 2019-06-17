@@ -30,8 +30,8 @@
                     <div class="flex">
                @if ($mode === 'edit')
                     <a href="/invoices/{{ $invoice->id }}" class="btn btn-secondary">View</a>
-                    <a href="#" class="btn btn-secondary">Print</a>
-                    <a href="#" class="btn btn-secondary">PDF</a>
+                    <a href="{{route('generate-pdf', ['invoice' => $invoice->id, 'print' => 'print'])}}" target="_blank" class="btn btn-secondary">Print</a>
+                    <a href="{{route('generate-pdf', ['invoice' => $invoice->id])}}" class="btn btn-secondary">PDF</a>
                     <a href="/invoice-mail/create/{{ $invoice->id }}" class="btn btn-secondary">Send</a>
                             <a href="{{route('record-payment', ['invoice' => $invoice->id])}}" class="btn btn-secondary">Record Payment</a>
                     <a href="/invoices/mark-as-paid/{{$invoice->id}}" class="btn btn-secondary">Mark as Paid</a>

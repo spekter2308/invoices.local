@@ -74,9 +74,15 @@ class CustomerController extends Controller
     public function getFinancicalData($customers)
     {
         foreach ($customers as &$customer) {
-            $customer['total'] = $customer->invoices->sum('total');
+            foreach ($customer->invoices as $invoice) {
+                if ($invoice->settings->show_tax) {
+                    $customer['total'] += $invoice->total;
+                } else {
+                    $customer['total'] += $invoice->subtotal;
+                }
+            }
             $customer['amount_paid'] = $customer->invoices->sum('amount_paid');
-            $customer['balance'] = $customer->invoices->sum('balance');
+            $customer['balance'] = $customer['total'] - $customer['amount_paid'];
         }
         return $customers;
     }

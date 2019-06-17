@@ -144,6 +144,17 @@
       padding: 3px 14px;
     }
   }
+
+  .show-payment-for-invoice {
+    display: flex;
+    margin-left: 18px;
+    padding: 5px 14px;
+    justify-content: space-between;
+    border: 1px solid #e9ecef;
+    border-radius: 3px;
+    background-color: #e9ecef;
+  }
+
     .invoice-table-row-notes {
       margin-top: 20px;
       > div {

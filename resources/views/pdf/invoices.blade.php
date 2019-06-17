@@ -5,8 +5,6 @@
     <title>Document</title>
 </head>
 <body>
-
-
 <style>
     .page-break {
         page-break-inside: avoid;
@@ -73,12 +71,12 @@
                 <br>
                 <tr>
                     <td align="right" style="font-weight: bold">Invoice Date</td>
-                    <td align="right" style="padding-left: 40px">{{ Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}</td>
+                    <td align="right" style="padding-left: 40px">{{ $invoice->invoice_date }}</td>
                 </tr>
                 <br>
                 <tr>
                     <td align="right" style="font-weight: bold">Due Date</td>
-                    <td align="right" style="padding-left: 40px">{{ Carbon\Carbon::parse($invoice->due_date)->format('d/m/Y') }}</td>
+                    <td align="right" style="padding-left: 40px">{{ $invoice->due_date }}</td>
                 </tr>
             </table>
         </div>
@@ -91,8 +89,8 @@
             <th align="left" style="width: 30%;">Description</th>
             <th align="center" nowrap>Unit Price</th>
             <th align="center">Quantity</th>
-            @if ($invoice->total != $invoice->subtotal)
-                <th align="center">Tax</th>
+            @if ($invoice->settings->show_tax)
+                <th align="center">Tax, %</th>
             @endif
             <th align="right">Amount</th>
         </tr>
@@ -104,73 +102,110 @@
                 <td align="left" style="width: 25%;">{{ $item->description }}</td>
                 <td align="center" nowrap>{{ $item->unitprice }}</td>
                 <td align="right">{{ $item->quantity }}</td>
-                @if ($item->tax != 0)
-                    <th align="center">Tax</th>
+                @if ($invoice->settings->show_tax)
+                    <td align="right">{{ $item->itemtax }}</td>
+                    <td align="right">{{ $item->unitprice * $item->quantity + $item->unitprice * $item->quantity * $item->itemtax/100}}</td>
+                @else
+                    <td align="right">{{ $item->unitprice * $item->quantity }}</td>
                 @endif
-                <td align="right">{{ $item->unitprice * $item->quantity }}</td>
             </tr>
         @endforeach
+        @if ($invoice->settings->show_payment)
             <tr>
-                <td colspan="{{ $invoice->total == $invoice->subtotal ? '5' : '6' }}" style="padding: 40px 5px 15px;">
+                <td align="left" style="padding: 5px 5px;">Payment:</td>
+                <td align="right" colspan="{{ $invoice->settings->show_tax ? '5' : '4' }}" style="padding: 5px 5px;">{{ $invoice->amount_paid }}</td>
+            </tr>
+        @endif
+            <tr>
+                <td colspan="{{ $invoice->settings->show_tax ? '6' : '5' }}" style="padding: 40px 5px 15px;">
                     <span style="text-decoration: underline">NOTES</span>: {!! nl2br(str_replace(" ", " &nbsp;", $invoice->company->invoice_notes))  !!}
                 </td>
             </tr>
     </table>
     <div class="page-break"></div>
-    <div style="border: 1px solid #000; border-top: none;">
-        <div align="left" style="float: left; width: 49%;">
-           
-        </div>
-        <div align="right" style="float: right; width: 50%; border-left: 1px solid #000; margin-right: 5px;">
-            <div style="width: 100%; border-bottom: 1px solid #000; padding: 5px 0;">
-                <div align="left" style="float: left; width: 20%; padding-left: 40px">
-                    <span style="font-weight: bold">Subtotal</span>
-                </div>
-                <div align="right" style="float: right; width: 40%; padding-right: 40px">
-                    {{ $invoice->subtotal }}
-                </div>
-            </div>
-            <div style="width: 100%; padding: 5px 0;">
-                <div align="left" style="float: left; width: 20%; padding-left: 40px">
-                    <span style="font-weight: bold">Total</span>
-                </div>
-                <div align="right" style="float: right; width: 40%; padding-right: 40px">
-                    {{ $invoice->total }}
-                </div>
-            </div>
-            <div style="width: 100%; border-bottom: 1px solid #000; padding: 5px 0;">
-                <div align="left" style="float: left; width: 30%; padding-left: 40px">
-                    <span style="font-weight: bold">Amount Paid</span>
-                </div>
-                <div align="right" style="float: right; width: 40%; padding-right: 40px">
-                    {{ $invoice->amount_paid }}
-                </div>
-            </div>
-            <div style="width: 100%; padding: 5px 0;">
-                <div align="left" style="float: left; width: 30%; padding-left: 40px">
-                    <span style="font-weight: bold">Balance Due</span>
-                </div>
-                <div align="right" style="float: right; width: 40%; padding-right: 40px">
-                    {{ $invoice->balance }}
-                </div>
-            </div>
-            {{--<table align="right" style="border-spacing:0 18px;">
-                <tr>
-                    <td align="right" style="font-weight: bold">Invoice #</td>
-                    <td align="right" style="padding-left: 40px">{{ $invoice->number }}</td>
-                </tr>
-                <br>
-                <tr>
-                    <td align="right" style="font-weight: bold">Invoice Date</td>
-                    <td align="right" style="padding-left: 40px">{{ Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') }}</td>
-                </tr>
-                <br>
-                <tr>
-                    <td align="right" style="font-weight: bold">Due Date</td>
-                    <td align="right" style="padding-left: 40px">{{ Carbon\Carbon::parse($invoice->due_date)->format('d/m/Y') }}</td>
-                </tr>
-            </table>--}}
-        </div>
+
+    <div align="left" style="float: left; width: 39%; height: 0;">
+
+    </div>
+    @if ($invoice->settings->show_tax)
+        <table class="test" align="right" style="width: 60%; float: right; border: 1px solid black; border-top: none;">
+            <tr>
+                <td align="left" style="float: left; width: 20%; padding-left: 10px; font-weight: bold">
+                    Subtotal
+                </td>
+                <td align="right" style="float: right; width: 40%; padding-right: 10px">
+                    {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid black">
+                <td align="left" style="float: left; width: 30%; padding-left: 40px; font-weight: bold">
+                    + Tax
+                </td>
+                <td align="right" style="float: right; width: 30%; padding-right: 10px; margin-left: 30px; font-size: 12px; font-style: italic">
+                    {{ $tax . ' ' . $invoice->settings->currency }}
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid black">
+                <td align="left" style="float: left; width: 20%; padding-left: 10px; font-weight: bold">
+                    Total
+                </td>
+                <td align="right" style="float: right; width: 40%; padding-right: 10px">
+                    {{ $invoice->total . ' ' . $invoice->settings->currency }}
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid black">
+                <td align="left" style="float: left; width: 30%; padding-left: 10px; font-weight: bold; white-space: nowrap">
+                    Amount Paid
+                </td>
+                <td align="right" style="float: right; width: 30%; padding-right: 10px">
+                    {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
+                </td>
+            </tr>
+            <tr style="border-bottom: 1px solid black">
+                <td align="left" style="float: left; width: 30%; padding-left: 10px; font-weight: bold; white-space: nowrap">
+                    Balance Due
+                </td>
+                <td align="right" style="float: right; width: 30%; padding-right: 10px">
+                    {{ $invoice->balance . ' ' . $invoice->settings->currency}}
+                </td>
+            </tr>
+        </table>
+    @else
+        <table align="right" style="width: 60%; float: right; border: 1px solid black; border-top: none;">
+            <tr style="border-bottom: 1px solid black">
+                <td align="left" style="float: left; width: 20%; padding-left: 10px; font-weight: bold">
+                    Subtotal
+                </td>
+                <td align="right" style="float: right; width: 40%; padding-right: 10px">
+                    {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
+                </td>
+            </tr>
+            <tr style="border-bottom: none;">
+                <td align="left" style="float: left; width: 20%; padding-left: 10px; font-weight: bold">
+                    Total
+                </td>
+                <td align="right" style="float: right; width: 40%; padding-right: 10px">
+                    {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
+                </td>
+            </tr>
+            <tr>
+                <td align="left" style="float: left; width: 30%; padding-left: 10px; font-weight: bold; white-space: nowrap;">
+                    Amount Paid
+                </td>
+                <td align="right" style="float: right; width: 30%; padding-right: 10px">
+                    {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
+                </td>
+            </tr>
+            <tr>
+                <td align="left" style="float: left; width: 30%; padding-left: 10px; font-weight: bold; white-space: nowrap;">
+                    Balance Due
+                </td>
+                <td align="right" style="float: right; width: 30%; padding-right: 10px">
+                    {{ $balance . ' ' . $invoice->settings->currency }}
+                </td>
+            </tr>
+        </table>
+    @endif
        
     
 
