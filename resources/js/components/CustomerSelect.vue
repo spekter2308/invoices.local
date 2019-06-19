@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4>To</h4>
+        <h4>{{ $t("message.to") }}</h4>
         <div class="form-group">
             <select class="custom-select"  v-model="customer" @change="toggleActive">
                 <option selected :value="emptyObj">New Customer ...</option>

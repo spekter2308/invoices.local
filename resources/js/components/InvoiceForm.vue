@@ -67,7 +67,7 @@
             <div class="invoice-box invoice-num-date-box">
                 <div class="row level">
                     <div class="col-md-4">
-                        <h6 class="font-weight-bold">Invoice #</h6>
+                        <h6 class="font-weight-bold">{{ $t("message.invoice_number") }} #</h6>
                     </div>
                     <div class="col-md-8">
                         <div class="form-group d-flex">
@@ -162,7 +162,7 @@
                 <!--Invoice Date-->
                 <div class="row level">
                     <div class="col-md-4">
-                        <h6 class="font-weight-bold">Invoice Date</h6>
+                        <h6 class="font-weight-bold">{{ $t("message.invoice_date") }}</h6>
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
@@ -186,7 +186,7 @@
                 <!--Due Date-->
                 <div class="row level">
                     <div class="col-md-4">
-                        <h6 class="font-weight-bold">Due Date</h6>
+                        <h6 class="font-weight-bold">{{ $t("message.due_date") }}</h6>
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
@@ -393,14 +393,17 @@
             }
         },
         watch: {
-            'defaultSettings.language' (v) {
-                if (v == 'english') {
-                    this.$i18n.locale = 'en';
-                } else if (v  == 'germany') {
-                    this.$i18n.locale = 'gr';
-                } else {
-                    this.$i18n.locale = 'sp';
-                }
+            'defaultSettings.language': {
+                immediate: true,
+                handler: function(v) {
+                    if (v == 'english') {
+                        this.$i18n.locale = 'en';
+                    } else if (v  == 'germany') {
+                        this.$i18n.locale = 'gr';
+                    } else {
+                        this.$i18n.locale = 'sp';
+                    }
+                },
             },
             '$v.$error'(v) {
                 if ( v === true) {

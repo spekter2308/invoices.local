@@ -5116,13 +5116,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   watch: {
-    'defaultSettings.language': function defaultSettingsLanguage(v) {
-      if (v == 'english') {
-        this.$i18n.locale = 'en';
-      } else if (v == 'germany') {
-        this.$i18n.locale = 'gr';
-      } else {
-        this.$i18n.locale = 'sp';
+    'defaultSettings.language': {
+      immediate: true,
+      handler: function handler(v) {
+        if (v == 'english') {
+          this.$i18n.locale = 'en';
+        } else if (v == 'germany') {
+          this.$i18n.locale = 'gr';
+        } else {
+          this.$i18n.locale = 'sp';
+        }
       }
     },
     '$v.$error': function $v$error(v) {
@@ -72859,7 +72862,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h4", [_vm._v("From")]),
+    _c("h4", [_vm._v(_vm._s(_vm.$t("message.from")))]),
     _vm._v(" "),
     _c("div", { staticClass: "form-group" }, [
       _c(
@@ -72915,7 +72918,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("h4", [_vm._v("To")]),
+    _c("h4", [_vm._v(_vm._s(_vm.$t("message.to")))]),
     _vm._v(" "),
     _c("div", { staticClass: "form-group" }, [
       _c(
@@ -73589,7 +73592,11 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "invoice-box invoice-num-date-box" }, [
           _c("div", { staticClass: "row level" }, [
-            _vm._m(0),
+            _c("div", { staticClass: "col-md-4" }, [
+              _c("h6", { staticClass: "font-weight-bold" }, [
+                _vm._v(_vm._s(_vm.$t("message.invoice_number")) + " #")
+              ])
+            ]),
             _vm._v(" "),
             _c(
               "div",
@@ -73675,7 +73682,7 @@ var render = function() {
                             },
                             [
                               _c("div", { staticClass: "modal-content" }, [
-                                _vm._m(1),
+                                _vm._m(0),
                                 _vm._v(" "),
                                 _c("div", { staticClass: "modal-body" }, [
                                   _c("p", [
@@ -73996,7 +74003,11 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "row level" }, [
-            _vm._m(2),
+            _c("div", { staticClass: "col-md-4" }, [
+              _c("h6", { staticClass: "font-weight-bold" }, [
+                _vm._v(_vm._s(_vm.$t("message.invoice_date")))
+              ])
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-8" }, [
               _c(
@@ -74035,7 +74046,11 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "row level" }, [
-            _vm._m(3),
+            _c("div", { staticClass: "col-md-4" }, [
+              _c("h6", { staticClass: "font-weight-bold" }, [
+                _vm._v(_vm._s(_vm.$t("message.due_date")))
+              ])
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "col-md-8" }, [
               _c(
@@ -74157,14 +74172,6 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-4" }, [
-      _c("h6", { staticClass: "font-weight-bold" }, [_vm._v("Invoice #")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "modal-header" }, [
       _c(
         "h5",
@@ -74191,22 +74198,6 @@ var staticRenderFns = [
         },
         [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
       )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-4" }, [
-      _c("h6", { staticClass: "font-weight-bold" }, [_vm._v("Invoice Date")])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-4" }, [
-      _c("h6", { staticClass: "font-weight-bold" }, [_vm._v("Due Date")])
     ])
   }
 ]
@@ -94751,17 +94742,43 @@ window.eventBus = new Vue();
 var messages = {
   en: {
     message: {
-      invoice: 'INVOICE'
+      invoice: 'INVOICE',
+      from: 'From',
+      to: 'To',
+      invoice_number: 'Invoice',
+      invoice_date: 'Invoice Date',
+      due_date: 'Due Date',
+      item: '',
+      description: '',
+      unit_price: '',
+      quantity: '',
+      tax: '',
+      amount: '',
+      invoice_notes: '',
+      subtotal: '',
+      total: '',
+      amount_paid: '',
+      balance_due: ''
     }
   },
   gr: {
     message: {
-      invoice: 'RECHNUNG'
+      invoice: 'RECHNUNG',
+      from: 'Von',
+      to: 'An',
+      invoice_number: 'Rechnung',
+      invoice_date: 'Datum',
+      due_date: 'Zahlungsfrist'
     }
   },
   sp: {
     message: {
-      invoice: 'FACTURA'
+      invoice: 'FACTURA',
+      from: 'De',
+      to: 'Para',
+      invoice_number: 'Factura',
+      invoice_date: 'Fecha',
+      due_date: 'Fecha de Vencimiento'
     }
   }
 };

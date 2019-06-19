@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h4>From</h4>
+        <h4>{{ $t("message.from") }}</h4>
         <div class="form-group">
             <select class="custom-select" :value="value" v-on="listeners">
                 <option disabled :value="NaN">Choose company...</option>

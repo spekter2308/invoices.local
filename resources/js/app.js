@@ -58,17 +58,43 @@ window.eventBus = new Vue()
 const messages = {
     en: {
         message: {
-            invoice: 'INVOICE'
+            invoice: 'INVOICE',
+            from: 'From',
+            to: 'To',
+            invoice_number: 'Invoice',
+            invoice_date: 'Invoice Date',
+            due_date: 'Due Date',
+            item: '',
+            description: '',
+            unit_price: '',
+            quantity: '',
+            tax: '',
+            amount: '',
+            invoice_notes: '',
+            subtotal: '',
+            total: '',
+            amount_paid: '',
+            balance_due: ''
         }
     },
     gr: {
         message: {
-            invoice: 'RECHNUNG'
+            invoice: 'RECHNUNG',
+            from: 'Von',
+            to: 'An',
+            invoice_number: 'Rechnung',
+            invoice_date: 'Datum',
+            due_date: 'Zahlungsfrist'
         }
     },
     sp: {
         message: {
-            invoice: 'FACTURA'
+            invoice: 'FACTURA',
+            from: 'De',
+            to: 'Para',
+            invoice_number: 'Factura',
+            invoice_date: 'Fecha',
+            due_date: 'Fecha de Vencimiento'
         }
     }
 }
