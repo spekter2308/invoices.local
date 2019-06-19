@@ -5046,16 +5046,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
-      currentDateFrom: this.currentInvoice.invoice_date,
-      currentDateTo: this.currentInvoice.due_date,
+      currentDateFrom: Date.parse(this.currentInvoice.invoice_date),
+      currentDateTo: Date.parse(this.currentInvoice.due_date),
       spinnerVisible: false,
       createdInvoiceId: NaN,
       isTableInvalid: true,
       invoice: {
         selectedCompany: this.invoiceCompany.id || NaN,
         selectedCustomer: this.invoiceCustomer.id || {},
-        selectedDateFrom: this.currentInvoice.invoice_date || new Date().toISOString().slice(0, 10),
-        selectedDateTo: this.currentInvoice.due_date || new Date().toISOString().slice(0, 10),
+        selectedDateFrom: Date.parse(this.currentInvoice.invoice_date) || new Date().toISOString().slice(0, 10),
+        selectedDateTo: Date.parse(this.currentInvoice.due_date) || new Date().toISOString().slice(0, 10),
         selectedInvoiceNumber: this.invoiceNumber,
         selectedItems: this.invoiceItems,
         selectedSettings: []
@@ -5116,6 +5116,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   watch: {
+    'defaultSettings.language': function defaultSettingsLanguage(v) {
+      if (v == 'english') {
+        this.$i18n.locale = 'en';
+      } else if (v == 'germany') {
+        this.$i18n.locale = 'gr';
+      } else {
+        this.$i18n.locale = 'sp';
+      }
+    },
     '$v.$error': function $v$error(v) {
       if (v === true) {
         this.sendButton.disabled = true;
@@ -5336,16 +5345,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         currency: this.defaultOptions.currency || '$'
       }, this.settings);
     },
-    locale: function locale() {
-      if (this.defaultSettings.language == 'english') {
-        this.$i18n.locale = 'en';
-      } else if (this.defaultSettings.language == 'germany') {
-        this.$i18n.locale = 'gr';
-      } else {
-        this.$i18n.locale = 'sp';
-      }
-
-      return this.$i18n.locale;
+    locale: function locale() {// if (this.defaultSettings.language == 'english') {
+      //     this.$i18n.locale = 'en';
+      // } else if (this.defaultSettings.language == 'germany') {
+      //     this.$i18n.locale = 'gr';
+      // } else {
+      //     this.$i18n.locale = 'sp';
+      // }
+      //return this.$i18n.locale;
     },
     currency: function currency() {
       return this.defaultSettings.currency;
