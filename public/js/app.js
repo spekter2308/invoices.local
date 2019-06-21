@@ -5624,9 +5624,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 
 var id = 1;
@@ -74123,14 +74120,18 @@ var render = function() {
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
           _c("div", { staticClass: "level" }, [
-            _c("h5", { staticClass: "flex" }, [_vm._v("Subtotal")]),
+            _c("h5", { staticClass: "flex" }, [
+              _vm._v(_vm._s(_vm.$t("message.subtotal")))
+            ]),
             _vm._v(" "),
             _c("span", [_vm._v(_vm._s(_vm.subtotal + " " + _vm.currency))])
           ]),
           _vm._v(" "),
           _vm.defaultSettings.tax
             ? _c("div", { staticClass: "with-tax level" }, [
-                _c("h5", { staticClass: "flex" }, [_vm._v("+ Tax")]),
+                _c("h5", { staticClass: "flex" }, [
+                  _vm._v("+ " + _vm._s(_vm.$t("message.tax")))
+                ]),
                 _vm._v(" "),
                 _c("span", [_vm._v(_vm._s(_vm.withTax + " " + _vm.currency))])
               ])
@@ -74139,7 +74140,9 @@ var render = function() {
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
           _c("div", { staticClass: "level" }, [
-            _c("h5", { staticClass: "flex" }, [_vm._v("Total")]),
+            _c("h5", { staticClass: "flex" }, [
+              _vm._v(_vm._s(_vm.$t("message.total")))
+            ]),
             _vm._v(" "),
             _c("span", [_vm._v(_vm._s(_vm.total + " " + _vm.currency))])
           ]),
@@ -74147,7 +74150,9 @@ var render = function() {
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
           _c("div", { staticClass: "level" }, [
-            _c("h5", { staticClass: "flex" }, [_vm._v("Amount Paid")]),
+            _c("h5", { staticClass: "flex" }, [
+              _vm._v(_vm._s(_vm.$t("message.amount_paid")))
+            ]),
             _vm._v(" "),
             _c("span", [_vm._v(_vm._s(_vm.amount_paid + " " + _vm.currency))])
           ]),
@@ -74155,7 +74160,9 @@ var render = function() {
           _c("div", { staticClass: "border-top pb-2" }),
           _vm._v(" "),
           _c("div", { staticClass: "level" }, [
-            _c("h5", { staticClass: "flex" }, [_vm._v("Balance Due")]),
+            _c("h5", { staticClass: "flex" }, [
+              _vm._v(_vm._s(_vm.$t("message.balance_due")))
+            ]),
             _vm._v(" "),
             _c("span", [_vm._v(_vm._s(_vm.balance + " " + _vm.currency))])
           ]),
@@ -74223,7 +74230,9 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "form-group" }, [
-    _c("label", { attrs: { for: "invoiceNotes" } }, [_vm._v("Invoice Notes")]),
+    _c("label", { attrs: { for: "invoiceNotes" } }, [
+      _vm._v(_vm._s(_vm.$t("message.invoice_notes")))
+    ]),
     _vm._v(" "),
     _c("textarea", {
       staticClass: "form-control",
@@ -74412,11 +74421,17 @@ var render = function() {
       this.tax
         ? _c("div", { staticClass: "items-table-header-with-tax" }, [
             _c("div", { staticClass: "item-name" }, [
-              _vm._v("\n            Item\n        ")
+              _vm._v(
+                "\n            " + _vm._s(_vm.$t("message.item")) + "\n        "
+              )
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "item-description" }, [
-              _vm._v("\n            Description\n        ")
+              _vm._v(
+                "\n            " +
+                  _vm._s(_vm.$t("message.description")) +
+                  "\n        "
+              )
             ]),
             _vm._v(" "),
             _c(
@@ -74425,7 +74440,13 @@ var render = function() {
                 staticClass: "item-unit-price",
                 staticStyle: { "white-space": "nowrap", "padding-left": "10px" }
               },
-              [_vm._v("\n            Unit Price\n        ")]
+              [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.$t("message.unit_price")) +
+                    "\n        "
+                )
+              ]
             ),
             _vm._v(" "),
             _c(
@@ -74434,7 +74455,13 @@ var render = function() {
                 staticClass: "item-quantity",
                 staticStyle: { "padding-left": "10px" }
               },
-              [_vm._v("\n            Quantity\n        ")]
+              [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.$t("message.quantity")) +
+                    "\n        "
+                )
+              ]
             ),
             _vm._v(" "),
             this.tax
@@ -74444,21 +74471,37 @@ var render = function() {
                     staticClass: "item-tax",
                     staticStyle: { "padding-left": "20px" }
                   },
-                  [_vm._v("\n            Tax\n        ")]
+                  [
+                    _vm._v(
+                      "\n            " +
+                        _vm._s(_vm.$t("message.tax")) +
+                        "\n        "
+                    )
+                  ]
                 )
               : _vm._e(),
             _vm._v(" "),
             _c("div", { staticClass: "item-amount" }, [
-              _vm._v("\n            Amount\n        ")
+              _vm._v(
+                "\n            " +
+                  _vm._s(_vm.$t("message.amount")) +
+                  "\n        "
+              )
             ])
           ])
         : _c("div", { staticClass: "items-table-header" }, [
             _c("div", { staticClass: "item-name" }, [
-              _vm._v("\n            Item\n        ")
+              _vm._v(
+                "\n            " + _vm._s(_vm.$t("message.item")) + "\n        "
+              )
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "item-description" }, [
-              _vm._v("\n            Description\n        ")
+              _vm._v(
+                "\n            " +
+                  _vm._s(_vm.$t("message.description")) +
+                  "\n        "
+              )
             ]),
             _vm._v(" "),
             _c(
@@ -74467,7 +74510,13 @@ var render = function() {
                 staticClass: "item-unit-price",
                 staticStyle: { "white-space": "nowrap", "padding-left": "10px" }
               },
-              [_vm._v("\n            Unit Price\n        ")]
+              [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.$t("message.unit_price")) +
+                    "\n        "
+                )
+              ]
             ),
             _vm._v(" "),
             _c(
@@ -74476,22 +74525,21 @@ var render = function() {
                 staticClass: "item-quantity",
                 staticStyle: { "padding-left": "10px" }
               },
-              [_vm._v("\n            Quantity\n        ")]
+              [
+                _vm._v(
+                  "\n            " +
+                    _vm._s(_vm.$t("message.quantity")) +
+                    "\n        "
+                )
+              ]
             ),
             _vm._v(" "),
-            this.tax
-              ? _c(
-                  "div",
-                  {
-                    staticClass: "item-tax",
-                    staticStyle: { "padding-left": "20px" }
-                  },
-                  [_vm._v("\n            Tax\n        ")]
-                )
-              : _vm._e(),
-            _vm._v(" "),
             _c("div", { staticClass: "item-amount" }, [
-              _vm._v("\n            Amount\n        ")
+              _vm._v(
+                "\n            " +
+                  _vm._s(_vm.$t("message.amount")) +
+                  "\n        "
+              )
             ])
           ]),
       _vm._v(" "),
@@ -94748,17 +94796,17 @@ var messages = {
       invoice_number: 'Invoice',
       invoice_date: 'Invoice Date',
       due_date: 'Due Date',
-      item: '',
-      description: '',
-      unit_price: '',
-      quantity: '',
-      tax: '',
-      amount: '',
-      invoice_notes: '',
-      subtotal: '',
-      total: '',
-      amount_paid: '',
-      balance_due: ''
+      item: 'Item',
+      description: 'Description',
+      unit_price: 'Unit Price',
+      quantity: 'Quantity',
+      tax: 'Tax',
+      amount: 'Amount',
+      invoice_notes: 'Invoice Notes',
+      subtotal: 'Subtotal',
+      total: 'Total',
+      amount_paid: 'Amount Paid',
+      balance_due: 'Balance Due'
     }
   },
   gr: {
@@ -94768,7 +94816,18 @@ var messages = {
       to: 'An',
       invoice_number: 'Rechnung',
       invoice_date: 'Datum',
-      due_date: 'Zahlungsfrist'
+      due_date: 'Zahlungsfrist',
+      item: 'Artikel',
+      description: 'Beschreibung',
+      unit_price: 'Einzelpreis',
+      quantity: 'Anzahl',
+      tax: 'Steuer',
+      amount: 'Betrag',
+      invoice_notes: 'ANMERKUNGEN',
+      subtotal: 'Zwischensumme',
+      total: 'Summe',
+      amount_paid: 'Betrag gezahlt',
+      balance_due: 'Fälliger Betrag'
     }
   },
   sp: {
@@ -94778,7 +94837,18 @@ var messages = {
       to: 'Para',
       invoice_number: 'Factura',
       invoice_date: 'Fecha',
-      due_date: 'Fecha de Vencimiento'
+      due_date: 'Fecha de Vencimiento',
+      item: 'Artículo',
+      description: 'Descripción',
+      unit_price: 'Precio Unitario',
+      quantity: 'Cantidad',
+      tax: 'Impuesto',
+      amount: 'Importe',
+      invoice_notes: 'NOTAS',
+      subtotal: 'Subtotal',
+      total: 'Total',
+      amount_paid: 'Monto Pagado',
+      balance_due: 'Factura Total'
     }
   }
 };
@@ -95939,8 +96009,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

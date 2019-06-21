@@ -227,26 +227,26 @@
             <div class="invoice-box invoice-total-box">
                 <div class="border-top pb-2"></div>
                 <div class="level">
-                    <h5 class="flex" >Subtotal</h5>
+                    <h5 class="flex" >{{ $t("message.subtotal") }}</h5>
                     <span>{{subtotal + ' ' + currency}}</span>
                 </div>
                 <div class="with-tax level" v-if="defaultSettings.tax">
-                    <h5 class="flex" >+ Tax</h5>
+                    <h5 class="flex" >+ {{ $t("message.tax") }}</h5>
                     <span>{{withTax + ' ' + currency}}</span>
                 </div>
                 <div class="border-top pb-2"></div>
                 <div class="level">
-                    <h5 class="flex" >Total</h5>
+                    <h5 class="flex" >{{ $t("message.total") }}</h5>
                     <span>{{total + ' ' + currency}}</span>
                 </div>
                 <div class="border-top pb-2"></div>
                 <div class="level">
-                    <h5 class="flex" >Amount Paid</h5>
+                    <h5 class="flex" >{{ $t("message.amount_paid") }}</h5>
                     <span>{{amount_paid + ' ' + currency}}</span>
                 </div>
                 <div class="border-top pb-2"></div>
                 <div class="level">
-                    <h5 class="flex" >Balance Due</h5>
+                    <h5 class="flex" >{{ $t("message.balance_due") }}</h5>
                     <span>{{balance + ' ' + currency}}</span>
                 </div>
                 <div class="border-top"></div>

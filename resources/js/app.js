@@ -64,17 +64,17 @@ const messages = {
             invoice_number: 'Invoice',
             invoice_date: 'Invoice Date',
             due_date: 'Due Date',
-            item: '',
-            description: '',
-            unit_price: '',
-            quantity: '',
-            tax: '',
-            amount: '',
-            invoice_notes: '',
-            subtotal: '',
-            total: '',
-            amount_paid: '',
-            balance_due: ''
+            item: 'Item',
+            description: 'Description',
+            unit_price: 'Unit Price',
+            quantity: 'Quantity',
+            tax: 'Tax',
+            amount: 'Amount',
+            invoice_notes: 'Invoice Notes',
+            subtotal: 'Subtotal',
+            total: 'Total',
+            amount_paid: 'Amount Paid',
+            balance_due: 'Balance Due'
         }
     },
     gr: {
@@ -84,7 +84,18 @@ const messages = {
             to: 'An',
             invoice_number: 'Rechnung',
             invoice_date: 'Datum',
-            due_date: 'Zahlungsfrist'
+            due_date: 'Zahlungsfrist',
+            item: 'Artikel',
+            description: 'Beschreibung',
+            unit_price: 'Einzelpreis',
+            quantity: 'Anzahl',
+            tax: 'Steuer',
+            amount: 'Betrag',
+            invoice_notes: 'ANMERKUNGEN',
+            subtotal: 'Zwischensumme',
+            total: 'Summe',
+            amount_paid: 'Betrag gezahlt',
+            balance_due: 'Fälliger Betrag'
         }
     },
     sp: {
@@ -94,7 +105,18 @@ const messages = {
             to: 'Para',
             invoice_number: 'Factura',
             invoice_date: 'Fecha',
-            due_date: 'Fecha de Vencimiento'
+            due_date: 'Fecha de Vencimiento',
+            item: 'Artículo',
+            description: 'Descripción',
+            unit_price: 'Precio Unitario',
+            quantity: 'Cantidad',
+            tax: 'Impuesto',
+            amount: 'Importe',
+            invoice_notes: 'NOTAS',
+            subtotal: 'Subtotal',
+            total: 'Total',
+            amount_paid: 'Monto Pagado',
+            balance_due: 'Factura Total'
         }
     }
 }

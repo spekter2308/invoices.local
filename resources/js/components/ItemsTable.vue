@@ -3,44 +3,41 @@
 
         <div v-if="this.tax" class="items-table-header-with-tax">
             <div class="item-name">
-                Item
+                {{ $t("message.item") }}
             </div>
             <div class="item-description">
-                Description
+                {{ $t("message.description") }}
             </div>
             <div class="item-unit-price" style="white-space: nowrap; padding-left: 10px">
-                Unit Price
+                {{ $t("message.unit_price") }}
             </div>
             <div class="item-quantity" style="padding-left: 10px">
-                Quantity
+                {{ $t("message.quantity") }}
             </div>
             <div v-if="this.tax" class="item-tax" style="padding-left: 20px;">
-                Tax
+                {{ $t("message.tax") }}
             </div>
             <div class="item-amount" >
-                Amount
+                {{ $t("message.amount") }}
             </div>
         </div>
 
         <div v-else class="items-table-header">
 
             <div class="item-name">
-                Item
+                {{ $t("message.item") }}
             </div>
             <div class="item-description">
-                Description
+                {{ $t("message.description") }}
             </div>
             <div class="item-unit-price" style="white-space: nowrap; padding-left: 10px">
-                Unit Price
+                {{ $t("message.unit_price") }}
             </div>
             <div class="item-quantity" style="padding-left: 10px">
-                Quantity
-            </div>
-            <div v-if="this.tax" class="item-tax" style="padding-left: 20px;">
-                Tax
+                {{ $t("message.quantity") }}
             </div>
             <div class="item-amount" >
-                Amount
+                {{ $t("message.amount") }}
             </div>
         </div>
 
