@@ -547,16 +547,6 @@
                     currency: this.defaultOptions.currency || '$',
                 }, this.settings);
             },
-            locale() {
-                // if (this.defaultSettings.language == 'english') {
-                //     this.$i18n.locale = 'en';
-                // } else if (this.defaultSettings.language == 'germany') {
-                //     this.$i18n.locale = 'gr';
-                // } else {
-                //     this.$i18n.locale = 'sp';
-                // }
-                //return this.$i18n.locale;
-            },
             currency() {
                 return this.defaultSettings.currency;
             },
