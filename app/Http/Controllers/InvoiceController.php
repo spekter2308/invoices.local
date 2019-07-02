@@ -221,17 +221,11 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
-        $tax = $invoice->total - $invoice->subtotal;
-
-        if ($invoice->settings->show_tax) {
-
-            return view('invoices.show-with-tax', compact('invoice', 'tax'));
-        } else {
-            $total = $subtotal = $invoice->total - $tax;
-            $balance = $invoice->balance - $tax;
-
-            return view('invoices.show', compact('invoice', 'total', 'subtotal', 'balance'));
-        }
+        return view('invoices.show', [
+            'invoice'=> $invoice,
+            'settings' => $invoice->settings,
+            'invoiceItems' => collect($invoice->items)
+        ]);
 
     }
 

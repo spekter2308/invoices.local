@@ -8,13 +8,13 @@
                     <div class="row justify-content">
                         <div class="col-md-12">
                             <div class="company-data-show">
-                                <span><a href="/invoices?bycompany="{{ invoice.company_id }}>{{ invoice.company_name }}</a></span>
-                                <!--<span>{!! nl2br(str_replace(" ", " &nbsp;", $invoice->company->address))  !!}</span>-->
+                                <span><a :href="'/invoices?bycompany=' + invoice.company_id">{{ invoice.company.name }}</a></span>
+                                <span v-html="replaceCompanyAddress"></span>
                             </div>
                             <div v-if="invoice.status == 'Paid'" class="paid"></div>
                             <div class="customer-data-show">
-                                <div><a href="/invoices?byuser="{{ invoice.customer_name }}>{{ invoice.customer_name }}</a></div>
-                                <!--<div>{!! nl2br(str_replace(" ", " &nbsp;", $invoice->customer->address))  !!}</div>-->
+                                <div><a :href="'/invoices?byuser=' + invoice.customer_id ">{{ invoice.customer.name }}</a></div>
+                                <span v-html="replaceCustomerAddress"></span>
                             </div>
                         </div>
                     </div>
@@ -24,7 +24,7 @@
             <!-- {{--Logo part--}} -->
             <div class="invoice-box invoice-logo-box">
                 <div class="company-logo">
-                    <img v-if="invoice.company.logo_img" src="/upload/company/"{{invoice.company_logo_img}} class="logo">
+                    <img v-if="invoice.company.logo_img" :src="'/upload/company/' + invoice.company_logo_img" class="logo">
                 </div>
             </div>
 
@@ -47,7 +47,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <span>{{ invoice.invoice_date }}</span>
+                            <span :format="settings.date_format">{{ invoice.invoice_date }}</span>
                         </div>
                     </div>
                 </div>
@@ -58,7 +58,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <span>{{ invoice.due_date }}</span>
+                            <span :format="settings.date_format">{{ invoice.due_date }}</span>
                         </div>
                     </div>
                 </div>
@@ -68,7 +68,7 @@
             <div class="invoice-box invoice-item-box">
                 <div class="items-wrapper">
 
-                    <div v-if="this.tax" class="items-table-header-with-tax">
+                    <div :class="{'items-table-header-with-tax': settings.show_tax, 'items-table-header': !settings.show_tax}" style="margin: 0;">
                         <div class="item-name">
                             {{ $t("message.item") }}
                         </div>
@@ -81,7 +81,7 @@
                         <div class="item-quantity" style="padding-left: 10px">
                             {{ $t("message.quantity") }}
                         </div>
-                        <div v-if="this.tax" class="item-tax" style="padding-left: 20px;">
+                        <div v-if="settings.show_tax" class="item-tax" style="padding-left: 20px;">
                             {{ $t("message.tax") }}
                         </div>
                         <div class="item-amount" >
@@ -89,28 +89,9 @@
                         </div>
                     </div>
 
-                    <div v-else class="items-table-header">
-
-                        <div class="item-name">
-                            {{ $t("message.item") }}
-                        </div>
-                        <div class="item-description">
-                            {{ $t("message.description") }}
-                        </div>
-                        <div class="item-unit-price" style="white-space: nowrap; padding-left: 10px">
-                            {{ $t("message.unit_price") }}
-                        </div>
-                        <div class="item-quantity" style="padding-left: 10px">
-                            {{ $t("message.quantity") }}
-                        </div>
-                        <div class="item-amount" >
-                            {{ $t("message.amount") }}
-                        </div>
-                    </div>
-
                     <div class="items-table-body">
-                        <template v-for="(el, index) in items">
-                            <div class="items-table-row-show">
+                        <template v-for="(item, index) in items">
+                            <div :class="{'items-table-row-show': !settings.show_tax, 'items-table-row-show-with-tax': settings.show_tax}">
                                 <div class="item-name">
                                     <div class="form-group-table">
                                         {{ item.item }}
@@ -129,6 +110,11 @@
                                 <div class="item-quantity">
                                     <div class="form-group-table">
                                         {{ item.quantity }}
+                                    </div>
+                                </div>
+                                <div v-if="settings.show_tax" class="item-tax">
+                                    <div class="form-group-table">
+                                        {{ item.itemtax }}
                                     </div>
                                 </div>
                                 <div class="item-total">
@@ -150,7 +136,8 @@
                         <div class="invoice-table-row-notes">
                             <div class="form-group">
                                 {{ invoice.invoice_notes}}
-                                <!--<p> <span style="text-decoration: underline">NOTES</span>: {!! nl2br(str_replace(" ", " &nbsp;", $invoice->company->invoice_notes))  !!}</p>-->
+                                <span style="text-decoration: underline">NOTES</span>:
+                                <span v-html="getNotes"></span>
                             </div>
                         </div>
                     </div>
@@ -162,21 +149,25 @@
                         <div class="invoice-total">
                             <div class="level mt-2">
                                 <h6 class="flex" >{{ $t("message.subtotal") }}</h6>
-                                <span>{{ subtotal + ' ' + invoice.settings.currency }}</span>
+                                <span>{{ invoice.subtotal + ' ' + invoice.settings.currency }}</span>
+                            </div>
+                            <div class="level mt-2 with-tax" v-if="settings.show_tax">
+                                <h6 class="flex" >+ Tax</h6>
+                                <span>{{ withTax + ' ' + invoice.settings.currency }}</span>
                             </div>
                             <div class="border-top pb-2"></div>
                             <div class="level">
-                                <h6 class="flex" >Total</h6>
-                                <span>{{ $total . ' ' . $invoice->settings->currency }}</span>
+                                <h6 class="flex" >{{ $t("message.total")}}</h6>
+                                <span>{{ total + ' ' + invoice.settings.currency }}</span>
                             </div>
                             <div class="level">
-                                <h6 class="flex" >Amount Paid</h6>
-                                <span>{{$invoice->amount_paid . ' ' . $invoice->settings->currency}}</span>
+                                <h6 class="flex" >{{ $t("message.amount_paid")}}</h6>
+                                <span>{{  invoice.amount_paid + ' ' + invoice.settings.currency}}</span>
                             </div>
                             <div class="border-top pb-2"></div>
                             <div class="level">
-                                <h6 class="flex" >Balance Due</h6>
-                                <span>{{ $balance . ' ' . $invoice->settings->currency }}</span>
+                                <h6 class="flex" >{{ $t("message.balance_due")}}</h6>
+                                <span>{{ balance + ' ' + invoice.settings.currency }}</span>
                             </div>
                         </div>
                     </div>
@@ -188,7 +179,77 @@
 
 <script>
     export default {
-        name: "InvoiceShow"
+        name: "InvoiceShow",
+
+        props: {
+            defaultOptions: {
+                type: Object,
+                required: true
+            },
+            currentInvoice: {
+                type: [Object],
+                required: true
+            },
+            invoiceItems: {
+                type: [Array],
+                required: true
+            }
+        },
+        data() {
+            return {
+                invoice: this.currentInvoice,
+                settings: this.defaultOptions,
+                items: this.invoiceItems,
+
+            }
+        },
+        watch: {
+            'getLocale': {
+                immediate: true,
+                handler: function(v) {
+                    this.$i18n.locale = v;
+                },
+            }
+        },
+        computed: {
+            replaceCompanyAddress() {
+                return this.invoice.company.address.replace('\n', '<br>');
+            },
+            replaceCustomerAddress() {
+                return this.invoice.customer.address.replace('\n', '<br>');
+            },
+            getNotes() {
+                return this.invoice.company.invoice_notes.replace('\n', '<br>');
+            },
+            getLocale() {
+                if (this.settings.language == 'english') {
+                    return 'en';
+                } else if (this.settings.language == 'germany') {
+                    return 'gr';
+                } else {
+                    return 'sp';
+                }
+            },
+            withTax() {
+                return this.items.reduce((acc, curr) =>
+                    acc+(curr.unitprice*curr.quantity*curr.itemtax/100), 0)
+            },
+            total() {
+                if (this.settings.show_tax) {
+                    return this.invoice.total;
+                } else {
+                    return this.invoice.subtotal;
+                }
+            },
+            balance() {
+                if (this.settings.show_tax) {
+                    return this.invoice.balance;
+                } else {
+                    return this.invoice.balance - this.withTax;
+                }
+            }
+        }
+
     }
 </script>
 

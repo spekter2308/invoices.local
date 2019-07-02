@@ -5046,8 +5046,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
-      currentDateFrom: Date.parse(this.currentInvoice.invoice_date),
-      currentDateTo: Date.parse(this.currentInvoice.due_date),
       spinnerVisible: false,
       createdInvoiceId: NaN,
       isTableInvalid: true,
@@ -5208,7 +5206,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 eventBus.$emit('touch', true);
 
                 if (!(!this.$v.$error && !this.isTableRowsInvalid)) {
-                  _context.next = 19;
+                  _context.next = 17;
                   break;
                 }
 
@@ -5217,7 +5215,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 console.log(JSON.stringify(this.invoice));
 
                 if (!(this.mode === 'create')) {
-                  _context.next = 14;
+                  _context.next = 13;
                   break;
                 }
 
@@ -5228,50 +5226,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 10:
-                console.log(this.createdInvoiceId);
-                location.href = '/invoices/' + this.createdInvoiceId;
-                _context.next = 18;
+                console.log(this.createdInvoiceId); //location.href = '/invoices/' + this.createdInvoiceId;
+
+                _context.next = 17;
                 break;
 
-              case 14:
+              case 13:
                 if (!(this.mode === 'edit')) {
-                  _context.next = 18;
+                  _context.next = 17;
                   break;
                 }
 
                 console.log(this.currentInvoice.id);
-                _context.next = 18;
+                _context.next = 17;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(function (response) {
                   _this2.createdInvoiceId = response.data.invoice.id;
                   _this2.spinnerVisible = false;
                 });
 
-              case 18:
-                location.href = '/invoices/' + this.createdInvoiceId; //await this.updateNextNumber();
-                //this.resetInvoice();
-                //eventBus.$emit('update', true)
-                //this.$v.$reset()
-                //eventBus.$emit('reset', true)
-                //console.log('resetting')
-
-              case 19:
-                _context.next = 25;
+              case 17:
+                _context.next = 23;
                 break;
 
-              case 21:
-                _context.prev = 21;
+              case 19:
+                _context.prev = 19;
                 _context.t0 = _context["catch"](0);
                 // this.resetInvoice()
                 // this.$v.$reset()
                 console.log('some error');
                 this.spinnerVisible = false;
 
-              case 25:
+              case 23:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 21]]);
+        }, _callee, this, [[0, 19]]);
       }));
 
       function onSubmit() {
@@ -5618,17 +5608,76 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "InvoiceShow"
+  name: "InvoiceShow",
+  props: {
+    defaultOptions: {
+      type: Object,
+      required: true
+    },
+    currentInvoice: {
+      type: [Object],
+      required: true
+    },
+    invoiceItems: {
+      type: [Array],
+      required: true
+    }
+  },
+  data: function data() {
+    return {
+      invoice: this.currentInvoice,
+      settings: this.defaultOptions,
+      items: this.invoiceItems
+    };
+  },
+  watch: {
+    'getLocale': {
+      immediate: true,
+      handler: function handler(v) {
+        this.$i18n.locale = v;
+      }
+    }
+  },
+  computed: {
+    replaceCompanyAddress: function replaceCompanyAddress() {
+      return this.invoice.company.address.replace('\n', '<br>');
+    },
+    replaceCustomerAddress: function replaceCustomerAddress() {
+      return this.invoice.customer.address.replace('\n', '<br>');
+    },
+    getNotes: function getNotes() {
+      return this.invoice.company.invoice_notes.replace('\n', '<br>');
+    },
+    getLocale: function getLocale() {
+      if (this.settings.language == 'english') {
+        return 'en';
+      } else if (this.settings.language == 'germany') {
+        return 'gr';
+      } else {
+        return 'sp';
+      }
+    },
+    withTax: function withTax() {
+      return this.items.reduce(function (acc, curr) {
+        return acc + curr.unitprice * curr.quantity * curr.itemtax / 100;
+      }, 0);
+    },
+    total: function total() {
+      if (this.settings.show_tax) {
+        return this.invoice.total;
+      } else {
+        return this.invoice.subtotal;
+      }
+    },
+    balance: function balance() {
+      if (this.settings.show_tax) {
+        return this.invoice.balance;
+      } else {
+        return this.invoice.balance - this.withTax;
+      }
+    }
+  }
 });
 
 /***/ }),
@@ -74252,7 +74301,7 @@ var render = function() {
                     attrs: { format: _vm.defaultSettings.format },
                     on: {
                       blur: function($event) {
-                        return _vm.$v.invoice.selectedDateFrom.$touch()
+                        return _vm.$v.invoice.selectedDateTo.$touch()
                       }
                     },
                     model: {
@@ -74453,8 +74502,419 @@ render._withStripped = true
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function () {}
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "mt-3 invoice-create-body" }, [
+    _c("div", { staticClass: "wrapper-invoice-create" }, [
+      _c("div", { staticClass: "invoice-box invoice-from-to-customer-box" }, [
+        _c("div", { staticClass: "container" }, [
+          _c("div", { staticClass: "row justify-content" }, [
+            _c("div", { staticClass: "col-md-12" }, [
+              _c("div", { staticClass: "company-data-show" }, [
+                _c("span", [
+                  _c(
+                    "a",
+                    {
+                      attrs: {
+                        href: "/invoices?bycompany=" + _vm.invoice.company_id
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.invoice.company.name))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("span", {
+                  domProps: { innerHTML: _vm._s(_vm.replaceCompanyAddress) }
+                })
+              ]),
+              _vm._v(" "),
+              _vm.invoice.status == "Paid"
+                ? _c("div", { staticClass: "paid" })
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "customer-data-show" }, [
+                _c("div", [
+                  _c(
+                    "a",
+                    {
+                      attrs: {
+                        href: "/invoices?byuser=" + _vm.invoice.customer_id
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.invoice.customer.name))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("span", {
+                  domProps: { innerHTML: _vm._s(_vm.replaceCustomerAddress) }
+                })
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "invoice-box invoice-logo-box" }, [
+        _c("div", { staticClass: "company-logo" }, [
+          _vm.invoice.company.logo_img
+            ? _c("img", {
+                staticClass: "logo",
+                attrs: {
+                  src: "/upload/company/" + _vm.invoice.company_logo_img
+                }
+              })
+            : _vm._e()
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "invoice-box invoice-num-date-box" }, [
+        _c("div", { staticClass: "row level text-right" }, [
+          _c("div", { staticClass: "col-md-6" }, [
+            _c("h6", { staticClass: "font-weight-bold" }, [
+              _vm._v(_vm._s(_vm.$t("message.invoice_number")))
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-6" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("span", [_vm._v(_vm._s(_vm.invoice.number))])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "row level text-right" }, [
+          _c("div", { staticClass: "col-md-6" }, [
+            _c("h6", { staticClass: "font-weight-bold" }, [
+              _vm._v(_vm._s(_vm.$t("message.invoice_date")))
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-6" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("span", { attrs: { format: _vm.settings.date_format } }, [
+                _vm._v(_vm._s(_vm.invoice.invoice_date))
+              ])
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "row level text-right" }, [
+          _c("div", { staticClass: "col-md-6" }, [
+            _c("h6", { staticClass: "font-weight-bold" }, [
+              _vm._v(_vm._s(_vm.$t("message.due_date")))
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "col-md-6" }, [
+            _c("div", { staticClass: "form-group" }, [
+              _c("span", { attrs: { format: _vm.settings.date_format } }, [
+                _vm._v(_vm._s(_vm.invoice.due_date))
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "invoice-box invoice-item-box" }, [
+        _c("div", { staticClass: "items-wrapper" }, [
+          _c(
+            "div",
+            {
+              class: {
+                "items-table-header-with-tax": _vm.settings.show_tax,
+                "items-table-header": !_vm.settings.show_tax
+              },
+              staticStyle: { margin: "0" }
+            },
+            [
+              _c("div", { staticClass: "item-name" }, [
+                _vm._v(
+                  "\n                        " +
+                    _vm._s(_vm.$t("message.item")) +
+                    "\n                    "
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "item-description" }, [
+                _vm._v(
+                  "\n                        " +
+                    _vm._s(_vm.$t("message.description")) +
+                    "\n                    "
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "item-unit-price",
+                  staticStyle: {
+                    "white-space": "nowrap",
+                    "padding-left": "10px"
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.$t("message.unit_price")) +
+                      "\n                    "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "item-quantity",
+                  staticStyle: { "padding-left": "10px" }
+                },
+                [
+                  _vm._v(
+                    "\n                        " +
+                      _vm._s(_vm.$t("message.quantity")) +
+                      "\n                    "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _vm.settings.show_tax
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "item-tax",
+                      staticStyle: { "padding-left": "20px" }
+                    },
+                    [
+                      _vm._v(
+                        "\n                        " +
+                          _vm._s(_vm.$t("message.tax")) +
+                          "\n                    "
+                      )
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "item-amount" }, [
+                _vm._v(
+                  "\n                        " +
+                    _vm._s(_vm.$t("message.amount")) +
+                    "\n                    "
+                )
+              ])
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "items-table-body" },
+            [
+              _vm._l(_vm.items, function(item, index) {
+                return [
+                  _c(
+                    "div",
+                    {
+                      class: {
+                        "items-table-row-show": !_vm.settings.show_tax,
+                        "items-table-row-show-with-tax": _vm.settings.show_tax
+                      }
+                    },
+                    [
+                      _c("div", { staticClass: "item-name" }, [
+                        _c("div", { staticClass: "form-group-table" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(item.item) +
+                              "\n                                "
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "item-description" }, [
+                        _c("div", { staticClass: "form-group-table" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(item.description) +
+                              "\n                                "
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "item-unit-price" }, [
+                        _c("div", { staticClass: "form-group-table" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(item.unitprice) +
+                              "\n                                "
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "item-quantity" }, [
+                        _c("div", { staticClass: "form-group-table" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(item.quantity) +
+                              "\n                                "
+                          )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _vm.settings.show_tax
+                        ? _c("div", { staticClass: "item-tax" }, [
+                            _c("div", { staticClass: "form-group-table" }, [
+                              _vm._v(
+                                "\n                                    " +
+                                  _vm._s(item.itemtax) +
+                                  "\n                                "
+                              )
+                            ])
+                          ])
+                        : _vm._e(),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "item-total" }, [
+                        _c("div", { staticClass: "form-group-table" }, [
+                          _vm._v(
+                            "\n                                    " +
+                              _vm._s(item.unitprice * item.quantity) +
+                              "\n                                "
+                          )
+                        ])
+                      ])
+                    ]
+                  )
+                ]
+              }),
+              _vm._v(" "),
+              _vm.invoice.settings.show_payment
+                ? _c(
+                    "div",
+                    {
+                      staticClass: "show-payment-for-invoice",
+                      staticStyle: { margin: "3px" }
+                    },
+                    [
+                      _c("div", { staticClass: "show-payment-head" }, [
+                        _vm._v(
+                          "\n                            Payment\n                        "
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "show-payment-body" }, [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(_vm.invoice.amount_paid) +
+                            "\n                        "
+                        )
+                      ])
+                    ]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "invoice-table-row-notes" }, [
+                _c("div", { staticClass: "form-group" }, [
+                  _vm._v(
+                    "\n                            " +
+                      _vm._s(_vm.invoice.invoice_notes) +
+                      "\n                            "
+                  ),
+                  _c(
+                    "span",
+                    { staticStyle: { "text-decoration": "underline" } },
+                    [_vm._v("NOTES")]
+                  ),
+                  _vm._v(":\n                            "),
+                  _c("span", { domProps: { innerHTML: _vm._s(_vm.getNotes) } })
+                ])
+              ])
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c("div", { staticClass: "invoice-table-result" }, [
+            _c("div", { staticClass: "invoice-empty" }),
+            _vm._v(" "),
+            _c("div", { staticClass: "invoice-total" }, [
+              _c("div", { staticClass: "level mt-2" }, [
+                _c("h6", { staticClass: "flex" }, [
+                  _vm._v(_vm._s(_vm.$t("message.subtotal")))
+                ]),
+                _vm._v(" "),
+                _c("span", [
+                  _vm._v(
+                    _vm._s(
+                      _vm.invoice.subtotal + " " + _vm.invoice.settings.currency
+                    )
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _vm.settings.show_tax
+                ? _c("div", { staticClass: "level mt-2 with-tax" }, [
+                    _c("h6", { staticClass: "flex" }, [_vm._v("+ Tax")]),
+                    _vm._v(" "),
+                    _c("span", [
+                      _vm._v(
+                        _vm._s(
+                          _vm.withTax + " " + _vm.invoice.settings.currency
+                        )
+                      )
+                    ])
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "border-top pb-2" }),
+              _vm._v(" "),
+              _c("div", { staticClass: "level" }, [
+                _c("h6", { staticClass: "flex" }, [
+                  _vm._v(_vm._s(_vm.$t("message.total")))
+                ]),
+                _vm._v(" "),
+                _c("span", [
+                  _vm._v(
+                    _vm._s(_vm.total + " " + _vm.invoice.settings.currency)
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "level" }, [
+                _c("h6", { staticClass: "flex" }, [
+                  _vm._v(_vm._s(_vm.$t("message.amount_paid")))
+                ]),
+                _vm._v(" "),
+                _c("span", [
+                  _vm._v(
+                    _vm._s(
+                      _vm.invoice.amount_paid +
+                        " " +
+                        _vm.invoice.settings.currency
+                    )
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "border-top pb-2" }),
+              _vm._v(" "),
+              _c("div", { staticClass: "level" }, [
+                _c("h6", { staticClass: "flex" }, [
+                  _vm._v(_vm._s(_vm.$t("message.balance_due")))
+                ]),
+                _vm._v(" "),
+                _c("span", [
+                  _vm._v(
+                    _vm._s(_vm.balance + " " + _vm.invoice.settings.currency)
+                  )
+                ])
+              ])
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
+}
 var staticRenderFns = []
+render._withStripped = true
 
 
 
@@ -94974,7 +95434,7 @@ Vue.component('company-select', __webpack_require__(/*! ./components/CompanySele
 Vue.component('customer-select', __webpack_require__(/*! ./components/CustomerSelect.vue */ "./resources/js/components/CustomerSelect.vue")["default"]);
 Vue.component('invoice-notes', __webpack_require__(/*! ./components/InvoiceNotes.vue */ "./resources/js/components/InvoiceNotes.vue")["default"]);
 Vue.component('invoice-form', __webpack_require__(/*! ./components/InvoiceForm.vue */ "./resources/js/components/InvoiceForm.vue")["default"]);
-Vue.component('invoice-form', __webpack_require__(/*! ./components/InvoiceShow.vue */ "./resources/js/components/InvoiceShow.vue")["default"]);
+Vue.component('invoice-show', __webpack_require__(/*! ./components/InvoiceShow.vue */ "./resources/js/components/InvoiceShow.vue")["default"]);
 Vue.component('items-table', __webpack_require__(/*! ./components/ItemsTable.vue */ "./resources/js/components/ItemsTable.vue")["default"]);
 Vue.component('datapicker', __webpack_require__(/*! vuejs-datepicker */ "./node_modules/vuejs-datepicker/dist/vuejs-datepicker.esm.js")["default"]);
 Vue.component('invoices-filter', __webpack_require__(/*! ./components/Invoices-filter.vue */ "./resources/js/components/Invoices-filter.vue")["default"]);

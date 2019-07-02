@@ -191,7 +191,7 @@
                     <div class="col-md-8">
                         <div class="form-group">
                             <datapicker :format="defaultSettings.format"
-                                        @blur="$v.invoice.selectedDateFrom.$touch()"
+                                        @blur="$v.invoice.selectedDateTo.$touch()"
                                         v-model="invoice.selectedDateTo"
                                         class=""></datapicker>
                            <!-- <input type="date" name="due_date" id="due_date"
@@ -325,8 +325,6 @@
         },
         data() {
             return {
-                currentDateFrom: Date.parse(this.currentInvoice.invoice_date),
-                currentDateTo: Date.parse(this.currentInvoice.due_date),
                 spinnerVisible: false,
                 createdInvoiceId: NaN,
                 isTableInvalid: true,
@@ -485,7 +483,7 @@
                                 this.spinnerVisible = false
                             });
                             console.log(this.createdInvoiceId)
-                            location.href = '/invoices/' + this.createdInvoiceId;
+                            //location.href = '/invoices/' + this.createdInvoiceId;
                         }
                         else if(this.mode === 'edit') {
                             console.log(this.currentInvoice.id)
@@ -494,7 +492,7 @@
                                 this.spinnerVisible = false
                             });
                         }
-                        location.href = '/invoices/' + this.createdInvoiceId;
+                        //location.href = '/invoices/' + this.createdInvoiceId;
                         //await this.updateNextNumber();
                         //this.resetInvoice();
                         //eventBus.$emit('update', true)
