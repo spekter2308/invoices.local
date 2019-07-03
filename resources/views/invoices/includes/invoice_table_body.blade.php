@@ -58,7 +58,7 @@
                 @endif
             </a>
         </td>
-        <td>{{ /*\Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y')*/ $invoice->invoice_date }}</td>
+        <td>{{ \Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') /*$invoice->invoice_date*/ }}</td>
             <td
                 @if ($invoice->status != 'Paid')
                     @if(\Carbon\Carbon::parse($invoice->due_date)->greaterThanOrEqualTo(\Carbon\Carbon::now()))
@@ -67,7 +67,7 @@
                     style="color: red"
                     @endif
                 @endif>
-                {{ \Carbon\Carbon::parse($invoice->due_date)->diffInDays(\Carbon\Carbon::now()) }}
+                {{ \Carbon\Carbon::parse($invoice->invoice_date)->diffInDays(\Carbon\Carbon::now()) }}
             </td>
         @if ($invoice->settings->show_tax)
             <td>{{ $invoice->total }}</td>

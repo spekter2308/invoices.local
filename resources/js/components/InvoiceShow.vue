@@ -22,10 +22,22 @@
             </div>
 
             <!-- {{--Logo part--}} -->
-            <div class="invoice-box invoice-logo-box">
-                <div class="company-logo">
-                    <img v-if="invoice.company.logo_img" :src="'/upload/company/' + invoice.company_logo_img" class="logo">
+            <div class="invoice-box invoice-logo-box mt-3">
+                <div v-if="invoice.company.logo_img" class="company-logo">
+                    <img :src="'/upload/company/' + invoice.company.logo_img" class="logo">
+                    <h3 style="letter-spacing: 6px; margin-top: 20px;">{{ $t("message.invoice") }}</h3>
                 </div>
+
+                <div v-else>
+                    <h1 style="letter-spacing: 6px; float: right;">{{ $t("message.invoice") }}</h1>
+                </div>
+                <!--@change="f => invoice.selectedFile=f"
+                @blur="$v.invoice.selectedFile.$touch()"-->
+                <!-- <template v-if="$v.invoice.selectedFile.$error">
+                     <small v-if="!$v.invoice.selectedFile.isCorrectType">
+                         Sorry but you have choosen wrong data
+                     </small>
+                 </template>-->
             </div>
 
             <!-- {{--Date and Nubmer part--}} -->
@@ -47,7 +59,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <span :format="settings.date_format">{{ invoice.invoice_date }}</span>
+                            <span>{{ invoice_date}}</span>
                         </div>
                     </div>
                 </div>
@@ -58,7 +70,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <span :format="settings.date_format">{{ invoice.due_date }}</span>
+                            <span>{{ due_date }}</span>
                         </div>
                     </div>
                 </div>
@@ -68,7 +80,7 @@
             <div class="invoice-box invoice-item-box">
                 <div class="items-wrapper">
 
-                    <div :class="{'items-table-header-with-tax': settings.show_tax, 'items-table-header': !settings.show_tax}" style="margin: 0;">
+                    <div :class="{'items-table-header-show-with-tax': settings.show_tax, 'items-table-header-show': !settings.show_tax}" style="margin: 0;">
                         <div class="item-name">
                             {{ $t("message.item") }}
                         </div>
@@ -193,6 +205,14 @@
             invoiceItems: {
                 type: [Array],
                 required: true
+            },
+            dateTo: {
+                type: String,
+                required: true,
+            },
+            dateFrom: {
+                type: String,
+                required: true
             }
         },
         data() {
@@ -200,7 +220,8 @@
                 invoice: this.currentInvoice,
                 settings: this.defaultOptions,
                 items: this.invoiceItems,
-
+                invoice_date: this.dateFrom,
+                due_date: this.dateTo,
             }
         },
         watch: {

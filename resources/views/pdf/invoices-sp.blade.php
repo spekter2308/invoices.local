@@ -3,39 +3,37 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Document</title>
-
-    <style>
-        .page-break {
-            page-break-inside: avoid;
-        }
-        body {
-            font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
-            color: #111;
-        }
-        .logo {
-            background-image: url('/upload/company/{{$invoice->company->logo_img}}');
-            float: right;
-            height: 80px; width: 300px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-
-        .paid {
-            display: block;
-            position: relative;
-            background-image: url("public/img/paid.jpg");
-            height: 60px; width: 100px;
-            margin: -30px 20% 0;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-
-    </style>
 </head>
 <body>
+<style>
+    .page-break {
+        page-break-inside: avoid;
+    }
+    body {
+        font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
+        color: #111;
+    }
+    .logo {
+        background-image: url("/upload/company/{{$invoice->company->logo_img}}");
+        float: right;
+        height: 80px; width: 300px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
 
+    .paid {
+        display: block;
+        position: relative;
+        background-image: url("/img/paid.jpg");
+        height: 60px; width: 100px;
+        margin: -30px 20% 0;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+
+</style>
 <div class="invoice-pdf">
 
     <div style="height: 150px;">
@@ -47,9 +45,9 @@
             @if ($invoice->company->logo_img)
                 <div class="logo"></div>
                 <div style="clear: both; margin: 0pt; padding: 0pt;"></div>
-                <h3 align="right" style="margin: 50px 0 35px; letter-spacing: 6px">INVOICE</h3>
+                <h3 align="right" style="margin: 50px 0 35px; letter-spacing: 6px">FACTURA</h3>
             @else
-                <h1 align="right" style="margin: 50px 0 35px; letter-spacing: 6px">INVOICE</h1>
+                <h1 align="right" style="margin: 50px 0 35px; letter-spacing: 6px">FACTURA</h1>
             @endif
         </div>
         <div style="clear: both; margin: 0pt; padding: 0pt;"></div>
@@ -67,17 +65,17 @@
         <div align="right" style="float: right; width: 54%;">
             <table align="right" style="border-spacing:0 18px;">
                 <tr>
-                    <td align="right" style="font-weight: bold">Invoice #</td>
+                    <td align="right" style="font-weight: bold">Factura #</td>
                     <td align="right" style="padding-left: 40px">{{ $invoice->number }}</td>
                 </tr>
                 <br>
                 <tr>
-                    <td align="right" style="font-weight: bold">Invoice Date</td>
+                    <td align="right" style="font-weight: bold">Fecha</td>
                     <td align="right" style="padding-left: 40px">{{ $invoice->invoice_date }}</td>
                 </tr>
                 <br>
                 <tr>
-                    <td align="right" style="font-weight: bold">Due Date</td>
+                    <td align="right" style="font-weight: bold">Fecha de Vencimiento</td>
                     <td align="right" style="padding-left: 40px">{{ $invoice->due_date }}</td>
                 </tr>
             </table>
@@ -87,14 +85,14 @@
 
     <table style="margin-top: 20px; padding: 6px 6px; width: 100%; border: 1px solid black; background-color: #e6e5e5; font-size: 13px;">
         <tr>
-            <th align="left">Item</th>
-            <th align="left" style="width: 30%;">Description</th>
-            <th align="center" nowrap>Unit Price</th>
-            <th align="center">Quantity</th>
+            <th align="left">Artículo</th>
+            <th align="left" style="width: 30%;">Descripción</th>
+            <th align="center" nowrap>Precio Unitario</th>
+            <th align="center">Cantidad</th>
             @if ($invoice->settings->show_tax)
-                <th align="center">Tax, %</th>
+                <th align="center">Impuesto, %</th>
             @endif
-            <th align="right">Amount</th>
+            <th align="right">Importe</th>
         </tr>
     </table>
     <table style="padding: 10px 6px; width: 100%; border: 1px solid black; border-top: none; font-size: 12px;">
@@ -120,7 +118,7 @@
         @endif
             <tr>
                 <td colspan="{{ $invoice->settings->show_tax ? '6' : '5' }}" style="padding: 40px 5px 15px;">
-                    <span style="text-decoration: underline">NOTES</span>: {!! nl2br(str_replace(" ", " &nbsp;", $invoice->company->invoice_notes))  !!}
+                    <span style="text-decoration: underline">NOTAS</span>: {!! nl2br(str_replace(" ", " &nbsp;", $invoice->company->invoice_notes))  !!}
                 </td>
             </tr>
     </table>
@@ -141,7 +139,7 @@
             </tr>
             <tr style="border-bottom: 1px solid black">
                 <td align="left" style="float: left; width: 30%; padding-left: 40px; font-weight: bold">
-                    + Tax
+                    + Impuesto
                 </td>
                 <td align="right" style="float: right; width: 30%; padding-right: 10px; margin-left: 30px; font-size: 12px; font-style: italic">
                     {{ $tax . ' ' . $invoice->settings->currency }}
@@ -157,7 +155,7 @@
             </tr>
             <tr style="border-bottom: 1px solid black">
                 <td align="left" style="float: left; width: 30%; padding-left: 10px; font-weight: bold; white-space: nowrap">
-                    Amount Paid
+                    Monto Pagado
                 </td>
                 <td align="right" style="float: right; width: 30%; padding-right: 10px">
                     {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
@@ -165,7 +163,7 @@
             </tr>
             <tr style="border-bottom: 1px solid black">
                 <td align="left" style="float: left; width: 30%; padding-left: 10px; font-weight: bold; white-space: nowrap">
-                    Balance Due
+                    Factura Total
                 </td>
                 <td align="right" style="float: right; width: 30%; padding-right: 10px">
                     {{ $invoice->balance . ' ' . $invoice->settings->currency}}
@@ -192,7 +190,7 @@
             </tr>
             <tr>
                 <td align="left" style="float: left; width: 30%; padding-left: 10px; font-weight: bold; white-space: nowrap;">
-                    Amount Paid
+                    Monto Pagado
                 </td>
                 <td align="right" style="float: right; width: 30%; padding-right: 10px">
                     {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
@@ -200,7 +198,7 @@
             </tr>
             <tr>
                 <td align="left" style="float: left; width: 30%; padding-left: 10px; font-weight: bold; white-space: nowrap;">
-                    Balance Due
+                    Factura Total
                 </td>
                 <td align="right" style="float: right; width: 30%; padding-right: 10px">
                     {{ $balance . ' ' . $invoice->settings->currency }}

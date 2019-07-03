@@ -331,8 +331,8 @@
                 invoice: {
                     selectedCompany: this.invoiceCompany.id || NaN,
                     selectedCustomer: this.invoiceCustomer.id || {},
-                    selectedDateFrom: Date.parse(this.currentInvoice.invoice_date) || new Date().toISOString().slice(0,10),
-                    selectedDateTo: Date.parse(this.currentInvoice.due_date) || new Date().toISOString().slice(0,10),
+                    selectedDateFrom: this.currentInvoice.invoice_date || new Date().toISOString().slice(0,10),
+                    selectedDateTo: this.currentInvoice.due_date || new Date().toISOString().slice(0,10),
                     selectedInvoiceNumber: this.invoiceNumber,
                     selectedItems: this.invoiceItems,
                     selectedSettings: []
@@ -483,7 +483,7 @@
                                 this.spinnerVisible = false
                             });
                             console.log(this.createdInvoiceId)
-                            //location.href = '/invoices/' + this.createdInvoiceId;
+                            location.href = '/invoices/' + this.createdInvoiceId;
                         }
                         else if(this.mode === 'edit') {
                             console.log(this.currentInvoice.id)
@@ -492,7 +492,7 @@
                                 this.spinnerVisible = false
                             });
                         }
-                        //location.href = '/invoices/' + this.createdInvoiceId;
+                        location.href = '/invoices/' + this.createdInvoiceId;
                         //await this.updateNextNumber();
                         //this.resetInvoice();
                         //eventBus.$emit('update', true)

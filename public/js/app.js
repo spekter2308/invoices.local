@@ -5052,8 +5052,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       invoice: {
         selectedCompany: this.invoiceCompany.id || NaN,
         selectedCustomer: this.invoiceCustomer.id || {},
-        selectedDateFrom: Date.parse(this.currentInvoice.invoice_date) || new Date().toISOString().slice(0, 10),
-        selectedDateTo: Date.parse(this.currentInvoice.due_date) || new Date().toISOString().slice(0, 10),
+        selectedDateFrom: this.currentInvoice.invoice_date || new Date().toISOString().slice(0, 10),
+        selectedDateTo: this.currentInvoice.due_date || new Date().toISOString().slice(0, 10),
         selectedInvoiceNumber: this.invoiceNumber,
         selectedItems: this.invoiceItems,
         selectedSettings: []
@@ -5206,7 +5206,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 eventBus.$emit('touch', true);
 
                 if (!(!this.$v.$error && !this.isTableRowsInvalid)) {
-                  _context.next = 17;
+                  _context.next = 19;
                   break;
                 }
 
@@ -5215,7 +5215,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 console.log(JSON.stringify(this.invoice));
 
                 if (!(this.mode === 'create')) {
-                  _context.next = 13;
+                  _context.next = 14;
                   break;
                 }
 
@@ -5226,42 +5226,50 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 10:
-                console.log(this.createdInvoiceId); //location.href = '/invoices/' + this.createdInvoiceId;
-
-                _context.next = 17;
+                console.log(this.createdInvoiceId);
+                location.href = '/invoices/' + this.createdInvoiceId;
+                _context.next = 18;
                 break;
 
-              case 13:
+              case 14:
                 if (!(this.mode === 'edit')) {
-                  _context.next = 17;
+                  _context.next = 18;
                   break;
                 }
 
                 console.log(this.currentInvoice.id);
-                _context.next = 17;
+                _context.next = 18;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(function (response) {
                   _this2.createdInvoiceId = response.data.invoice.id;
                   _this2.spinnerVisible = false;
                 });
 
-              case 17:
-                _context.next = 23;
-                break;
+              case 18:
+                location.href = '/invoices/' + this.createdInvoiceId; //await this.updateNextNumber();
+                //this.resetInvoice();
+                //eventBus.$emit('update', true)
+                //this.$v.$reset()
+                //eventBus.$emit('reset', true)
+                //console.log('resetting')
 
               case 19:
-                _context.prev = 19;
+                _context.next = 25;
+                break;
+
+              case 21:
+                _context.prev = 21;
                 _context.t0 = _context["catch"](0);
                 // this.resetInvoice()
                 // this.$v.$reset()
                 console.log('some error');
                 this.spinnerVisible = false;
 
-              case 23:
+              case 25:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 19]]);
+        }, _callee, this, [[0, 21]]);
       }));
 
       function onSubmit() {
@@ -5608,6 +5616,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "InvoiceShow",
   props: {
@@ -5622,13 +5642,23 @@ __webpack_require__.r(__webpack_exports__);
     invoiceItems: {
       type: [Array],
       required: true
+    },
+    dateTo: {
+      type: String,
+      required: true
+    },
+    dateFrom: {
+      type: String,
+      required: true
     }
   },
   data: function data() {
     return {
       invoice: this.currentInvoice,
       settings: this.defaultOptions,
-      items: this.invoiceItems
+      items: this.invoiceItems,
+      invoice_date: this.dateFrom,
+      due_date: this.dateTo
     };
   },
   watch: {
@@ -13154,7 +13184,7 @@ var components = {
 /*!***********************************************************!*\
   !*** ./node_modules/bootstrap-vue/es/components/index.js ***!
   \***********************************************************/
-/*! exports provided: BVModalPlugin, BVToastPlugin, AlertPlugin, BadgePlugin, BreadcrumbPlugin, ButtonPlugin, ButtonGroupPlugin, ButtonToolbarPlugin, InputGroupPlugin, CardPlugin, CarouselPlugin, LayoutPlugin, CollapsePlugin, DropdownPlugin, EmbedPlugin, FormPlugin, FormGroupPlugin, FormCheckboxPlugin, FormRadioPlugin, FormInputPlugin, FormTextareaPlugin, FormFilePlugin, FormSelectPlugin, ImagePlugin, JumbotronPlugin, LinkPlugin, ListGroupPlugin, MediaPlugin, ModalPlugin, NavPlugin, NavbarPlugin, PaginationPlugin, PaginationNavPlugin, PopoverPlugin, ProgressPlugin, SpinnerPlugin, TablePlugin, TabsPlugin, ToastPlugin, TooltipPlugin, Alert, Badge, Breadcrumb, Button, ButtonGroup, ButtonToolbar, InputGroup, Card, Carousel, Layout, Collapse, Dropdown, Embed, Form, FormGroup, FormCheckbox, FormRadio, FormInput, FormTextarea, FormFile, FormSelect, Image, Jumbotron, Link, ListGroup, Media, Modal, Nav, Navbar, Pagination, PaginationNav, Popover, Progress, Spinner, Table, Tabs, Toast, Tooltip, BAlert, BBadge, BBreadcrumb, BBreadcrumbItem, BBreadcrumbLink, BButton, BButtonClose, BButtonGroup, BButtonToolbar, BInputGroup, BInputGroupAddon, BInputGroupPrepend, BInputGroupAppend, BInputGroupText, BCard, BCardHeader, BCardBody, BCardTitle, BCardSubTitle, BCardFooter, BCardImg, BCardImgLazy, BCardText, BCardGroup, BCarousel, BCarouselSlide, BContainer, BRow, BCol, BFormRow, BCollapse, BDropdown, BDropdownItem, BDropdownItemButton, BDropdownHeader, BDropdownDivider, BDropdownForm, BDropdownText, BDropdownGroup, BEmbed, BForm, BFormDatalist, BFormText, BFormInvalidFeedback, BFormValidFeedback, BFormGroup, BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup, BFormInput, BFormTextarea, BFormFile, BFormSelect, BImg, BImgLazy, BJumbotron, BLink, BListGroup, BListGroupItem, BMedia, BMediaAside, BMediaBody, BModal, BNav, BNavItem, BNavText, BNavForm, BNavItemDropdown, BNavbar, BNavbarNav, BNavbarBrand, BNavbarToggle, BPagination, BPaginationNav, BPopover, BProgress, BProgressBar, BSpinner, BTable, BTabs, BTab, BToast, BToaster, BTooltip, default */
+/*! exports provided: default, BVModalPlugin, BVToastPlugin, AlertPlugin, BadgePlugin, BreadcrumbPlugin, ButtonPlugin, ButtonGroupPlugin, ButtonToolbarPlugin, InputGroupPlugin, CardPlugin, CarouselPlugin, LayoutPlugin, CollapsePlugin, DropdownPlugin, EmbedPlugin, FormPlugin, FormGroupPlugin, FormCheckboxPlugin, FormRadioPlugin, FormInputPlugin, FormTextareaPlugin, FormFilePlugin, FormSelectPlugin, ImagePlugin, JumbotronPlugin, LinkPlugin, ListGroupPlugin, MediaPlugin, ModalPlugin, NavPlugin, NavbarPlugin, PaginationPlugin, PaginationNavPlugin, PopoverPlugin, ProgressPlugin, SpinnerPlugin, TablePlugin, TabsPlugin, ToastPlugin, TooltipPlugin, Alert, Badge, Breadcrumb, Button, ButtonGroup, ButtonToolbar, InputGroup, Card, Carousel, Layout, Collapse, Dropdown, Embed, Form, FormGroup, FormCheckbox, FormRadio, FormInput, FormTextarea, FormFile, FormSelect, Image, Jumbotron, Link, ListGroup, Media, Modal, Nav, Navbar, Pagination, PaginationNav, Popover, Progress, Spinner, Table, Tabs, Toast, Tooltip, BAlert, BBadge, BBreadcrumb, BBreadcrumbItem, BBreadcrumbLink, BButton, BButtonClose, BButtonGroup, BButtonToolbar, BInputGroup, BInputGroupAddon, BInputGroupPrepend, BInputGroupAppend, BInputGroupText, BCard, BCardHeader, BCardBody, BCardTitle, BCardSubTitle, BCardFooter, BCardImg, BCardImgLazy, BCardText, BCardGroup, BCarousel, BCarouselSlide, BContainer, BRow, BCol, BFormRow, BCollapse, BDropdown, BDropdownItem, BDropdownItemButton, BDropdownHeader, BDropdownDivider, BDropdownForm, BDropdownText, BDropdownGroup, BEmbed, BForm, BFormDatalist, BFormText, BFormInvalidFeedback, BFormValidFeedback, BFormGroup, BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup, BFormInput, BFormTextarea, BFormFile, BFormSelect, BImg, BImgLazy, BJumbotron, BLink, BListGroup, BListGroupItem, BMedia, BMediaAside, BMediaBody, BModal, BNav, BNavItem, BNavText, BNavForm, BNavItemDropdown, BNavbar, BNavbarNav, BNavbarBrand, BNavbarToggle, BPagination, BPaginationNav, BPopover, BProgress, BProgressBar, BSpinner, BTable, BTabs, BTab, BToast, BToaster, BTooltip */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23759,7 +23789,7 @@ var NAME = 'BTooltip'; // @vue/component
 /*!***********************************************************!*\
   !*** ./node_modules/bootstrap-vue/es/directives/index.js ***!
   \***********************************************************/
-/*! exports provided: VBTogglePlugin, VBModalPlugin, VBScrollspyPlugin, VBTooltipPlugin, VBPopoverPlugin, BToggle, BModal, BScrollspy, BTooltip, BPopover, VBToggle, VBModal, VBScrollspy, VBTooltip, VBPopover, default */
+/*! exports provided: default, VBTogglePlugin, VBModalPlugin, VBScrollspyPlugin, VBTooltipPlugin, VBPopoverPlugin, BToggle, BModal, BScrollspy, BTooltip, BPopover, VBToggle, VBModal, VBScrollspy, VBTooltip, VBPopover */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -74556,17 +74586,31 @@ var render = function() {
         ])
       ]),
       _vm._v(" "),
-      _c("div", { staticClass: "invoice-box invoice-logo-box" }, [
-        _c("div", { staticClass: "company-logo" }, [
-          _vm.invoice.company.logo_img
-            ? _c("img", {
+      _c("div", { staticClass: "invoice-box invoice-logo-box mt-3" }, [
+        _vm.invoice.company.logo_img
+          ? _c("div", { staticClass: "company-logo" }, [
+              _c("img", {
                 staticClass: "logo",
                 attrs: {
-                  src: "/upload/company/" + _vm.invoice.company_logo_img
+                  src: "/upload/company/" + _vm.invoice.company.logo_img
                 }
-              })
-            : _vm._e()
-        ])
+              }),
+              _vm._v(" "),
+              _c(
+                "h3",
+                {
+                  staticStyle: { "letter-spacing": "6px", "margin-top": "20px" }
+                },
+                [_vm._v(_vm._s(_vm.$t("message.invoice")))]
+              )
+            ])
+          : _c("div", [
+              _c(
+                "h1",
+                { staticStyle: { "letter-spacing": "6px", float: "right" } },
+                [_vm._v(_vm._s(_vm.$t("message.invoice")))]
+              )
+            ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "invoice-box invoice-num-date-box" }, [
@@ -74593,9 +74637,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "col-md-6" }, [
             _c("div", { staticClass: "form-group" }, [
-              _c("span", { attrs: { format: _vm.settings.date_format } }, [
-                _vm._v(_vm._s(_vm.invoice.invoice_date))
-              ])
+              _c("span", [_vm._v(_vm._s(_vm.invoice_date))])
             ])
           ])
         ]),
@@ -74609,9 +74651,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "col-md-6" }, [
             _c("div", { staticClass: "form-group" }, [
-              _c("span", { attrs: { format: _vm.settings.date_format } }, [
-                _vm._v(_vm._s(_vm.invoice.due_date))
-              ])
+              _c("span", [_vm._v(_vm._s(_vm.due_date))])
             ])
           ])
         ])
@@ -74623,8 +74663,8 @@ var render = function() {
             "div",
             {
               class: {
-                "items-table-header-with-tax": _vm.settings.show_tax,
-                "items-table-header": !_vm.settings.show_tax
+                "items-table-header-show-with-tax": _vm.settings.show_tax,
+                "items-table-header-show": !_vm.settings.show_tax
               },
               staticStyle: { margin: "0" }
             },
@@ -75533,7 +75573,7 @@ var render = function() {
               "tbody",
               _vm._l(_vm.histories, function(history) {
                 return _c("tr", [
-                  _c("td", [_vm._v(_vm._s(history.created_at))]),
+                  _c("td", [_vm._v(_vm._s(history.date.slice(0, 10)))]),
                   _vm._v(" "),
                   _c("td", [_vm._v(_vm._s(history.amount))]),
                   _vm._v(" "),
@@ -96751,8 +96791,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

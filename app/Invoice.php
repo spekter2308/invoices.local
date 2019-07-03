@@ -74,7 +74,7 @@ class Invoice extends Model
         return $filters->apply($query);
     }
 
-    public function getInvoiceDateAttribute($value)
+   /* public function getInvoiceDateAttribute($value)
     {
         $date = Carbon::parse($value);
 
@@ -110,5 +110,5 @@ class Invoice extends Model
         }
 
         return $date->format($format);
-    }
+    }*/
 }

@@ -45,6 +45,8 @@
                     :default-options="{{ $settings }}"
                     :current-invoice="{{ $invoice }}"
                     :invoice-items="{{ $invoiceItems }}"
+                    date-from="{{$invoiceDate}}"
+                    date-to="{{$dueDate}}"
                 >
                 
                 </invoice-show>

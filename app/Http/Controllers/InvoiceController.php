@@ -39,8 +39,6 @@ class InvoiceController extends Controller
     {
         $invoices = $this->getInvoices($filters);
 
-        //dd($request->query);
-
         $getFilters = [];
         foreach ($request->query as $key => $filter) {
             $getFilters[$key] = $filter;
@@ -57,12 +55,6 @@ class InvoiceController extends Controller
         }
 
         $invoices = $invoices->paginate(15);
-
-        if (\request()->wantsJson()) {
-            return $invoices;
-        }
-
-        //$invoices = $invoices->paginate(2);
 
         return view('invoices.index', [
             'invoices' => $invoices,
@@ -142,6 +134,7 @@ class InvoiceController extends Controller
 
         //check for unique invoice number
         $data['selectedInvoiceNumber'] = $this->checkInvoiceNumber($data['selectedInvoiceNumber']);
+
         $data['selectedDateFrom'] = Carbon::parse($data['selectedDateFrom']);
         $data['selectedDateTo'] = Carbon::parse($data['selectedDateTo']);
 
@@ -221,10 +214,24 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
+        if ($invoice->settings->date_format == 'dd.MM.yyyy') {
+            $format = 'd.m.Y';
+        } elseif ($invoice->settings->date_format == 'dd/MM/yyyy') {
+            $format = 'd/m/Y';
+        } elseif ($invoice->settings->date_format == 'MM/dd/yyyy') {
+            $format = 'm/d/Y';
+        } elseif ($invoice->settings->date_format == 'dd-MM-yyyy') {
+            $format = 'd-m-Y';
+        } else {
+            $format = 'Y-m-d';
+        }
+
         return view('invoices.show', [
             'invoice'=> $invoice,
             'settings' => $invoice->settings,
-            'invoiceItems' => collect($invoice->items)
+            'invoiceItems' => collect($invoice->items),
+            'invoiceDate' => Carbon::parse($invoice->invoice_date)->format($format),
+            'dueDate' => Carbon::parse($invoice->due_date)->format($format),
         ]);
 
     }
@@ -269,7 +276,9 @@ class InvoiceController extends Controller
         $data = $request->input();
 
         //check for unique invoice number
-        $data['selectedInvoiceNumber'] = $this->checkInvoiceNumber($data['selectedInvoiceNumber']);
+        if ($invoice->number != $data['selectedInvoiceNumber']) {
+            $data['selectedInvoiceNumber'] = $this->checkInvoiceNumber($data['selectedInvoiceNumber']);
+        }
 
         $data['selectedDateFrom'] = Carbon::parse($data['selectedDateFrom']);
         $data['selectedDateTo'] = Carbon::parse($data['selectedDateTo']);
@@ -424,11 +433,13 @@ class InvoiceController extends Controller
     {
         $attributes = \request()->validate([
             'invoice_id' => 'required|numeric',
-            'date' => 'required|date',
+            'date' => 'required',
             'amount' => 'required|numeric',
             'receiving_account' => 'required|string|max:255',
             'notes' => 'nullable|string|max:255',
         ]);
+
+        $attributes['date'] = Carbon::parse($attributes['date']);
 
         $paymentData = PaymentInvoice::create($attributes);
 
@@ -570,11 +581,25 @@ class InvoiceController extends Controller
         $balance = $invoice->balance - $tax;
 
         if ($print) {
-            return view('pdf.invoices', ['invoice' => $invoice, 'tax' => $tax, 'balance' => $balance]);
+            if ($invoice->settings->language == 'english') {
+                return view('pdf.invoices', ['invoice' => $invoice, 'tax' => $tax, 'balance' => $balance]);
+            } elseif ($invoice->settings->language == 'germany') {
+                return view('pdf.invoices-ge', ['invoice' => $invoice, 'tax' => $tax, 'balance' => $balance]);
+            } else {
+                return view('pdf.invoices-sp', ['invoice' => $invoice, 'tax' => $tax, 'balance' => $balance]);
+            }
         } else {
-            $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice, 'tax' => $tax, 'balance' => $balance]);
-            return $pdf->download('Invoice ' . $invoice->number . '.pdf');
-            //return $pdf->stream('document.pdf');
+            if ($invoice->settings->language == 'english') {
+                $pdf = PDF::loadView('pdf.invoices', ['invoice' => $invoice, 'tax' => $tax, 'balance' => $balance]);
+                return $pdf->download('Invoice ' . $invoice->number . '.pdf');
+                //return $pdf->stream('document.pdf');
+            } elseif ($invoice->settings->language == 'germany') {
+                $pdf = PDF::loadView('pdf.invoices-ge', ['invoice' => $invoice, 'tax' => $tax, 'balance' => $balance]);
+                return $pdf->download('Invoice ' . $invoice->number . '.pdf');
+            } else {
+                $pdf = PDF::loadView('pdf.invoices-sp', ['invoice' => $invoice, 'tax' => $tax, 'balance' => $balance]);
+                return $pdf->download('Invoice ' . $invoice->number . '.pdf');
+            }
         }
     }
 }

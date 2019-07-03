@@ -80,7 +80,7 @@
                         </thead>
                     <tbody>
                         <tr v-for="history in histories">
-                            <td>{{ history.created_at }}</td>
+                            <td>{{ (history.date).slice(0,10) }}</td>
                             <td>{{ history.amount }}</td>
                             <td>{{ history.receiving_account  }}</td>
                             <td>{{ history.notes  }}</td>
