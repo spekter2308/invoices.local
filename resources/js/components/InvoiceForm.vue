@@ -54,13 +54,6 @@
                 <div v-else>
                     <h1 style="letter-spacing: 6px; float: right;">{{ $t("message.invoice") }}</h1>
                 </div>
-                <!--@change="f => invoice.selectedFile=f"
-                @blur="$v.invoice.selectedFile.$touch()"-->
-                <!-- <template v-if="$v.invoice.selectedFile.$error">
-                     <small v-if="!$v.invoice.selectedFile.isCorrectType">
-                         Sorry but you have choosen wrong data
-                     </small>
-                 </template>-->
             </div>
 
             <!-- {{--Date and Nubmer part--}} -->
@@ -221,7 +214,9 @@
             </div>
 
             <div class="invoice-box invoice-notes-box">
-                <invoice-notes :notes="notes"></invoice-notes>
+                <invoice-notes :notes="notes"
+                                v-model="invoice.selectedNotes">
+                </invoice-notes>
             </div>
 
             <div class="invoice-box invoice-total-box">
@@ -335,7 +330,8 @@
                     selectedDateTo: this.currentInvoice.due_date || new Date().toISOString().slice(0,10),
                     selectedInvoiceNumber: this.invoiceNumber,
                     selectedItems: this.invoiceItems,
-                    selectedSettings: []
+                    selectedSettings: [],
+                    selectedNotes: this.notes
                 },
                 selectedNumber: {
                     prefix: this.formatNumber.prefix || '',
@@ -343,7 +339,7 @@
                     postfix: this.formatNumber.postfix || '',
                     increment: this.formatNumber.increment || 1
                 },
-                notes: this.invoiceCompany.invoice_notes || ''
+                notes: this.currentInvoice.invoice_notes || this.invoiceCompany.invoice_notes
             }
         },
         validations: {
@@ -483,7 +479,7 @@
                                 this.spinnerVisible = false
                             });
                             console.log(this.createdInvoiceId)
-                            location.href = '/invoices/' + this.createdInvoiceId;
+                            //location.href = '/invoices/' + this.createdInvoiceId;
                         }
                         else if(this.mode === 'edit') {
                             console.log(this.currentInvoice.id)
@@ -492,7 +488,7 @@
                                 this.spinnerVisible = false
                             });
                         }
-                        location.href = '/invoices/' + this.createdInvoiceId;
+                        //location.href = '/invoices/' + this.createdInvoiceId;
                         //await this.updateNextNumber();
                         //this.resetInvoice();
                         //eventBus.$emit('update', true)

@@ -4973,11 +4973,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5056,7 +5051,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         selectedDateTo: this.currentInvoice.due_date || new Date().toISOString().slice(0, 10),
         selectedInvoiceNumber: this.invoiceNumber,
         selectedItems: this.invoiceItems,
-        selectedSettings: []
+        selectedSettings: [],
+        selectedNotes: this.notes
       },
       selectedNumber: {
         prefix: this.formatNumber.prefix || '',
@@ -5064,7 +5060,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         postfix: this.formatNumber.postfix || '',
         increment: this.formatNumber.increment || 1
       },
-      notes: this.invoiceCompany.invoice_notes || ''
+      notes: this.currentInvoice.invoice_notes || this.invoiceCompany.invoice_notes
     };
   },
   validations: {
@@ -5206,7 +5202,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 eventBus.$emit('touch', true);
 
                 if (!(!this.$v.$error && !this.isTableRowsInvalid)) {
-                  _context.next = 19;
+                  _context.next = 17;
                   break;
                 }
 
@@ -5215,7 +5211,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 console.log(JSON.stringify(this.invoice));
 
                 if (!(this.mode === 'create')) {
-                  _context.next = 14;
+                  _context.next = 13;
                   break;
                 }
 
@@ -5226,50 +5222,42 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 10:
-                console.log(this.createdInvoiceId);
-                location.href = '/invoices/' + this.createdInvoiceId;
-                _context.next = 18;
+                console.log(this.createdInvoiceId); //location.href = '/invoices/' + this.createdInvoiceId;
+
+                _context.next = 17;
                 break;
 
-              case 14:
+              case 13:
                 if (!(this.mode === 'edit')) {
-                  _context.next = 18;
+                  _context.next = 17;
                   break;
                 }
 
                 console.log(this.currentInvoice.id);
-                _context.next = 18;
+                _context.next = 17;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(function (response) {
                   _this2.createdInvoiceId = response.data.invoice.id;
                   _this2.spinnerVisible = false;
                 });
 
-              case 18:
-                location.href = '/invoices/' + this.createdInvoiceId; //await this.updateNextNumber();
-                //this.resetInvoice();
-                //eventBus.$emit('update', true)
-                //this.$v.$reset()
-                //eventBus.$emit('reset', true)
-                //console.log('resetting')
-
-              case 19:
-                _context.next = 25;
+              case 17:
+                _context.next = 23;
                 break;
 
-              case 21:
-                _context.prev = 21;
+              case 19:
+                _context.prev = 19;
                 _context.t0 = _context["catch"](0);
                 // this.resetInvoice()
                 // this.$v.$reset()
                 console.log('some error');
                 this.spinnerVisible = false;
 
-              case 25:
+              case 23:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 21]]);
+        }, _callee, this, [[0, 19]]);
       }));
 
       function onSubmit() {
@@ -5423,6 +5411,11 @@ __webpack_require__.r(__webpack_exports__);
     notes: {
       type: String
     }
+  },
+  data: function data() {
+    return {
+      enterednotes: this.notes
+    };
   }
 });
 
@@ -13184,7 +13177,7 @@ var components = {
 /*!***********************************************************!*\
   !*** ./node_modules/bootstrap-vue/es/components/index.js ***!
   \***********************************************************/
-/*! exports provided: default, BVModalPlugin, BVToastPlugin, AlertPlugin, BadgePlugin, BreadcrumbPlugin, ButtonPlugin, ButtonGroupPlugin, ButtonToolbarPlugin, InputGroupPlugin, CardPlugin, CarouselPlugin, LayoutPlugin, CollapsePlugin, DropdownPlugin, EmbedPlugin, FormPlugin, FormGroupPlugin, FormCheckboxPlugin, FormRadioPlugin, FormInputPlugin, FormTextareaPlugin, FormFilePlugin, FormSelectPlugin, ImagePlugin, JumbotronPlugin, LinkPlugin, ListGroupPlugin, MediaPlugin, ModalPlugin, NavPlugin, NavbarPlugin, PaginationPlugin, PaginationNavPlugin, PopoverPlugin, ProgressPlugin, SpinnerPlugin, TablePlugin, TabsPlugin, ToastPlugin, TooltipPlugin, Alert, Badge, Breadcrumb, Button, ButtonGroup, ButtonToolbar, InputGroup, Card, Carousel, Layout, Collapse, Dropdown, Embed, Form, FormGroup, FormCheckbox, FormRadio, FormInput, FormTextarea, FormFile, FormSelect, Image, Jumbotron, Link, ListGroup, Media, Modal, Nav, Navbar, Pagination, PaginationNav, Popover, Progress, Spinner, Table, Tabs, Toast, Tooltip, BAlert, BBadge, BBreadcrumb, BBreadcrumbItem, BBreadcrumbLink, BButton, BButtonClose, BButtonGroup, BButtonToolbar, BInputGroup, BInputGroupAddon, BInputGroupPrepend, BInputGroupAppend, BInputGroupText, BCard, BCardHeader, BCardBody, BCardTitle, BCardSubTitle, BCardFooter, BCardImg, BCardImgLazy, BCardText, BCardGroup, BCarousel, BCarouselSlide, BContainer, BRow, BCol, BFormRow, BCollapse, BDropdown, BDropdownItem, BDropdownItemButton, BDropdownHeader, BDropdownDivider, BDropdownForm, BDropdownText, BDropdownGroup, BEmbed, BForm, BFormDatalist, BFormText, BFormInvalidFeedback, BFormValidFeedback, BFormGroup, BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup, BFormInput, BFormTextarea, BFormFile, BFormSelect, BImg, BImgLazy, BJumbotron, BLink, BListGroup, BListGroupItem, BMedia, BMediaAside, BMediaBody, BModal, BNav, BNavItem, BNavText, BNavForm, BNavItemDropdown, BNavbar, BNavbarNav, BNavbarBrand, BNavbarToggle, BPagination, BPaginationNav, BPopover, BProgress, BProgressBar, BSpinner, BTable, BTabs, BTab, BToast, BToaster, BTooltip */
+/*! exports provided: BVModalPlugin, BVToastPlugin, AlertPlugin, BadgePlugin, BreadcrumbPlugin, ButtonPlugin, ButtonGroupPlugin, ButtonToolbarPlugin, InputGroupPlugin, CardPlugin, CarouselPlugin, LayoutPlugin, CollapsePlugin, DropdownPlugin, EmbedPlugin, FormPlugin, FormGroupPlugin, FormCheckboxPlugin, FormRadioPlugin, FormInputPlugin, FormTextareaPlugin, FormFilePlugin, FormSelectPlugin, ImagePlugin, JumbotronPlugin, LinkPlugin, ListGroupPlugin, MediaPlugin, ModalPlugin, NavPlugin, NavbarPlugin, PaginationPlugin, PaginationNavPlugin, PopoverPlugin, ProgressPlugin, SpinnerPlugin, TablePlugin, TabsPlugin, ToastPlugin, TooltipPlugin, Alert, Badge, Breadcrumb, Button, ButtonGroup, ButtonToolbar, InputGroup, Card, Carousel, Layout, Collapse, Dropdown, Embed, Form, FormGroup, FormCheckbox, FormRadio, FormInput, FormTextarea, FormFile, FormSelect, Image, Jumbotron, Link, ListGroup, Media, Modal, Nav, Navbar, Pagination, PaginationNav, Popover, Progress, Spinner, Table, Tabs, Toast, Tooltip, BAlert, BBadge, BBreadcrumb, BBreadcrumbItem, BBreadcrumbLink, BButton, BButtonClose, BButtonGroup, BButtonToolbar, BInputGroup, BInputGroupAddon, BInputGroupPrepend, BInputGroupAppend, BInputGroupText, BCard, BCardHeader, BCardBody, BCardTitle, BCardSubTitle, BCardFooter, BCardImg, BCardImgLazy, BCardText, BCardGroup, BCarousel, BCarouselSlide, BContainer, BRow, BCol, BFormRow, BCollapse, BDropdown, BDropdownItem, BDropdownItemButton, BDropdownHeader, BDropdownDivider, BDropdownForm, BDropdownText, BDropdownGroup, BEmbed, BForm, BFormDatalist, BFormText, BFormInvalidFeedback, BFormValidFeedback, BFormGroup, BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup, BFormInput, BFormTextarea, BFormFile, BFormSelect, BImg, BImgLazy, BJumbotron, BLink, BListGroup, BListGroupItem, BMedia, BMediaAside, BMediaBody, BModal, BNav, BNavItem, BNavText, BNavForm, BNavItemDropdown, BNavbar, BNavbarNav, BNavbarBrand, BNavbarToggle, BPagination, BPaginationNav, BPopover, BProgress, BProgressBar, BSpinner, BTable, BTabs, BTab, BToast, BToaster, BTooltip, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23789,7 +23782,7 @@ var NAME = 'BTooltip'; // @vue/component
 /*!***********************************************************!*\
   !*** ./node_modules/bootstrap-vue/es/directives/index.js ***!
   \***********************************************************/
-/*! exports provided: default, VBTogglePlugin, VBModalPlugin, VBScrollspyPlugin, VBTooltipPlugin, VBPopoverPlugin, BToggle, BModal, BScrollspy, BTooltip, BPopover, VBToggle, VBModal, VBScrollspy, VBTooltip, VBPopover */
+/*! exports provided: VBTogglePlugin, VBModalPlugin, VBScrollspyPlugin, VBTooltipPlugin, VBPopoverPlugin, BToggle, BModal, BScrollspy, BTooltip, BPopover, VBToggle, VBModal, VBScrollspy, VBTooltip, VBPopover, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -74385,7 +74378,18 @@ var render = function() {
         _c(
           "div",
           { staticClass: "invoice-box invoice-notes-box" },
-          [_c("invoice-notes", { attrs: { notes: _vm.notes } })],
+          [
+            _c("invoice-notes", {
+              attrs: { notes: _vm.notes },
+              model: {
+                value: _vm.invoice.selectedNotes,
+                callback: function($$v) {
+                  _vm.$set(_vm.invoice, "selectedNotes", $$v)
+                },
+                expression: "invoice.selectedNotes"
+              }
+            })
+          ],
           1
         ),
         _vm._v(" "),
@@ -74508,9 +74512,25 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("textarea", {
+      directives: [
+        {
+          name: "model",
+          rawName: "v-model",
+          value: _vm.enterednotes,
+          expression: "enterednotes"
+        }
+      ],
       staticClass: "form-control",
       attrs: { id: "invoiceNotes", rows: "5" },
-      domProps: { textContent: _vm._s(_vm.notes) }
+      domProps: { value: _vm.enterednotes },
+      on: {
+        input: function($event) {
+          if ($event.target.composing) {
+            return
+          }
+          _vm.enterednotes = $event.target.value
+        }
+      }
     })
   ])
 }
