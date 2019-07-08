@@ -108,7 +108,7 @@ class CompanyController extends Controller
             'name' => 'required|min:3|max:100',
             'short_name' => 'nullable|min:3|max:50',
             'address' => 'required|min:3|max:100',
-            'invoice_notes' => 'nullable|min:3|max:1000',
+            'invoice_notes' => 'required|min:3|max:1000',
             'logo_img' => 'nullable|image|max:300',
         ]);
 

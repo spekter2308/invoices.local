@@ -4390,10 +4390,6 @@ __webpack_require__.r(__webpack_exports__);
     value: {
       type: [Object, Number],
       required: true
-      /*newname: {
-          type: String
-      }*/
-
     }
   },
   data: function data() {
@@ -4425,19 +4421,15 @@ __webpack_require__.r(__webpack_exports__);
     customer: {
       handler: function handler(val) {
         if (this.editing) {
-          // this.editing = true;
           var user = {
             name: this.enteredname,
             address: this.enteredaddress
           };
           this.$emit('input', user);
         } else {
-          //const customer = this.customers.find(el => el.id === parseInt(val))
-          this.address = this.customer.address;
-          this.$emit('input', this.customer.id);
+          this.address = this.customer.address, this.$emit('input', this.customer.id);
         }
-      } //immediate: true
-
+      }
     }
   },
   computed: {
@@ -4450,9 +4442,6 @@ __webpack_require__.r(__webpack_exports__);
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
     },
     enteredaddress: {
-      /*        required: requiredIf(function() {
-                  return this.isEmpty
-              })*/
       required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
     }
   },
@@ -4961,18 +4950,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5044,6 +5021,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       spinnerVisible: false,
       createdInvoiceId: NaN,
       isTableInvalid: true,
+      notes: this.currentInvoice.invoice_notes || '',
       invoice: {
         selectedCompany: this.invoiceCompany.id || NaN,
         selectedCustomer: this.invoiceCustomer.id || {},
@@ -5052,15 +5030,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         selectedInvoiceNumber: this.invoiceNumber,
         selectedItems: this.invoiceItems,
         selectedSettings: [],
-        selectedNotes: this.notes
+        selectedNotes: this.currentInvoice.invoice_notes || ''
       },
       selectedNumber: {
         prefix: this.formatNumber.prefix || '',
         start: this.formatNumber.start || 0,
         postfix: this.formatNumber.postfix || '',
         increment: this.formatNumber.increment || 1
-      },
-      notes: this.currentInvoice.invoice_notes || this.invoiceCompany.invoice_notes
+      }
     };
   },
   validations: {
@@ -5202,62 +5179,71 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 eventBus.$emit('touch', true);
 
                 if (!(!this.$v.$error && !this.isTableRowsInvalid)) {
-                  _context.next = 17;
+                  _context.next = 20;
                   break;
                 }
 
                 this.spinnerVisible = true;
+                this.invoice.selectedNotes = this.notes;
                 this.invoice.selectedSettings = [this.defaultSettings];
                 console.log(JSON.stringify(this.invoice));
 
                 if (!(this.mode === 'create')) {
-                  _context.next = 13;
+                  _context.next = 15;
                   break;
                 }
 
-                _context.next = 10;
+                _context.next = 11;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices', this.invoice).then(function (response) {
                   _this2.createdInvoiceId = response.data.invoice.id;
                   _this2.spinnerVisible = false;
                 });
 
-              case 10:
-                console.log(this.createdInvoiceId); //location.href = '/invoices/' + this.createdInvoiceId;
-
-                _context.next = 17;
+              case 11:
+                console.log(this.createdInvoiceId);
+                location.href = '/invoices/' + this.createdInvoiceId;
+                _context.next = 19;
                 break;
 
-              case 13:
+              case 15:
                 if (!(this.mode === 'edit')) {
-                  _context.next = 17;
+                  _context.next = 19;
                   break;
                 }
 
                 console.log(this.currentInvoice.id);
-                _context.next = 17;
+                _context.next = 19;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(function (response) {
                   _this2.createdInvoiceId = response.data.invoice.id;
                   _this2.spinnerVisible = false;
                 });
 
-              case 17:
-                _context.next = 23;
+              case 19:
+                location.href = '/invoices/' + this.createdInvoiceId; //await this.updateNextNumber();
+                //this.resetInvoice();
+                //eventBus.$emit('update', true)
+                //this.$v.$reset()
+                //eventBus.$emit('reset', true)
+                //console.log('resetting')
+
+              case 20:
+                _context.next = 26;
                 break;
 
-              case 19:
-                _context.prev = 19;
+              case 22:
+                _context.prev = 22;
                 _context.t0 = _context["catch"](0);
                 // this.resetInvoice()
                 // this.$v.$reset()
                 console.log('some error');
                 this.spinnerVisible = false;
 
-              case 23:
+              case 26:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, this, [[0, 19]]);
+        }, _callee, this, [[0, 22]]);
       }));
 
       function onSubmit() {
@@ -5344,10 +5330,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         return el.id === _this3.invoice.selectedCompany;
       }).logo_img;
     },
-
-    /* urlExists() {
-         return this.companies.find(el => el.id === this.invoice.selectedCompany).logo_img ? true : false;
-     },*/
     isTableRowsInvalid: function isTableRowsInvalid() {
       return this.invoice.selectedItems.reduce(function (acc, curr) {
         return acc && !curr.correct;
@@ -5413,9 +5395,12 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   data: function data() {
-    return {
-      enterednotes: this.notes
-    };
+    return {};
+  },
+  methods: {
+    updateNotes: function updateNotes(notes) {
+      this.$emit('input', notes);
+    }
   }
 });
 
@@ -5430,7 +5415,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
 //
 //
 //
@@ -5664,13 +5648,13 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     replaceCompanyAddress: function replaceCompanyAddress() {
-      return this.invoice.company.address.replace('\n', '<br>');
+      return this.invoice.company.address.replace(/\n/g, '<br>');
     },
     replaceCustomerAddress: function replaceCustomerAddress() {
-      return this.invoice.customer.address.replace('\n', '<br>');
+      return this.invoice.customer.address.replace(/\n/g, '<br>');
     },
     getNotes: function getNotes() {
-      return this.invoice.company.invoice_notes.replace('\n', '<br>');
+      return this.invoice.invoice_notes.replace(/\n/g, '<br>');
     },
     getLocale: function getLocale() {
       if (this.settings.language == 'english') {
@@ -74382,11 +74366,11 @@ var render = function() {
             _c("invoice-notes", {
               attrs: { notes: _vm.notes },
               model: {
-                value: _vm.invoice.selectedNotes,
+                value: _vm.notes,
                 callback: function($$v) {
-                  _vm.$set(_vm.invoice, "selectedNotes", $$v)
+                  _vm.notes = $$v
                 },
-                expression: "invoice.selectedNotes"
+                expression: "notes"
               }
             })
           ],
@@ -74512,23 +74496,12 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("textarea", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.enterednotes,
-          expression: "enterednotes"
-        }
-      ],
       staticClass: "form-control",
       attrs: { id: "invoiceNotes", rows: "5" },
-      domProps: { value: _vm.enterednotes },
+      domProps: { value: _vm.notes },
       on: {
         input: function($event) {
-          if ($event.target.composing) {
-            return
-          }
-          _vm.enterednotes = $event.target.value
+          return _vm.updateNotes($event.target.value)
         }
       }
     })
@@ -74873,11 +74846,6 @@ var render = function() {
               _vm._v(" "),
               _c("div", { staticClass: "invoice-table-row-notes" }, [
                 _c("div", { staticClass: "form-group" }, [
-                  _vm._v(
-                    "\n                            " +
-                      _vm._s(_vm.invoice.invoice_notes) +
-                      "\n                            "
-                  ),
                   _c(
                     "span",
                     { staticStyle: { "text-decoration": "underline" } },
@@ -96157,14 +96125,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!*************************************************!*\
   !*** ./resources/js/components/InvoiceForm.vue ***!
   \*************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _InvoiceForm_vue_vue_type_template_id_429c2ff6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./InvoiceForm.vue?vue&type=template&id=429c2ff6& */ "./resources/js/components/InvoiceForm.vue?vue&type=template&id=429c2ff6&");
 /* harmony import */ var _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InvoiceForm.vue?vue&type=script&lang=js& */ "./resources/js/components/InvoiceForm.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -96194,7 +96163,7 @@ component.options.__file = "resources/js/components/InvoiceForm.vue"
 /*!**************************************************************************!*\
   !*** ./resources/js/components/InvoiceForm.vue?vue&type=script&lang=js& ***!
   \**************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -96811,8 +96780,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

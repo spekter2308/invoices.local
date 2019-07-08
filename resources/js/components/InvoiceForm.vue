@@ -163,12 +163,6 @@
                                         @blur="$v.invoice.selectedDateFrom.$touch()"
                                         v-model="invoice.selectedDateFrom"
                                         class=""></datapicker>
-                           <!-- <input type="date" name="invoice_date" id="invoice_date"
-                                   class="form-control"
-                                   :value="currentDate"
-                                   @blur="$v.invoice.selectedDateFrom.$touch()"
-                                   @input="invoice.selectedDateFrom=$event.target.value"
-                            >-->
                             <template v-if="$v.invoice.selectedDateFrom.$error">
                                 <small class="error-control" v-if="!$v.invoice.selectedDateFrom.required"
                                 >Please fill the date field</small>
@@ -187,12 +181,6 @@
                                         @blur="$v.invoice.selectedDateTo.$touch()"
                                         v-model="invoice.selectedDateTo"
                                         class=""></datapicker>
-                           <!-- <input type="date" name="due_date" id="due_date"
-                                   class="form-control"
-                                   @blur="$v.invoice.selectedDateTo.$touch()"
-                                   :value="currentDate"
-                                   @input="invoice.selectedDateTo=$event.target.value"
-                            >-->
                             <template v-if="$v.invoice.selectedDateTo.$error">
                                 <small class="error-control" v-if="!$v.invoice.selectedDateTo.required"
                                 >Please fill the date field</small>
@@ -215,7 +203,7 @@
 
             <div class="invoice-box invoice-notes-box">
                 <invoice-notes :notes="notes"
-                                v-model="invoice.selectedNotes">
+                                v-model="notes">
                 </invoice-notes>
             </div>
 
@@ -323,6 +311,7 @@
                 spinnerVisible: false,
                 createdInvoiceId: NaN,
                 isTableInvalid: true,
+                notes: this.currentInvoice.invoice_notes || '',
                 invoice: {
                     selectedCompany: this.invoiceCompany.id || NaN,
                     selectedCustomer: this.invoiceCustomer.id || {},
@@ -331,7 +320,7 @@
                     selectedInvoiceNumber: this.invoiceNumber,
                     selectedItems: this.invoiceItems,
                     selectedSettings: [],
-                    selectedNotes: this.notes
+                    selectedNotes: this.currentInvoice.invoice_notes || ''
                 },
                 selectedNumber: {
                     prefix: this.formatNumber.prefix || '',
@@ -339,7 +328,6 @@
                     postfix: this.formatNumber.postfix || '',
                     increment: this.formatNumber.increment || 1
                 },
-                notes: this.currentInvoice.invoice_notes || this.invoiceCompany.invoice_notes
             }
         },
         validations: {
@@ -471,6 +459,7 @@
                     eventBus.$emit('touch', true)
                     if (!this.$v.$error && !this.isTableRowsInvalid) {
                         this.spinnerVisible = true
+                        this.invoice.selectedNotes = this.notes;
                         this.invoice.selectedSettings = [this.defaultSettings];
                         console.log(JSON.stringify(this.invoice));
                         if (this.mode === 'create') {
@@ -479,7 +468,7 @@
                                 this.spinnerVisible = false
                             });
                             console.log(this.createdInvoiceId)
-                            //location.href = '/invoices/' + this.createdInvoiceId;
+                            location.href = '/invoices/' + this.createdInvoiceId;
                         }
                         else if(this.mode === 'edit') {
                             console.log(this.currentInvoice.id)
@@ -488,7 +477,7 @@
                                 this.spinnerVisible = false
                             });
                         }
-                        //location.href = '/invoices/' + this.createdInvoiceId;
+                        location.href = '/invoices/' + this.createdInvoiceId;
                         //await this.updateNextNumber();
                         //this.resetInvoice();
                         //eventBus.$emit('update', true)
@@ -547,9 +536,6 @@
             url() {
                 return this.companies.find(el => el.id === this.invoice.selectedCompany).logo_img
             },
-           /* urlExists() {
-                return this.companies.find(el => el.id === this.invoice.selectedCompany).logo_img ? true : false;
-            },*/
             isTableRowsInvalid() {
                 return this.invoice.selectedItems.reduce((acc, curr) => {
                     return acc && !curr.correct

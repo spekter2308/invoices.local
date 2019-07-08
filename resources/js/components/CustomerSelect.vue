@@ -52,9 +52,6 @@
                 type: [Object, Number],
                 required: true
             }
-            /*newname: {
-                type: String
-            }*/
         },
         data() {
             return {
@@ -71,50 +68,43 @@
             enteredname(val) {
                 const user = {
                     name: this.enteredname,
-                    address: this.enteredaddress,
+                    address: this.enteredaddress
                 }
                 this.$emit('input', user)
             },
             enteredaddress(val) {
                 const user = {
                     name: this.enteredname,
-                    address: this.enteredaddress,
+                    address: this.enteredaddress
                 }
                 this.$emit('input', user)
             },
             customer: {
                 handler: function (val) {
                     if (this.editing) {
-                        // this.editing = true;
                         const user = {
                             name: this.enteredname,
-                            address: this.enteredaddress,
+                            address: this.enteredaddress
                         }
                         this.$emit('input', user)
                     } else {
-                        //const customer = this.customers.find(el => el.id === parseInt(val))
-                        this.address = this.customer.address
+                        this.address = this.customer.address,
                         this.$emit('input', this.customer.id)
                     }
                 },
-                //immediate: true
             }
         },
         computed: {
             isEmpty() {
                 return Object.keys(this.customer).length === 0
             },
-
         },
         validations: {
             enteredname: {
                 required
             },
             enteredaddress: {
-                /*        required: requiredIf(function() {
-                            return this.isEmpty
-                        })*/
-            required
+                required
             }
         },
         mounted() {

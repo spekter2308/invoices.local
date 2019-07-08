@@ -147,7 +147,6 @@
                         </div>
                         <div class="invoice-table-row-notes">
                             <div class="form-group">
-                                {{ invoice.invoice_notes}}
                                 <span style="text-decoration: underline">NOTES</span>:
                                 <span v-html="getNotes"></span>
                             </div>
@@ -234,13 +233,13 @@
         },
         computed: {
             replaceCompanyAddress() {
-                return this.invoice.company.address.replace('\n', '<br>');
+                return this.invoice.company.address.replace(/\n/g, '<br>');
             },
             replaceCustomerAddress() {
-                return this.invoice.customer.address.replace('\n', '<br>');
+                return this.invoice.customer.address.replace(/\n/g, '<br>');
             },
             getNotes() {
-                return this.invoice.company.invoice_notes.replace('\n', '<br>');
+                return this.invoice.invoice_notes.replace(/\n/g, '<br>');
             },
             getLocale() {
                 if (this.settings.language == 'english') {

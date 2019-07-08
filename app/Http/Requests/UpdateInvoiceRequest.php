@@ -30,6 +30,7 @@ class UpdateInvoiceRequest extends FormRequest
             'selectedDateTo' => 'required|date',
             'selectedInvoiceNumber' => 'required|string',
             'selectedItems' => 'required|array|min:1',
+            'selectedNotes' => 'required|string|min:5',
             'selectedItems.*.item' => 'required|string',
             'selectedItems.*.description' => 'nullable',
             'selectedItems.*.quantity' => 'required|integer|min:1',
