@@ -203,8 +203,15 @@
 
             <div class="invoice-box invoice-notes-box">
                 <invoice-notes :notes="notes"
-                                v-model="notes">
+                                v-model="notes"
+                >
                 </invoice-notes>
+                <template v-if="$v.notes.$error">
+                    <small class="error-control" v-if="!$v.notes.required"
+                    >Please type name</small>
+                    <small class="error-control" v-if="!$v.notes.minLength"
+                    >This field should have minimum 5 symbols</small>
+                </template>
             </div>
 
             <div class="invoice-box invoice-total-box">
@@ -240,7 +247,7 @@
 
 <script>
     import axios from 'axios'
-    import { required, integer, minValue } from 'vuelidate/lib/validators'
+    import { required, integer, minValue, minLength } from 'vuelidate/lib/validators'
 
     export default {
         props: {
@@ -340,6 +347,10 @@
                     required,
                     minValue: minValue(1)
                 }
+            },
+            notes: {
+                required,
+                minLength: minLength(5)
             },
             invoice: {
                 selectedCompany: {

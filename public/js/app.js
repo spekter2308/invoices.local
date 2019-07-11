@@ -4538,6 +4538,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CustomizationOptions",
   props: {
@@ -4950,6 +4951,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -5050,6 +5058,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"],
         minValue: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["minValue"])(1)
       }
+    },
+    notes: {
+      required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["required"],
+      minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_2__["minLength"])(5)
     },
     invoice: {
       selectedCompany: {
@@ -5379,6 +5391,8 @@ function isObject(v) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
+/* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -5388,6 +5402,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     notes: {
@@ -73381,7 +73397,11 @@ var render = function() {
                   [
                     _c("option", { attrs: { value: "$" } }, [_vm._v("$ USD")]),
                     _vm._v(" "),
-                    _c("option", { attrs: { value: "€" } }, [_vm._v("€ EURO")])
+                    _c("option", { attrs: { value: "€" } }, [_vm._v("€ EURO")]),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "£" } }, [
+                      _vm._v("£ POUND SIGN")
+                    ])
                   ]
                 )
               ]),
@@ -74372,9 +74392,25 @@ var render = function() {
                 },
                 expression: "notes"
               }
-            })
+            }),
+            _vm._v(" "),
+            _vm.$v.notes.$error
+              ? [
+                  !_vm.$v.notes.required
+                    ? _c("small", { staticClass: "error-control" }, [
+                        _vm._v("Please type name")
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  !_vm.$v.notes.minLength
+                    ? _c("small", { staticClass: "error-control" }, [
+                        _vm._v("This field should have minimum 5 symbols")
+                      ])
+                    : _vm._e()
+                ]
+              : _vm._e()
           ],
-          1
+          2
         ),
         _vm._v(" "),
         _c("div", { staticClass: "invoice-box invoice-total-box" }, [
@@ -96125,15 +96161,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*************************************************!*\
   !*** ./resources/js/components/InvoiceForm.vue ***!
   \*************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _InvoiceForm_vue_vue_type_template_id_429c2ff6___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./InvoiceForm.vue?vue&type=template&id=429c2ff6& */ "./resources/js/components/InvoiceForm.vue?vue&type=template&id=429c2ff6&");
 /* harmony import */ var _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InvoiceForm.vue?vue&type=script&lang=js& */ "./resources/js/components/InvoiceForm.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _InvoiceForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -96163,7 +96198,7 @@ component.options.__file = "resources/js/components/InvoiceForm.vue"
 /*!**************************************************************************!*\
   !*** ./resources/js/components/InvoiceForm.vue?vue&type=script&lang=js& ***!
   \**************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

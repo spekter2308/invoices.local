@@ -1,3 +1,7 @@
+<form method="POST" action={{ route('update-status') }}">
+	@csrf
+	@method('PATCH')
+
 @forelse ($invoices as $invoice)
     @php
         /** @var \App\Invoice $invoice */
@@ -96,3 +100,4 @@
         <td><h3>No data</h3></td>
     </tr>
 @endforelse
+</form>

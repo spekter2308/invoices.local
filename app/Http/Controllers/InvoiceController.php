@@ -394,7 +394,17 @@ class InvoiceController extends Controller
     {
         $attributes = \request()->input('params');
 
-        Invoice::whereIn('id', $attributes['ids'])->update(['status' => $attributes['status']]);
+        foreach ($attributes['ids'] as $id) {
+            $invoice = Invoice::find($id)->first();
+            $old_status = $invoice->status;
+            $invoice->update(['status' => $attributes['status']]);
+
+            InvoiceHistory::create([
+                'invoice_id' => $id,
+                'user_id' => auth()->id(),
+                'changes' => "Status changed from $old_status to $invoice->status"
+            ]);
+        }
 
         if (\request()->wantsJson()) {
             return response(['success'], 204);

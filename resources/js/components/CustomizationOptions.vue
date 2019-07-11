@@ -9,6 +9,7 @@
                         <select v-model="settings.currency">
                             <option value="$">$ USD</option>
                             <option value="€">€ EURO</option>
+                            <option value="£">£ POUND SIGN</option>
                         </select>
                     </div>
                     <div>
