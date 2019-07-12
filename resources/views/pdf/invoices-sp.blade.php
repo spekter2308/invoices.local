@@ -71,12 +71,12 @@
                 <br>
                 <tr>
                     <td align="right" style="font-weight: bold">Fecha</td>
-                    <td align="right" style="padding-left: 40px">{{ $invoice->invoice_date }}</td>
+                    <td align="right" style="padding-left: 40px">{{ $invoice->pdf_invoice_date }}</td>
                 </tr>
                 <br>
                 <tr>
                     <td align="right" style="font-weight: bold">Fecha de Vencimiento</td>
-                    <td align="right" style="padding-left: 40px">{{ $invoice->due_date }}</td>
+                    <td align="right" style="padding-left: 40px">{{ $invoice->pdf_due_date }}</td>
                 </tr>
             </table>
         </div>
@@ -86,27 +86,29 @@
     <table style="margin-top: 20px; padding: 6px 6px; width: 100%; border: 1px solid black; background-color: #e6e5e5; font-size: 13px;">
         <tr>
             <th align="left" style="width: 10%;">Artículo</th>
-            <th align="left" style="width: 30%;">Descripción</th>
-            <th align="center" nowrap>Precio Unitario</th>
-            <th align="center">Cantidad</th>
+            <th align="left" style="width: 40%;">Descripción</th>
+            <th align="center" style="width: 10%;" nowrap>Precio Unitario</th>
+            <th align="center" style="width: 10%;">Cantidad</th>
             @if ($invoice->settings->show_tax)
-                <th align="center">Impuesto, %</th>
+                <th align="center" style="width: 10%;">Impuesto, %</th>
+                <th align="right" style="width: 10%;">Importe</th>
+            @else
+                <th align="right" style="width: 20%;">Importe</th>
             @endif
-            <th align="right">Importe</th>
         </tr>
     </table>
     <table style="padding: 10px 6px; width: 100%; border: 1px solid black; border-top: none; font-size: 12px;">
         @foreach ($invoice->items as $item)
             <tr>
-                <td align="left"> {{ $item->item }}</td>
-                <td align="left" style="width: 25%;">{{ $item->description }}</td>
-                <td align="center" nowrap>{{ $item->unitprice }}</td>
-                <td align="center">{{ $item->quantity }}</td>
+                <td align="left" style="width: 10%;">{{ $item->item }}</td>
+                <td align="left" style="width: 40%;">{{ $item->description }}</td>
+                <td align="center" style="width: 10%;" nowrap>{{ $item->unitprice }}</td>
+                <td align="center" style="width: 10%;">{{ $item->quantity }}</td>
                 @if ($invoice->settings->show_tax)
-                    <td align="right">{{ $item->itemtax }}</td>
-                    <td align="center">{{ $item->unitprice * $item->quantity + $item->unitprice * $item->quantity * $item->itemtax/100}}</td>
+                    <td align="center" style="width: 10%;">{{ $item->itemtax }}</td>
+                    <td align="right" style="width: 10%;">{{ $item->unitprice * $item->quantity + $item->unitprice * $item->quantity * $item->itemtax/100}}</td>
                 @else
-                    <td align="right">{{ $item->unitprice * $item->quantity }}</td>
+                    <td align="right" style="width: 20%;">{{ $item->unitprice * $item->quantity }}</td>
                 @endif
             </tr>
         @endforeach

@@ -88,27 +88,30 @@
     <table style="margin-top: 20px; padding: 6px 6px; width: 100%; border: 1px solid black; background-color: #e6e5e5; font-size: 12px;">
         <tr>
             <th align="left" style="width: 10%;">Item</th>
-            <th align="left" style="width: 30%;">Description</th>
-            <th align="center" nowrap>Unit Price</th>
-            <th align="center">Quantity</th>
+            <th align="left" style="width: 40%;">Description</th>
+            <th align="center" style="width: 10%;" nowrap>Unit Price</th>
+            <th align="center" style="width: 10%;">Quantity</th>
             @if ($invoice->settings->show_tax)
-                <th align="center">Tax, %</th>
+                <th align="center" style="width: 10%;" >Tax, %</th>
+                <th align="right" style="width: 10%;">Amount</th>
+            @else
+                <th align="right" style="width: 20%;">Amount</th>
             @endif
-            <th align="right">Amount</th>
+            
         </tr>
     </table>
     <table style="padding: 10px 6px; width: 100%; border: 1px solid black; border-top: none; font-size: 12px;">
         @foreach ($invoice->items as $item)
             <tr>
                 <td align="left" style="width: 10%;"> {{ $item->item }}</td>
-                <td align="left" style="width: 30%;">{{ $item->description }}</td>
-                <td align="center" nowrap>{{ $item->unitprice }}</td>
-                <td align="center">{{ $item->quantity }}</td>
+                <td align="left" style="width: 40%;">{{ $item->description }}</td>
+                <td align="center" style="width: 10%;" nowrap>{{ $item->unitprice }}</td>
+                <td align="center" style="width: 10%;">{{ $item->quantity }}</td>
                 @if ($invoice->settings->show_tax)
-                    <td align="center">{{ $item->itemtax }}</td>
-                    <td align="right">{{ $item->unitprice * $item->quantity + $item->unitprice * $item->quantity * $item->itemtax/100}}</td>
+                    <td align="center" style="width: 10%;">{{ $item->itemtax }}</td>
+                    <td align="right" style="width: 10%;">{{ $item->unitprice * $item->quantity + $item->unitprice * $item->quantity * $item->itemtax/100}}</td>
                 @else
-                    <td align="right">{{ $item->unitprice * $item->quantity }}</td>
+                    <td align="right" style="width: 20%;">{{ $item->unitprice * $item->quantity }}</td>
                 @endif
             </tr>
         @endforeach
