@@ -1,7 +1,3 @@
-<form method="POST" action={{ route('update-status') }}">
-	@csrf
-	@method('PATCH')
-
 @forelse ($invoices as $invoice)
     @php
         /** @var \App\Invoice $invoice */
@@ -38,7 +34,7 @@
                                 Status to:<i class="fas icon-rigth fa-caret-right"></i></a>
                             <ul class="list-status list-group list-group-flush">
                                 <li class="list-group-item"><a href="{{route('update-status')}}?invoices=[{{$invoice->id}}]&status=1">Paid</a></li>
-                                <li class="list-group-item"><a href="#">Partial</a></li>
+                                <li class="list-group-item"><a href="{{route('update-status')}}?invoices=[{{$invoice->id}}]&status=2">Partial</a></li>
                                 <li class="list-group-item"><a href="{{route('update-status')}}?invoices=[{{$invoice->id}}]&status=3">Sent</a></li>
                             </ul>
                         </li>
@@ -100,4 +96,3 @@
         <td><h3>No data</h3></td>
     </tr>
 @endforelse
-</form>

@@ -93,6 +93,7 @@ class InvoiceController extends Controller
             //return $invoiceItems;
             session()->forget('id');
         } else {
+            $invoice = '{}';
             $settings = '{}';
             $invoiceCustomer = '{}';
             $invoiceCompany = '{}';
@@ -114,7 +115,7 @@ class InvoiceController extends Controller
         $companies = Company::latest()->get();
 
         return view('invoices.edit', [
-            'invoice' => '{}',
+            'invoice' => $invoice,
             'invoiceCustomer' => $invoiceCustomer,
             'invoiceCompany' => $invoiceCompany,
             'invoiceItems' => $invoiceItems,
@@ -394,7 +395,9 @@ class InvoiceController extends Controller
     {
         $attributes = \request()->input('params');
 
-        foreach ($attributes['ids'] as $id) {
+        Invoice::whereIn('id', $attributes['ids'])->update(['status' => $attributes['status']]);
+
+        /*foreach ($attributes['ids'] as $id) {
             $invoice = Invoice::find($id)->first();
             $old_status = $invoice->status;
             $invoice->update(['status' => $attributes['status']]);
@@ -404,7 +407,7 @@ class InvoiceController extends Controller
                 'user_id' => auth()->id(),
                 'changes' => "Status changed from $old_status to $invoice->status"
             ]);
-        }
+        }*/
 
         if (\request()->wantsJson()) {
             return response(['success'], 204);
