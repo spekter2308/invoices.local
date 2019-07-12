@@ -33,13 +33,13 @@
                         <li class="list-group-item show-status-list"><i class="fas fa-sync-alt"></i><a href="#">Change
                                 Status to:<i class="fas icon-rigth fa-caret-right"></i></a>
                             <ul class="list-status list-group list-group-flush">
-                                <li class="list-group-item"><a href="{{route('update-status')}}?invoices=[{{$invoice->id}}]&status=1">Paid</a></li>
-                                <li class="list-group-item"><a href="{{route('update-status')}}?invoices=[{{$invoice->id}}]&status=2">Partial</a></li>
-                                <li class="list-group-item"><a href="{{route('update-status')}}?invoices=[{{$invoice->id}}]&status=3">Sent</a></li>
+                                <li class="list-group-item"><a href="/invoices/unit-update/status/{{$invoice->id}}?status=Paid">Paid</a></li>
+                                <li class="list-group-item"><a href="/invoices/unit-update/status/{{$invoice->id}}?status=Partial">Partial</a></li>
+                                <li class="list-group-item"><a href="/invoices/unit-update/status/{{$invoice->id}}?status=Sent">Sent</a></li>
                             </ul>
                         </li>
-                        <li class="list-group-item"><i class="far fa-file-archive"></i><a href="#">Archive</a></li>
-                        <li class="list-group-item"><i class="far fa-trash-alt"></i><a href="#">Delete</a></li>
+                        <li class="list-group-item"><i class="far fa-file-archive"></i><a href="/invoices/unit-update/status/{{$invoice->id}}?status=Archive">Archive</a></li>
+                        <li class="list-group-item"><i class="far fa-trash-alt"></i><a href="/invoices/destroy/{{$invoice->id}}">Delete</a></li>
                     </ul>
                 </div>
                 <a href="/invoices/{{ $invoice->id }}">{{ $invoice->number }}</a>

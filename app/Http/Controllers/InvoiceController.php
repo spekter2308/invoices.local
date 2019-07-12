@@ -379,6 +379,12 @@ class InvoiceController extends Controller
 
     public function multiDelete()
     {
+        if(\Gate::denies('delete', Invoice::class)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t change statuses.']);
+        }
+
         $ids = \request()->all();
 
         DB::table('invoices')->whereIn('id', $ids['parameters'])->delete();
@@ -388,33 +394,72 @@ class InvoiceController extends Controller
         }
         return redirect()
             ->back()
-            ->with(['flash' => 'Invoice has been deleted success.']);
+            ->with(['show-success' => 'Invoices has been deleted success.']);
     }
 
-    public function changeInvoicesStatus()
+    public function destroy($id)
+    {
+        if(\Gate::denies('delete', Invoice::find($id))){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t change statuses.']);
+        }
+
+        DB::table('invoices')->where('id', '=', $id)->delete();
+
+        return redirect()
+            ->back()
+            ->with(['show-success' => 'Invoice has been deleted success.']);
+    }
+
+    public function multiChangeInvoicesStatus()
     {
         $attributes = \request()->input('params');
 
-        Invoice::whereIn('id', $attributes['ids'])->update(['status' => $attributes['status']]);
-
-        /*foreach ($attributes['ids'] as $id) {
-            $invoice = Invoice::find($id)->first();
+        foreach ($attributes['ids'] as $id) {
+            $invoice = Invoice::find($id);
             $old_status = $invoice->status;
             $invoice->update(['status' => $attributes['status']]);
 
+            if ($old_status != $invoice->status) {
+                InvoiceHistory::create([
+                    'invoice_id' => $id,
+                    'user_id' => auth()->id(),
+                    'changes' => "Status changed from $old_status to $invoice->status"
+                ]);
+            }
+        }
+
+        if (\request()->wantsJson()) {
+            session()->flash('show-success', 'Statuses changed');
+            return \response()->json(['success' => true]);
+        }
+        return redirect()
+            ->back()
+            ->with(['show-success' => 'Status changed']);
+    }
+
+    public function unitChangeInvoiceStatus($id)
+    {
+        $attributes = \request()->input();
+        $invoice = Invoice::find($id);
+        $old_status = $invoice->status;
+
+        $invoice->update([
+            'status' => $attributes['status']
+        ]);
+
+        if ($old_status != $invoice->status) {
             InvoiceHistory::create([
                 'invoice_id' => $id,
                 'user_id' => auth()->id(),
                 'changes' => "Status changed from $old_status to $invoice->status"
             ]);
-        }*/
-
-        if (\request()->wantsJson()) {
-            return response(['success'], 204);
         }
+
         return redirect()
             ->back()
-            ->with(['flash' => 'Status changed']);
+            ->with(['show-success' => 'Status changed']);
     }
 
     public function recordPayment($id)
@@ -513,6 +558,31 @@ class InvoiceController extends Controller
             'invoice_id' => $invoice->id,
             'user_id' => auth()->id(),
             'changes' => "Invoice marked as paid"
+        ]);
+
+        return redirect()->back();
+    }
+
+    public function markAsUnpaid($id)
+    {
+        $invoice = Invoice::findOrFail($id);
+
+        if(\Gate::denies('update', $invoice)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t change statuses.']);
+        }
+
+        $invoice->update([
+            'status' => 'Partial',
+            'balance' => 0,
+            'amount_paid' => $invoice->total
+        ]);
+
+        InvoiceHistory::create([
+            'invoice_id' => $invoice->id,
+            'user_id' => auth()->id(),
+            'changes' => "Invoice marked as unpaid"
         ]);
 
         return redirect()->back();

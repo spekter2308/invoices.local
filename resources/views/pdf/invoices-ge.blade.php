@@ -85,7 +85,7 @@
 
     <table style="margin-top: 20px; padding: 6px 6px; width: 100%; border: 1px solid black; background-color: #e6e5e5; font-size: 13px;">
         <tr>
-            <th align="left">Artikel</th>
+            <th align="left" style="width: 10%;">Artikel</th>
             <th align="left" style="width: 30%;">Beschreibung</th>
             <th align="center" nowrap>Einzelpreis</th>
             <th align="center">Anzahl</th>
@@ -101,9 +101,9 @@
                 <td align="left"> {{ $item->item }}</td>
                 <td align="left" style="width: 25%;">{{ $item->description }}</td>
                 <td align="center" nowrap>{{ $item->unitprice }}</td>
-                <td align="right">{{ $item->quantity }}</td>
+                <td align="center">{{ $item->quantity }}</td>
                 @if ($invoice->settings->show_tax)
-                    <td align="right">{{ $item->itemtax }}</td>
+                    <td align="center">{{ $item->itemtax }}</td>
                     <td align="right">{{ $item->unitprice * $item->quantity + $item->unitprice * $item->quantity * $item->itemtax/100}}</td>
                 @else
                     <td align="right">{{ $item->unitprice * $item->quantity }}</td>

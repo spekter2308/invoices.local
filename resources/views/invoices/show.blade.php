@@ -14,7 +14,6 @@
                            <span class="flex">
                                <h1>View Invoice</h1>
                            </span>
-
                         </div>
                     </div>
                 </div>
@@ -27,7 +26,11 @@
                             <a href="{{route('generate-pdf', ['invoice' => $invoice->id, 'print' => 'print'])}}" target="_blank" class="btn btn-secondary">Print</a>
                             <a href="{{route('generate-pdf', ['invoice' => $invoice->id])}}" class="btn btn-secondary">PDF</a>
                             <a href="/invoice-mail/create/{{ $invoice->id }}" class="btn btn-secondary">Send</a>
-                            <a href="/invoices/mark-as-paid/{{$invoice->id}}" class="btn btn-secondary">Mark as Paid</a>
+                            @if ($invoice->status != 'Paid')
+                                <a href="/invoices/mark-as-paid/{{$invoice->id}}" class="btn btn-secondary">Mark as Paid</a>
+                            @else
+                                <a href="/invoices/mark-as-unpaid/{{$invoice->id}}" class="btn btn-secondary">Mark as Unpaid</a>
+                            @endif
                             <a href="{{route('record-payment', ['invoice' => $invoice->id])}}" class="btn btn-secondary">Record Payment</a>
                             <a href="/invoices/duplicate/{{ $invoice->id }}" class="btn btn-secondary">Duplicate</a>
                         </div>

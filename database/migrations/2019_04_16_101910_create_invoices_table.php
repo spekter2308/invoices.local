@@ -21,10 +21,10 @@ class CreateInvoicesTable extends Migration
             $table->integer('customer_id')->unsigned();
             $table->integer('company_id')->unsigned();
 
-            $table->float('amount_paid');
-            $table->float('subtotal');
-            $table->float('total');
-            $table->float('balance');
+            $table->float('amount_paid', 20, 2);
+            $table->float('subtotal', 20, 3);
+            $table->float('total', 20, 3);
+            $table->float('balance', 20, 3);
 
             $table->string('invoice_notes', 500);
 

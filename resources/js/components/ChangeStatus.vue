@@ -18,7 +18,7 @@
     export default {
         data() {
             return {
-                statuses: ['Paid', 'Sent', 'Archive'],
+                statuses: ['Paid', 'Partial', 'Sent', 'Archive'],
             }
         },
         methods: {
@@ -29,7 +29,7 @@
             changeStatus(status) {
                 //console.log(JSON.stringify(this.$store.state.checkbox));
                 //console.log(JSON.stringify(status));
-                axios.post('/invoices/update/status',
+                axios.post('/invoices/multi-update/status',
                     {params: {
                         ids: this.$store.state.checkbox,
                         status: status}

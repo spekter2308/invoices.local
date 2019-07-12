@@ -28,12 +28,15 @@ Route::post('invoices', 'InvoiceController@store');
 Route::get('invoices/{invoice}/edit', 'InvoiceController@edit');
 Route::patch('invoices/{invoice}', 'InvoiceController@update');
 Route::post('invoices/multiDelete', 'InvoiceController@multiDelete');
+Route::get('invoices/destroy/{id}', 'InvoiceController@destroy');
 Route::get('invoices/pdf/{invoice}/{print?}', 'InvoiceController@generatePdf')->where(['id' => '[0-9]+', 'print' => 'print'])->name('generate-pdf');
 Route::get('invoices/mark-as-paid/{invoice}', 'InvoiceController@markAsPaid')->name('mark-as-paid');
+Route::get('invoices/mark-as-unpaid/{invoice}', 'InvoiceController@markAsUnpaid');
 Route::get('invoices/record-payment/{id}', 'InvoiceController@recordPayment')->where(['id' => '[0-9]+'])->name('record-payment');
 Route::post('invoices/record-payment/save/{id}', 'InvoiceController@recordPaymentSave');
 Route::post('invoices/get/date', 'InvoiceController@getDate')->name('get-date-for-filter');
-Route::post('invoices/update/status', 'InvoiceController@changeInvoicesStatus')->name('update-status');
+Route::post('invoices/multi-update/status', 'InvoiceController@multiChangeInvoicesStatus')->name('update-status');
+Route::get('invoices/unit-update/status/{id}', 'InvoiceController@unitChangeInvoiceStatus');
 
 
 //Invoice items part
