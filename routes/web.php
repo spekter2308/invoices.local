@@ -38,6 +38,9 @@ Route::post('invoices/get/date', 'InvoiceController@getDate')->name('get-date-fo
 Route::post('invoices/multi-update/status', 'InvoiceController@multiChangeInvoicesStatus')->name('update-status');
 Route::get('invoices/unit-update/status/{id}', 'InvoiceController@unitChangeInvoiceStatus');
 
+//Show invoice for customer
+Route::get('invoice/invoice-show', 'InvoiceController@showForCustomer');
+
 
 //Invoice items part
 Route::get('items/select-items', 'InvoiceItemController@selectItems');

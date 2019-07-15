@@ -7,6 +7,7 @@ use App\Mail\InvoiceSendMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Invoice;
+use Carbon\Carbon;
 
 class InvoiceMailController extends Controller
 {
@@ -14,16 +15,28 @@ class InvoiceMailController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
-        $tax = $invoice->total - $invoice->subtotal;
+        $encrypt = \Crypt::encryptString($id);
 
-        if ($invoice->settings->show_tax) {
-            return view('invoices.send_mail-with-tax', compact('invoice', 'tax'));
+        if ($invoice->settings->date_format == 'dd.MM.yyyy') {
+            $format = 'd.m.Y';
+        } elseif ($invoice->settings->date_format == 'dd/MM/yyyy') {
+            $format = 'd/m/Y';
+        } elseif ($invoice->settings->date_format == 'MM/dd/yyyy') {
+            $format = 'm/d/Y';
+        } elseif ($invoice->settings->date_format == 'dd-MM-yyyy') {
+            $format = 'd-m-Y';
         } else {
-            $total = $subtotal = $invoice->total - $tax;
-            $balance = $invoice->balance - $tax;
-
-            return view('invoices.send_mail', compact('invoice', 'total', 'subtotal', 'balance'));
+            $format = 'Y-m-d';
         }
+
+            return view('invoices.send_mail', [
+                'encrypt' => $encrypt,
+                'invoice'=> $invoice,
+                'settings' => $invoice->settings,
+                'invoiceItems' => collect($invoice->items),
+                'invoiceDate' => Carbon::parse($invoice->invoice_date)->format($format),
+                'dueDate' => Carbon::parse($invoice->due_date)->format($format),
+            ]);
     }
 
     public function store($id)

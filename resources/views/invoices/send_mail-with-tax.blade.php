@@ -40,7 +40,7 @@
                                   rows="8">You have received an invoice from {{ $invoice->company->name }} for {{ $invoice->balance }} $.
 To view, print or download a PDF copy of your invoice, click the link below:
 
-http://invoices.local/invoices/{{ $invoice->id }}
+http://invoices.local/invoice/invoice-show?link={{ $encrypt }}
 
                             Best regards,
                             {{ $invoice->company->name }}
