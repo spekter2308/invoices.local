@@ -26,8 +26,8 @@
                <div class="form-group-table">
                    <input type="number" class="form-control"
                           name="item-unit-price[]" placeholder="1.0"
-                          min="1"
-                          step="1"
+                          min="0.01"
+                          step="0.01"
                           @keypress="checkForFloats"
                           @blur="makeDirty"
                           v-model.number="tableItem.unitprice">
@@ -40,15 +40,15 @@
            <div class="item-quantity">
                <div class="form-group-table">
                    <input type="number" class="form-control"
-                          min="1"
-                          step="1"
-                          @keypress="checkForIntegers"
+                          min="0.1"
+                          step="0.01"
+                          @keypress="checkForFloatQuantity"
                           name="item-quantity[]" placeholder="1"
                           @blur="makeDirty"
                           v-model.number="tableItem.quantity">
                    <template v-if="isDirty && tableItem.dirty">
                        <small v-if="!quantityRequired" class="error-control">Quantity is required</small>
-                       <small v-if="!quantityInteger" class="error-control">Quantity must be integer number</small>
+                       <small v-if="!quantityFloat" class="error-control">Quantity must be integer number</small>
                    </template>
                </div>
            </div>
@@ -185,6 +185,9 @@
             quantityInteger() {
                 return integer(this.tableItem.quantity)
             },
+            quantityFloat() {
+                return /[+-]?([0-9]*[.])?[0-9]+/.test(this.tableItem.quantity)
+            },
             unitPriceFloat() {
                 return /[+-]?([0-9]*[.])?[0-9]+/.test(this.tableItem.unitprice)
             },
@@ -205,6 +208,12 @@
             checkForFloats(e) {
                 const val = `${this.tableItem.unitprice}${e.key}`
                 if ( this.tableItem.unitprice !== null && !/[+-]?([0-9]*[.])?[0-9]+/.test(val)) {
+                    e.preventDefault()
+                }
+            },
+            checkForFloatQuantity(e) {
+                const val = `${this.tableItem.quantity}${e.key}`
+                if ( this.tableItem.quantity !== null && !/[+-]?([0-9]*[.])?[0-9]+/.test(val)) {
                     e.preventDefault()
                 }
             },

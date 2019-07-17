@@ -18,7 +18,7 @@
     export default {
         data() {
             return {
-                statuses: ['Paid', 'Partial', 'Sent', 'Archive'],
+                statuses: ['Partial', 'Sent', 'Archive'],
             }
         },
         methods: {

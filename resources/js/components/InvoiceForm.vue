@@ -159,7 +159,8 @@
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <datapicker :format="defaultSettings.format"
+                            <datapicker monday-first="true"
+                                        :format="defaultSettings.format"
                                         @blur="$v.invoice.selectedDateFrom.$touch()"
                                         v-model="invoice.selectedDateFrom"
                                         class=""></datapicker>
@@ -177,7 +178,8 @@
                     </div>
                     <div class="col-md-8">
                         <div class="form-group">
-                            <datapicker :format="defaultSettings.format"
+                            <datapicker monday-first="true"
+                                        :format="defaultSettings.format"
                                         @blur="$v.invoice.selectedDateTo.$touch()"
                                         v-model="invoice.selectedDateTo"
                                         class=""></datapicker>

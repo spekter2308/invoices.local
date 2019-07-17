@@ -37,7 +37,7 @@
                         <a href="/invoices?status=Viewed" class="pd-1 pdl-1 border-right">Viewed</a>
                         <a href="/invoices?status=Paid" class="pd-1 pdl-1 border-right">Paid</a>
                         <a href="/invoices?status=Partial" class="pd-1 pdl-1 border-right">Partial</a>
-                        <a href="/invoices?status=Archived" class="pd-1 pdl-1 border-right">Archived</a>
+                        <a href="/invoices?status=Archive" class="pd-1 pdl-1 border-right">Archived</a>
                     </div>
                     <table class="table">
                         <thead class="bg-primary text-white">

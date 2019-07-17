@@ -37,11 +37,15 @@ class InvoiceController extends Controller
 
     public function index(Request $request, InvoiceFilters $filters)
     {
-        $invoices = $this->getInvoices($filters);
-
         $getFilters = [];
-        foreach ($request->query as $key => $filter) {
-            $getFilters[$key] = $filter;
+        if ($request->query->count()) {
+            $invoices = $this->getInvoices($filters);
+
+            foreach ($request->query as $key => $filter) {
+                $getFilters[$key] = $filter;
+            }
+        } else {
+            $invoices = Invoice::latest()->where('status', '!=', 'Archive');
         }
 
         //return $getFilters;
@@ -553,7 +557,7 @@ class InvoiceController extends Controller
         InvoiceHistory::create([
             'invoice_id' => $invoice->id,
             'user_id' => auth()->id(),
-            'changes' => "Amount changed from $old_balance to $invoice->balance"
+            'changes' => "Amount changed from $old_balance to $invoice->balance, Status: $status"
         ]);
 
         if (\request()->wantsJson()) {
@@ -578,10 +582,8 @@ class InvoiceController extends Controller
                 ->with(['flash' => 'Access denied. You cann\'t change statuses.']);
         }
 
-        $invoice->update([
+        /*$invoice->update([
             'status' => 'Paid',
-            'balance' => 0,
-            'amount_paid' => $invoice->total
         ]);
 
         InvoiceHistory::create([
@@ -590,12 +592,15 @@ class InvoiceController extends Controller
             'changes' => "Invoice marked as paid"
         ]);
 
-        return redirect()->back();
+        return redirect()->back();*/
+
+        return redirect()->route('record-payment', [$id]);
     }
 
     public function markAsUnpaid($id)
     {
         $invoice = Invoice::findOrFail($id);
+        $old_balance = $invoice->balance;
 
         if(\Gate::denies('update', $invoice)){
             return redirect()
@@ -603,16 +608,26 @@ class InvoiceController extends Controller
                 ->with(['flash' => 'Access denied. You cann\'t change statuses.']);
         }
 
+        $last_payment = PaymentInvoice::latest()->where('invoice_id', '=', $id)->first();
+
+        PaymentInvoice::create([
+            'invoice_id' => $invoice->id,
+            'date' => Carbon::now(),
+            'amount' => -$last_payment->amount,
+            'receiving_account' => $last_payment->receiving_account,
+            'notes' => $last_payment->notes
+        ]);
+
         $invoice->update([
             'status' => 'Partial',
-            'balance' => 0,
-            'amount_paid' => $invoice->total
+            'balance' => $old_balance + $last_payment->amount,
+            'amount_paid' => $invoice->amount_paid - $last_payment->amount,
         ]);
 
         InvoiceHistory::create([
             'invoice_id' => $invoice->id,
             'user_id' => auth()->id(),
-            'changes' => "Invoice marked as unpaid"
+            'changes' => "Amount changed from $old_balance to $invoice->balance, Status: Partial"
         ]);
 
         return redirect()->back();
@@ -622,7 +637,6 @@ class InvoiceController extends Controller
     {
         $invoices = Invoice::latest()->filter($filters);
 
-        //$invoices = $invoices->paginate(2);
         return $invoices;
     }
 

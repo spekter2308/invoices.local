@@ -33,8 +33,8 @@ class UpdateInvoiceRequest extends FormRequest
             'selectedNotes' => 'required|string|min:5',
             'selectedItems.*.item' => 'required|string',
             'selectedItems.*.description' => 'nullable',
-            'selectedItems.*.quantity' => 'required|integer|min:1',
-            'selectedItems.*.unitprice' => 'required|integer|min:1',
+            'selectedItems.*.quantity' => 'required|numeric|min:0.01',
+            'selectedItems.*.unitprice' => 'required|numeric|min:0.01',
             'selectedSettings' => 'required|array'
         ];
     }
