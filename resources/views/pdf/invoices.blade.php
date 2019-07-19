@@ -9,8 +9,8 @@
             page-break-inside: avoid;
         }
         body {
-            font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
-            color: #111;
+            /*font-family: Roboto, 'Segoe UI', Tahoma, sans-serif;
+            color: #111;*/
         }
         .logo {
             background-image: url('/upload/company/{{$invoice->company->logo_img}}');
@@ -127,180 +127,93 @@
                 </td>
             </tr>
     </table>
-    <div class="page-break"></div>
-
-    <div align="left" style="float: left; width: 39%; height: 0;">
-
-    </div>
-    {{--@if ($invoice->settings->show_tax)
-        <table class="test" align="right" style="width: 60%; float: right; border: 1px solid black; border-top: none;">
-            <tr>
-                <td align="left" style="float: left; width: 20%; padding-left: 10px; font-weight: bold">
-                    Subtotal
-                </td>
-                <td align="right" style="float: right; width: 40%; padding-right: 10px">
-                    {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
-                </td>
-            </tr>
-            <tr style="border-bottom: 1px solid black">
-                <td align="left" style="float: left; width: 30%; padding-left: 40px; font-weight: bold">
-                    + Tax
-                </td>
-                <td align="right" style="float: right; width: 30%; padding-right: 10px; margin-left: 30px; font-size: 12px; font-style: italic">
-                    {{ $tax . ' ' . $invoice->settings->currency }}
-                </td>
-            </tr>
-            <tr style="border-bottom: 1px solid black">
-                <td align="left" style="float: left; width: 20%; padding-left: 10px; font-weight: bold">
-                    Total
-                </td>
-                <td align="right" style="float: right; width: 40%; padding-right: 10px">
-                    {{ $invoice->total . ' ' . $invoice->settings->currency }}
-                </td>
-            </tr>
-            <tr style="border-bottom: 1px solid black">
-                <td align="left" style="float: left; width: 30%; padding-left: 10px; font-weight: bold; white-space: nowrap">
-                    Amount Paid
-                </td>
-                <td align="right" style="float: right; width: 30%; padding-right: 10px">
-                    {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
-                </td>
-            </tr>
-            <tr style="border-bottom: 1px solid black">
-                <td align="left" style="float: left; width: 30%; padding-left: 10px; font-weight: bold; white-space: nowrap">
-                    Balance Due
-                </td>
-                <td align="right" style="float: right; width: 30%; padding-right: 10px">
-                    {{ $invoice->balance . ' ' . $invoice->settings->currency}}
-                </td>
-            </tr>
-        </table>
-    @else
-        <table align="right" style="width: 60%; float: right; border: 1px solid black; border-top: none;">
-            <tr style="border-bottom: 1px solid black">
-                <td align="left" style="float: left; width: 20%; padding-left: 10px; font-weight: bold">
-                    Subtotal
-                </td>
-                <td align="right" style="float: right; width: 40%; padding-right: 10px">
-                    {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
-                </td>
-            </tr>
-            <tr style="border-bottom: none;">
-                <td align="left" style="float: left; width: 20%; padding-left: 10px; font-weight: bold">
-                    Total
-                </td>
-                <td align="right" style="float: right; width: 40%; padding-right: 10px">
-                    {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
-                </td>
-            </tr>
-            <tr>
-                <td align="left" style="float: left; width: 30%; padding-left: 10px; font-weight: bold; white-space: nowrap;">
-                    Amount Paid
-                </td>
-                <td align="right" style="float: right; width: 30%; padding-right: 10px">
-                    {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
-                </td>
-            </tr>
-            <tr>
-                <td align="left" style="float: left; width: 30%; padding-left: 10px; font-weight: bold; white-space: nowrap;">
-                    Balance Due
-                </td>
-                <td align="right" style="float: right; width: 30%; padding-right: 10px">
-                    {{ $balance . ' ' . $invoice->settings->currency }}
-                </td>
-            </tr>
-        </table>
-    @endif--}}
-    
-    <table style="width: 100%; border: 1px solid black; border-top: none; font-size: 12px; ">
+    <table style="padding: -3px; width: 100%; border: 1px solid black; border-top: none; overflow: hidden; font-size: 13px">
         <tr>
-            <td style="width: 55%; border-right: 1px solid #000;"></td>
-            <td style="width: 45%;">
-            @if ($invoice->settings->show_tax)
-                <table width="100%" style="border-collapse: collapse;">
-                    <tr>
-                        <td align="left" style="float: left; width: 20%; padding-top: 10px; padding-left: 20px; font-weight: bold;">
-                            Subtotal
-                        </td>
-                        <td align="right" style="float: right; width: 40%; padding-top: 10px; padding-right: 10px;">
-                            {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid black">
-                        <td align="left" style="float: left; width: 30%; padding-bottom: 10px; padding-left: 50px; font-weight: bold; border-bottom: 1px solid #000; font-weight: normal; font-style: italic">
-                            + Tax
-                        </td>
-                        <td align="right" style="float: right; width: 30%; padding-bottom: 10px; padding-right: 10px; margin-left: 30px; font-size: 12px; font-style: italic; border-bottom: 1px solid #000;">
-                            {{ $tax . ' ' . $invoice->settings->currency }}
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid black">
-                        <td align="left" style="float: left; width: 20%; padding: 10px; padding-left: 20px; font-weight: bold; border-bottom: 1px solid #000;">
-                            Total
-                        </td>
-                        <td align="right" style="float: right; width: 40%; padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
-                            {{ $invoice->total . ' ' . $invoice->settings->currency }}
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid black">
-                        <td align="left" style="float: left; width: 30%; padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap; border-bottom: 1px solid #000;">
-                            Amount Paid
-                        </td>
-                        <td align="right" style="float: right; width: 30%; padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
-                            {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid black">
-                        <td align="left" style="float: left; width: 30%; padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
-                            Balance Due
-                        </td>
-                        <td align="right" style="float: right; width: 30%; padding: 10px; padding-right: 10px">
-                            {{ $invoice->balance . ' ' . $invoice->settings->currency}}
-                        </td>
-                    </tr>
-                </table>
-            @else
-                <table width="100%" style="border-collapse: collapse;">
-                    <tr>
-                        <td align="left" style="float: left; width: 20%; padding: 10px; padding-left: 20px; font-weight: bold; border-bottom: 1px solid #000;">
-                            Subtotal
-                        </td>
-                        <td align="right" style="float: right; width: 40%; padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
-                            {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
-                        </td>
-                    </tr>
-                    <tr style="border-bottom: none;">
-                        <td align="left" style="float: left; width: 20%; padding: 10px; padding-left: 20px; font-weight: bold; border-bottom: 1px solid #000;">
-                            Total
-                        </td>
-                        <td align="right" style="float: right; width: 40%; padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
-                            {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="left" style="float: left; width: 30%; padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;  border-bottom: 1px solid #000;">
-                            Amount Paid
-                        </td>
-                        <td align="right" style="float: right; width: 30%; padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
-                            {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="left" style="float: left; width: 30%; padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
-                            Balance Due
-                        </td>
-                        <td align="right" style="float: right; width: 30%; padding: 10px; padding-right: 10px">
-                            {{ $balance . ' ' . $invoice->settings->currency }}
-                        </td>
-                    </tr>
-                </table>
-            @endif
+            <td align="left" style="width: 55%; border-right: 1px solid #000"></td>
+            <td align="right">
+                @if ($invoice->settings->show_tax)
+                    <table width="100%" style="border-collapse: collapse;">
+                        <tr>
+                            <td align="left" style="padding-top: 10px; padding-left: 20px; font-weight: bold;">
+                                Subtotal
+                            </td>
+                            <td align="right" style="padding-top: 10px; padding-right: 10px;">
+                                {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
+                            </td>
+                        </tr>
+                        <tr style="border-bottom: 1px solid black">
+                            <td align="left" style="padding-bottom: 10px; padding-left: 50px; font-weight: bold; border-bottom: 1px solid #000; font-weight: normal; font-style: italic">
+                                + Tax
+                            </td>
+                            <td align="right" style=" padding-bottom: 10px; padding-right: 10px; margin-left: 30px; font-size: 12px; font-style: italic; border-bottom: 1px solid #000;">
+                                {{ $tax . ' ' . $invoice->settings->currency }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="padding: 10px 0 5px 20px; font-weight: bold;">
+                                Total
+                            </td>
+                            <td align="right" style="padding: 10px 10px 5px 0px;">
+                                {{ $invoice->total . ' ' . $invoice->settings->currency }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="padding: 5px 0 10px 20px; font-weight: bold; white-space: nowrap; border-bottom: 1px solid #000;">
+                                Amount Paid
+                            </td>
+                            <td align="right" style="padding: 5px 10px 10px 0px; border-bottom: 1px solid #000;">
+                                {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
+                                Balance Due
+                            </td>
+                            <td align="right" style="padding: 10px; padding-right: 10px">
+                                {{ $invoice->balance . ' ' . $invoice->settings->currency}}
+                            </td>
+                        </tr>
+                    </table>
+                @else
+                    <table width="100%" style="border-collapse: collapse;">
+                        <tr>
+                            <td align="left" style="padding: 10px; padding-left: 20px; font-weight: bold; border-bottom: 1px solid #000;">
+                                Subtotal
+                            </td>
+                            <td align="right" style="padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
+                                {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="padding: 10px 0 5px 20px; font-weight: bold;">
+                                Total
+                            </td>
+                            <td align="right" style="padding: 10px 10px 5px 0px;">
+                                {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="padding: 5px 0 10px 20px; font-weight: bold; white-space: nowrap;  border-bottom: 1px solid #000;">
+                                Amount Paid
+                            </td>
+                            <td align="right" style="padding: 5px 10px 10px 0px; border-bottom: 1px solid #000;">
+                                {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
+                                Balance Due
+                            </td>
+                            <td align="right" style="padding: 10px; padding-right: 10px">
+                                {{ $balance . ' ' . $invoice->settings->currency }}
+                            </td>
+                        </tr>
+                    </table>
+                @endif
             </td>
         </tr>
     </table>
-       
     
-
 </div>
 
 </body>

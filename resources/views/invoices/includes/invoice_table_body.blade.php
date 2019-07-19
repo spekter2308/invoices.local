@@ -33,7 +33,8 @@
                         <li class="list-group-item show-status-list"><i class="fas fa-sync-alt"></i><a href="#">Change
                                 Status to:<i class="fas icon-rigth fa-caret-right"></i></a>
                             <ul class="list-status list-group list-group-flush">
-                                <li class="list-group-item"><a href="/invoices/unit-update/status/{{$invoice->id}}?status=Paid">Paid</a></li>
+                                <li class="list-group-item"><a href="{{route('mark-as-paid', ['id' => $invoice->id])}}">Paid</a></li>
+                                <li class="list-group-item"><a href="{{route('mark-as-paid', ['id' => $invoice->id])}}">Draft</a></li>
                                 <li class="list-group-item"><a href="/invoices/unit-update/status/{{$invoice->id}}?status=Partial">Partial</a></li>
                                 <li class="list-group-item"><a href="/invoices/unit-update/status/{{$invoice->id}}?status=Sent">Sent</a></li>
                             </ul>

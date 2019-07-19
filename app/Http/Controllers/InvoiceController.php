@@ -348,7 +348,6 @@ class InvoiceController extends Controller
             'invoice_date' => $data['selectedDateFrom'],
             'due_date' => $data['selectedDateTo'],
             'invoice_notes' => $data['selectedNotes'],
-            'amount_paid' => 0,
             'subtotal' => $subtotal,
             'total' => $total,
             'balance' => $total,
@@ -413,12 +412,6 @@ class InvoiceController extends Controller
 
     public function multiDelete()
     {
-        if(\Gate::denies('delete', Invoice::class)){
-            return redirect()
-                ->back()
-                ->with(['flash' => 'Access denied. You cann\'t change statuses.']);
-        }
-
         $ids = \request()->all();
 
         DB::table('invoices')->whereIn('id', $ids['parameters'])->delete();
@@ -436,7 +429,7 @@ class InvoiceController extends Controller
         if(\Gate::denies('delete', Invoice::find($id))){
             return redirect()
                 ->back()
-                ->with(['flash' => 'Access denied. You cann\'t change statuses.']);
+                ->with(['flash' => 'Access denied. You cann\'t delete invoice.']);
         }
 
         DB::table('invoices')->where('id', '=', $id)->delete();
@@ -608,7 +601,7 @@ class InvoiceController extends Controller
                 ->with(['flash' => 'Access denied. You cann\'t change statuses.']);
         }
 
-        $last_payment = PaymentInvoice::latest()->where('invoice_id', '=', $id)->first();
+        $last_payment = PaymentInvoice::latest()->where('invoice_id', '=', $id)->where('amount', '!=', 0)->first();
 
         PaymentInvoice::create([
             'invoice_id' => $invoice->id,

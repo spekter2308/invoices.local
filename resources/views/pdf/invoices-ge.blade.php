@@ -124,55 +124,49 @@
                 </td>
             </tr>
     </table>
-    <div class="page-break"></div>
-
-    <div align="left" style="float: left; width: 39%; height: 0;">
-
-    </div>
-    
-    <table style="width: 100%; border: 1px solid black; border-top: none; font-size: 12px; ">
+    <table style="padding: -3px; width: 100%; border: 1px solid black; border-top: none; overflow: hidden; font-size: 13px">
         <tr>
-            <td style="width: 55%; border-right: 1px solid #000;"></td>
-            <td style="width: 45%;">
+            <td align="left" style="width: 55%; border-right: 1px solid #000"></td>
+            <td align="right">
                 @if ($invoice->settings->show_tax)
                     <table width="100%" style="border-collapse: collapse;">
                         <tr>
-                            <td align="left" style="float: left; width: 20%; padding-top: 10px; padding-left: 20px; font-weight: bold;">
+                            <td align="left" style="padding-top: 10px; padding-left: 20px; font-weight: bold;">
                                 Zwischensumme
                             </td>
-                            <td align="right" style="float: right; width: 40%; padding-top: 10px; padding-right: 10px;">
+                            <td align="right" style="padding-top: 10px; padding-right: 10px;">
                                 {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
                             </td>
                         </tr>
                         <tr style="border-bottom: 1px solid black">
-                            <td align="left" style="float: left; width: 30%; padding-bottom: 10px; padding-left: 50px; font-weight: bold; border-bottom: 1px solid #000; font-weight: normal; font-style: italic">
+                            <td align="left" style="padding-bottom: 10px; padding-left: 50px; font-weight: bold; border-bottom: 1px solid #000; font-weight: normal; font-style: italic">
                                 + Steuer
                             </td>
-                            <td align="right" style="float: right; width: 30%; padding-bottom: 10px; padding-right: 10px; margin-left: 30px; font-size: 12px; font-style: italic; border-bottom: 1px solid #000;">
+                            <td align="right" style=" padding-bottom: 10px; padding-right: 10px; margin-left: 30px; font-size: 12px; font-style: italic; border-bottom: 1px solid #000;">
                                 {{ $tax . ' ' . $invoice->settings->currency }}
                             </td>
                         </tr>
-                        <tr style="border-bottom: 1px solid black">
-                            <td align="left" style="float: left; width: 20%; padding: 10px; padding-left: 20px; font-weight: bold; border-bottom: 1px solid #000;">
+                        <tr>
+                            <td align="left" style="padding: 10px 0 5px 20px; font-weight: bold;">
                                 Summe
                             </td>
-                            <td align="right" style="float: right; width: 40%; padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
+                            <td align="right" style="padding: 10px 10px 5px 0px;">
                                 {{ $invoice->total . ' ' . $invoice->settings->currency }}
                             </td>
                         </tr>
-                        <tr style="border-bottom: 1px solid black">
-                            <td align="left" style="float: left; width: 30%; padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap; border-bottom: 1px solid #000;">
+                        <tr>
+                            <td align="left" style="padding: 5px 0 10px 20px; font-weight: bold; white-space: nowrap; border-bottom: 1px solid #000;">
                                 Betrag gezahlt
                             </td>
-                            <td align="right" style="float: right; width: 30%; padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
+                            <td align="right" style="padding: 5px 10px 10px 0px; border-bottom: 1px solid #000;">
                                 {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
                             </td>
                         </tr>
-                        <tr style="border-bottom: 1px solid black">
-                            <td align="left" style="float: left; width: 30%; padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
+                        <tr>
+                            <td align="left" style="padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
                                 Fälliger Betrag
                             </td>
-                            <td align="right" style="float: right; width: 30%; padding: 10px; padding-right: 10px">
+                            <td align="right" style="padding: 10px; padding-right: 10px">
                                 {{ $invoice->balance . ' ' . $invoice->settings->currency}}
                             </td>
                         </tr>
@@ -180,34 +174,34 @@
                 @else
                     <table width="100%" style="border-collapse: collapse;">
                         <tr>
-                            <td align="left" style="float: left; width: 20%; padding: 10px; padding-left: 20px; font-weight: bold; border-bottom: 1px solid #000;">
+                            <td align="left" style="padding: 10px; padding-left: 20px; font-weight: bold; border-bottom: 1px solid #000;">
                                 Zwischensumme
                             </td>
-                            <td align="right" style="float: right; width: 40%; padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
-                                {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
-                            </td>
-                        </tr>
-                        <tr style="border-bottom: none;">
-                            <td align="left" style="float: left; width: 20%; padding: 10px; padding-left: 20px; font-weight: bold; border-bottom: 1px solid #000;">
-                                Summe
-                            </td>
-                            <td align="right" style="float: right; width: 40%; padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
+                            <td align="right" style="padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
                                 {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
                             </td>
                         </tr>
                         <tr>
-                            <td align="left" style="float: left; width: 30%; padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;  border-bottom: 1px solid #000;">
+                            <td align="left" style="padding: 10px 0 5px 20px; font-weight: bold;">
+                                Summe
+                            </td>
+                            <td align="right" style="padding: 10px 10px 5px 0px;">
+                                {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td align="left" style="padding: 5px 0 10px 20px; font-weight: bold; white-space: nowrap;  border-bottom: 1px solid #000;">
                                 Betrag gezahlt
                             </td>
-                            <td align="right" style="float: right; width: 30%; padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
+                            <td align="right" style="padding: 5px 10px 10px 0px; border-bottom: 1px solid #000;">
                                 {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
                             </td>
                         </tr>
                         <tr>
-                            <td align="left" style="float: left; width: 30%; padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
+                            <td align="left" style="padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
                                 Fälliger Betrag
                             </td>
-                            <td align="right" style="float: right; width: 30%; padding: 10px; padding-right: 10px">
+                            <td align="right" style="padding: 10px; padding-right: 10px">
                                 {{ $balance . ' ' . $invoice->settings->currency }}
                             </td>
                         </tr>
