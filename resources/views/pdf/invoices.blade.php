@@ -129,8 +129,8 @@
     </table>
     <table style="padding: -3px; width: 100%; border: 1px solid black; border-top: none; overflow: hidden; font-size: 13px">
         <tr>
-            <td align="left" style="width: 55%; border-right: 1px solid #000"></td>
-            <td align="right">
+            <td align="left" style="width: 55%;"></td>
+            <td align="right" style="border-left: 1px solid #000; padding: 0;">
                 @if ($invoice->settings->show_tax)
                     <table width="100%" style="border-collapse: collapse;">
                         <tr>
@@ -141,7 +141,7 @@
                                 {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
                             </td>
                         </tr>
-                        <tr style="border-bottom: 1px solid black">
+                        <tr>
                             <td align="left" style="padding-bottom: 10px; padding-left: 50px; font-weight: bold; border-bottom: 1px solid #000; font-weight: normal; font-style: italic">
                                 + Tax
                             </td>
