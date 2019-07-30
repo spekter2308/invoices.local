@@ -5697,9 +5697,10 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     withTax: function withTax() {
-      return this.items.reduce(function (acc, curr) {
+      var tax = this.items.reduce(function (acc, curr) {
         return acc + curr.unitprice * curr.quantity * curr.itemtax / 100;
       }, 0);
+      return parseFloat(tax.toFixed(2));
     },
     total: function total() {
       if (this.settings.show_tax) {
@@ -5714,6 +5715,9 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         return this.invoice.balance - this.withTax;
       }
+    },
+    itemsTotal: function itemsTotal(quan, unit_price) {
+      return parseFloat((quan * unit_price).toFixed(2));
     }
   }
 });
@@ -6431,7 +6435,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     correct: function correct() {
-      return this.itemRequired && this.quantityInteger && this.quantityRequired && this.unitPriceRequired && this.unitPriceFloat;
+      return this.itemRequired && this.quantityRequired && this.quantityFloat && this.unitPriceRequired && this.unitPriceFloat;
     },
     itemRequired: function itemRequired() {
       return Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"])(this.tableItem.item);
@@ -6442,9 +6446,10 @@ __webpack_require__.r(__webpack_exports__);
     unitPriceRequired: function unitPriceRequired() {
       return Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"])(this.tableItem.unitprice);
     },
-    quantityInteger: function quantityInteger() {
-      return Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["integer"])(this.tableItem.quantity);
-    },
+
+    /*quantityInteger() {
+        return integer(this.tableItem.quantity)
+    },*/
     quantityFloat: function quantityFloat() {
       return /[+-]?([0-9]*[.])?[0-9]+/.test(this.tableItem.quantity);
     },
@@ -6456,7 +6461,8 @@ __webpack_require__.r(__webpack_exports__);
         return 0;
       }
 
-      return this.showTax ? this.tableItem.unitprice * this.tableItem.quantity + this.tableItem.unitprice * this.tableItem.quantity * this.tableItem.itemtax / 100 : this.tableItem.unitprice * this.tableItem.quantity;
+      var total = this.showTax ? this.tableItem.unitprice * this.tableItem.quantity + this.tableItem.unitprice * this.tableItem.quantity * this.tableItem.itemtax / 100 : this.tableItem.unitprice * this.tableItem.quantity;
+      return parseFloat(total.toFixed(2));
     }
   },
   methods: {
@@ -74905,7 +74911,9 @@ var render = function() {
                         _c("div", { staticClass: "form-group-table" }, [
                           _vm._v(
                             "\n                                    " +
-                              _vm._s(item.unitprice * item.quantity) +
+                              _vm._s(
+                                _vm.itemsTotal(item.quantity, item.unitprice)
+                              ) +
                               "\n                                "
                           )
                         ])

@@ -131,7 +131,7 @@
                                 </div>
                                 <div class="item-total">
                                     <div class="form-group-table">
-                                        {{ item.unitprice * item.quantity }}
+                                        {{ itemsTotal(item.quantity, item.unitprice) }}
                                     </div>
                                 </div>
                             </div>
@@ -251,8 +251,9 @@
                 }
             },
             withTax() {
-                return this.items.reduce((acc, curr) =>
-                    acc+(curr.unitprice*curr.quantity*curr.itemtax/100), 0)
+                let tax = this.items.reduce((acc, curr) =>
+                    acc+(curr.unitprice*curr.quantity*curr.itemtax/100), 0);
+                return parseFloat(tax.toFixed(2));
             },
             total() {
                 if (this.settings.show_tax) {
@@ -267,6 +268,9 @@
                 } else {
                     return this.invoice.balance - this.withTax;
                 }
+            },
+            itemsTotal(quan, unit_price) {
+                return parseFloat((quan * unit_price).toFixed(2));
             }
         }
 

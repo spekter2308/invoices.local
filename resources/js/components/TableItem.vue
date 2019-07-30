@@ -169,8 +169,8 @@
         computed: {
             correct() {
               return this.itemRequired
-                  && this.quantityInteger
                   && this.quantityRequired
+                  && this.quantityFloat
                   && this.unitPriceRequired
                   && this.unitPriceFloat
             },
@@ -183,9 +183,9 @@
             unitPriceRequired() {
                 return required(this.tableItem.unitprice)
             },
-            quantityInteger() {
+            /*quantityInteger() {
                 return integer(this.tableItem.quantity)
-            },
+            },*/
             quantityFloat() {
                 return /[+-]?([0-9]*[.])?[0-9]+/.test(this.tableItem.quantity)
             },
@@ -196,10 +196,11 @@
                 if (!this.tableItem.unitprice || !this.tableItem.quantity){
                     return 0;
                 }
-                return (this.showTax) ? this.tableItem.unitprice *
+                let total = (this.showTax) ? this.tableItem.unitprice *
                     this.tableItem.quantity +
                     this.tableItem.unitprice * this.tableItem.quantity * this.tableItem.itemtax/100 :
                     this.tableItem.unitprice * this.tableItem.quantity;
+                return parseFloat(total.toFixed(2));
             }
         },
         methods: {
