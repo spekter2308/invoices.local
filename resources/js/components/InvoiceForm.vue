@@ -555,17 +555,20 @@
                 }, true)
             },
             withTax() {
-                    return this.invoice.selectedItems.reduce((acc, curr) =>
-                    acc+(curr.unitprice*curr.quantity*curr.itemtax/100), 0)
+                    let tax = this.invoice.selectedItems.reduce((acc, curr) =>
+                    acc+(curr.unitprice*curr.quantity*curr.itemtax/100), 0);
+                    return parseFloat(tax.toFixed(2));
             },
             subtotal() {
-                return this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0)
+                let subtotal = this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0);
+                return parseFloat(subtotal.toFixed(2));
             },
             total() {
-                return (this.defaultSettings.tax) ?
+                let total = (this.defaultSettings.tax) ?
                     this.invoice.selectedItems.reduce((acc, curr) =>
                     acc+(curr.unitprice*curr.quantity + curr.unitprice*curr.quantity*curr.itemtax/100), 0) :
-                    this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0)
+                    this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0);
+                return parseFloat(total.toFixed(2));
             },
             balance() {
                 return this.total - this.amount_paid;

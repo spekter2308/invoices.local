@@ -138,7 +138,7 @@
                                 Subtotal
                             </td>
                             <td align="right" style="padding-top: 10px; padding-right: 10px;">
-                                {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
+                                {{ $invoice->settings->currency . ' ' . $invoice->subtotal }}
                             </td>
                         </tr>
                         <tr>
@@ -146,7 +146,7 @@
                                 + Tax
                             </td>
                             <td align="right" style=" padding-bottom: 10px; padding-right: 10px; margin-left: 30px; font-size: 12px; font-style: italic; border-bottom: 1px solid #000;">
-                                {{ $tax . ' ' . $invoice->settings->currency }}
+                                {{ $invoice->settings->currency . ' ' . $tax }}
                             </td>
                         </tr>
                         <tr>
@@ -154,7 +154,7 @@
                                 Total
                             </td>
                             <td align="right" style="padding: 10px 10px 5px 0px;">
-                                {{ $invoice->total . ' ' . $invoice->settings->currency }}
+                                {{ $invoice->settings->currency . ' ' . $invoice->total }}
                             </td>
                         </tr>
                         <tr>
@@ -162,7 +162,7 @@
                                 Amount Paid
                             </td>
                             <td align="right" style="padding: 5px 10px 10px 0px; border-bottom: 1px solid #000;">
-                                {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
+                                {{ $invoice->settings->currency . ' ' . $invoice->amount_paid }}
                             </td>
                         </tr>
                         <tr>
@@ -170,7 +170,7 @@
                                 Balance Due
                             </td>
                             <td align="right" style="padding: 10px; padding-right: 10px">
-                                {{ $invoice->balance . ' ' . $invoice->settings->currency}}
+                                {{ $invoice->settings->currency . ' ' . $invoice->balance }}
                             </td>
                         </tr>
                     </table>
@@ -181,7 +181,7 @@
                                 Subtotal
                             </td>
                             <td align="right" style="padding: 10px; padding-right: 10px; border-bottom: 1px solid #000;">
-                                {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
+                                {{ $invoice->settings->currency . ' ' . $invoice->subtotal }}
                             </td>
                         </tr>
                         <tr>
@@ -189,7 +189,7 @@
                                 Total
                             </td>
                             <td align="right" style="padding: 10px 10px 5px 0px;">
-                                {{ $invoice->subtotal . ' ' . $invoice->settings->currency }}
+                                {{ $invoice->settings->currency . ' ' . $invoice->subtotal }}
                             </td>
                         </tr>
                         <tr>
@@ -197,7 +197,7 @@
                                 Amount Paid
                             </td>
                             <td align="right" style="padding: 5px 10px 10px 0px; border-bottom: 1px solid #000;">
-                                {{ $invoice->amount_paid . ' ' . $invoice->settings->currency }}
+                                {{ $invoice->settings->currency . ' ' . $invoice->amount_paid }}
                             </td>
                         </tr>
                         <tr>
@@ -205,7 +205,7 @@
                                 Balance Due
                             </td>
                             <td align="right" style="padding: 10px; padding-right: 10px">
-                                {{ $balance . ' ' . $invoice->settings->currency }}
+                                {{ $invoice->settings->currency . ' ' . $balance }}
                             </td>
                         </tr>
                     </table>

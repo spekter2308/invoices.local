@@ -57,6 +57,7 @@
                    <input type="number" class="form-control"
                           name="item-tax[]" placeholder="0"
                           min="0"
+                          @blur="makeDirty"
                           v-model.number="tableItem.itemtax">
                </div>
            </div>
