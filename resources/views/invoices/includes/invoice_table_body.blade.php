@@ -70,13 +70,12 @@
                 @endif>
                 {{ \Carbon\Carbon::parse($invoice->due_date)->diffInDays(\Carbon\Carbon::now()) }}
             </td>
-        @if ($invoice->settings->show_tax)
-            <td>{{ $invoice->total }}</td>
+            @if ($invoice->settings->show_tax)
+                <td>{{ $invoice->total }}</td>
+            @else
+                <td>{{ $invoice->subtotal }}</td>
+            @endif
             <td>{{ $invoice->balance . ' ' . $invoice->settings->currency }}</td>
-        @else
-            <td>{{ $invoice->subtotal }}</td>
-            <td>{{ $invoice->balance - ($invoice->total - $invoice->subtotal) . ' ' . $invoice->settings->currency }}</td>
-        @endif
         <td
                 @if ($invoice->status == 'Paid')
                 style="color: green;"

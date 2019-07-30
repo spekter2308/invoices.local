@@ -567,11 +567,11 @@
                 let total = (this.defaultSettings.tax) ?
                     this.invoice.selectedItems.reduce((acc, curr) =>
                     acc+(curr.unitprice*curr.quantity + curr.unitprice*curr.quantity*curr.itemtax/100), 0) :
-                    this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0);
+                    this.subtotal;
                 return parseFloat(total.toFixed(2));
             },
             balance() {
-                return this.total - this.amount_paid;
+                return parseFloat((this.total - this.amount_paid).toFixed(2));
             },
             amount_paid(){
                 return (this.invoicePaid === '0') ? 0 : this.invoicePaid;

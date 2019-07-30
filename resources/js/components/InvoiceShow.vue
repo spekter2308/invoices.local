@@ -269,7 +269,7 @@
                 if (this.settings.show_tax) {
                     return parseFloat(this.invoice.balance.toFixed(2));
                 } else {
-                    return parseFloat((this.invoice.balance - this.withTax).toFixed(2));
+                    return parseFloat((this.invoice.subtotal - this.invoice.amount_paid).toFixed(2));
                 }
             },
 

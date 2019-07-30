@@ -5374,13 +5374,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     total: function total() {
       var total = this.defaultSettings.tax ? this.invoice.selectedItems.reduce(function (acc, curr) {
         return acc + (curr.unitprice * curr.quantity + curr.unitprice * curr.quantity * curr.itemtax / 100);
-      }, 0) : this.invoice.selectedItems.reduce(function (acc, curr) {
-        return acc + curr.unitprice * curr.quantity;
-      }, 0);
+      }, 0) : this.subtotal;
       return parseFloat(total.toFixed(2));
     },
     balance: function balance() {
-      return this.total - this.amount_paid;
+      return parseFloat((this.total - this.amount_paid).toFixed(2));
     },
     amount_paid: function amount_paid() {
       return this.invoicePaid === '0' ? 0 : this.invoicePaid;
@@ -5716,7 +5714,7 @@ __webpack_require__.r(__webpack_exports__);
       if (this.settings.show_tax) {
         return parseFloat(this.invoice.balance.toFixed(2));
       } else {
-        return parseFloat((this.invoice.balance - this.withTax).toFixed(2));
+        return parseFloat((this.invoice.subtotal - this.invoice.amount_paid).toFixed(2));
       }
     }
   },
@@ -96889,8 +96887,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

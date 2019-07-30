@@ -200,6 +200,9 @@ class InvoiceController extends Controller
         if ($invoice->settings->show_tax) {
             $changes = "Invoice created, amount $invoice->balance with tax ($tax)";
         } else {
+            $invoice->update([
+                'balance' => $invoice->subtotal
+            ]);
             $changes = "Invoice created, amount $totalWithoutTax without tax";
         }
 
@@ -219,7 +222,6 @@ class InvoiceController extends Controller
     public function show($id)
     {
         $invoice = Invoice::findOrFail($id);
-
 
         if ($invoice->settings->date_format == 'dd.MM.yyyy') {
             $format = 'd.m.Y';
@@ -309,6 +311,10 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
+        $old_total = $invoice->total;
+        $previous_show_tax = $invoice->settings->show_tax;
+        $old_total_without_tax = $invoice->subtotal;
+
         $data = $request->input();
 
         //check for unique invoice number
@@ -337,22 +343,6 @@ class InvoiceController extends Controller
             return $item['quantity'] * $item['unitprice'] + $item['quantity'] * $item['unitprice']*$item['itemtax']/100;
         });
 
-        $old_total = $invoice->total;
-        $previous_show_tax = $invoice->settings->show_tax;
-        $old_total_without_tax = $invoice->subtotal;
-
-        $invoice->update([
-            'number' => $data['selectedInvoiceNumber'],
-            'customer_id' => $customerId,
-            'company_id' => \request('selectedCompany'),
-            'invoice_date' => $data['selectedDateFrom'],
-            'due_date' => $data['selectedDateTo'],
-            'invoice_notes' => $data['selectedNotes'],
-            'subtotal' => $subtotal,
-            'total' => $total,
-            'balance' => $total,
-        ]);
-
         $invoice = DB::transaction(function () use ($invoice, $request) {
             $invoice->updateHasMany([
                 'items' => $request->selectedItems
@@ -372,6 +362,24 @@ class InvoiceController extends Controller
                 'show_tax' => $setting['tax']
             ]);
         }
+
+        if ($invoice->settings->show_tax) {
+            $balance = $invoice->total - $invoice->amount_paid;
+        } else {
+            $balance = $invoice->subtotal - $invoice->amount_paid;
+        }
+
+        $invoice->update([
+            'number' => $data['selectedInvoiceNumber'],
+            'customer_id' => $customerId,
+            'company_id' => \request('selectedCompany'),
+            'invoice_date' => $data['selectedDateFrom'],
+            'due_date' => $data['selectedDateTo'],
+            'invoice_notes' => $data['selectedNotes'],
+            'subtotal' => $subtotal,
+            'total' => $total,
+            'balance' => $balance,
+        ]);
 
         $tax = $invoice->total - $invoice->subtotal;
         $totalWithoutTax = $invoice->subtotal;
@@ -493,27 +501,25 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
-        $tax = $invoice->total - $invoice->subtotal;
-
-        if ($invoice->settings->show_tax) {
-
-            return view('invoices.record-payment-with-tax', [
-                'invoice' => $invoice,
-                'tax' => $tax,
-                'paymentHistory' => $invoice->payments
-            ]);
+        if ($invoice->settings->date_format == 'dd.MM.yyyy') {
+            $format = 'd.m.Y';
+        } elseif ($invoice->settings->date_format == 'dd/MM/yyyy') {
+            $format = 'd/m/Y';
+        } elseif ($invoice->settings->date_format == 'MM/dd/yyyy') {
+            $format = 'm/d/Y';
+        } elseif ($invoice->settings->date_format == 'dd-MM-yyyy') {
+            $format = 'd-m-Y';
         } else {
-            $total = $subtotal = $invoice->total - $tax;
-            $balance = $invoice->balance - $tax;
-
-            return view('invoices.record-payment', [
-                'invoice' => $invoice,
-                'total' => $total,
-                'subtotal' => $subtotal,
-                'balance' => $balance,
-                'paymentHistory' => $invoice->payments
-            ]);
+            $format = 'Y-m-d';
         }
+        return view('invoices.record-payment', [
+            'invoice'=> $invoice,
+            'settings' => $invoice->settings,
+            'invoiceItems' => collect($invoice->items),
+            'invoiceDate' => Carbon::parse($invoice->invoice_date)->format($format),
+            'dueDate' => Carbon::parse($invoice->due_date)->format($format),
+            'paymentHistory' => $invoice->payments
+        ]);
     }
 
     public function recordPaymentSave($id)
@@ -575,19 +581,36 @@ class InvoiceController extends Controller
                 ->with(['flash' => 'Access denied. You cann\'t change statuses.']);
         }
 
-        /*$invoice->update([
+        if ($invoice->settings->show_tax) {
+            $amount_payment = $invoice->total - $invoice->amount_paid;
+        } else {
+            $amount_payment = $invoice->subtotal - $invoice->amount_paid;
+        }
+
+        $paymentData = PaymentInvoice::create([
+            'invoice_id' => $invoice->id,
+            'date' => Carbon::now()->format('Y-m-d'),
+            'amount' => $amount_payment,
+            'receiving_account' => 'cash',
+            'notes' => 'Marked as paid',
+        ]);
+
+        $old_paid = $invoice->amount_paid;
+        $old_balance = $invoice->balance;
+
+        $invoice->update([
             'status' => 'Paid',
+            'balance' => $old_balance - $amount_payment,
+            'amount_paid' => $amount_payment + $old_paid,
         ]);
 
         InvoiceHistory::create([
             'invoice_id' => $invoice->id,
             'user_id' => auth()->id(),
-            'changes' => "Invoice marked as paid"
+            'changes' => "Invoice marked as paid; Amount changed from $old_balance to $invoice->balance, Status: Paid"
         ]);
 
-        return redirect()->back();*/
-
-        return redirect()->route('record-payment', [$id]);
+        return redirect()->back();
     }
 
     public function markAsUnpaid($id)
@@ -608,7 +631,7 @@ class InvoiceController extends Controller
             'date' => Carbon::now(),
             'amount' => -$last_payment->amount,
             'receiving_account' => $last_payment->receiving_account,
-            'notes' => $last_payment->notes
+            'notes' => 'Marked as unpaid'
         ]);
 
         $invoice->update([
@@ -620,7 +643,7 @@ class InvoiceController extends Controller
         InvoiceHistory::create([
             'invoice_id' => $invoice->id,
             'user_id' => auth()->id(),
-            'changes' => "Amount changed from $old_balance to $invoice->balance, Status: Partial"
+            'changes' => "Invoice marked as unpaid; Amount changed from $old_balance to $invoice->balance, Status: Partial"
         ]);
 
         return redirect()->back();
@@ -700,7 +723,7 @@ class InvoiceController extends Controller
         $invoice = Invoice::findOrFail($invoice);
 
         $tax = $invoice->total - $invoice->subtotal;
-        $balance = $invoice->balance - $tax;
+        $balance = $invoice->subtotal - $invoice->amount_paid;
 
         if ($print) {
             if ($invoice->settings->language == 'english') {
