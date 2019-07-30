@@ -160,7 +160,7 @@
                         <div class="invoice-total">
                             <div class="level mt-2">
                                 <h6 class="flex" >{{ $t("message.subtotal") }}</h6>
-                                <span>{{ invoice.subtotal + ' ' + invoice.settings.currency }}</span>
+                                <span>{{ subtotal + ' ' + invoice.settings.currency }}</span>
                             </div>
                             <div class="level mt-2 with-tax" v-if="settings.show_tax">
                                 <h6 class="flex" >+ Tax</h6>
@@ -255,20 +255,26 @@
                     acc+(curr.unitprice*curr.quantity*curr.itemtax/100), 0);
                 return parseFloat(tax.toFixed(2));
             },
+            subtotal() {
+                return parseFloat(this.invoice.subtotal.toFixed(2));
+            },
             total() {
                 if (this.settings.show_tax) {
-                    return this.invoice.total;
+                    return parseFloat(this.invoice.total.toFixed(2));
                 } else {
-                    return this.invoice.subtotal;
+                    return parseFloat(this.invoice.subtotal.toFixed(2));
                 }
             },
             balance() {
                 if (this.settings.show_tax) {
-                    return this.invoice.balance;
+                    return parseFloat(this.invoice.balance.toFixed(2));
                 } else {
-                    return this.invoice.balance - this.withTax;
+                    return parseFloat((this.invoice.balance - this.withTax).toFixed(2));
                 }
             },
+
+        },
+        methods: {
             itemsTotal(quan, unit_price) {
                 return parseFloat((quan * unit_price).toFixed(2));
             }

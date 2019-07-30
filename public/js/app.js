@@ -5702,20 +5702,25 @@ __webpack_require__.r(__webpack_exports__);
       }, 0);
       return parseFloat(tax.toFixed(2));
     },
+    subtotal: function subtotal() {
+      return parseFloat(this.invoice.subtotal.toFixed(2));
+    },
     total: function total() {
       if (this.settings.show_tax) {
-        return this.invoice.total;
+        return parseFloat(this.invoice.total.toFixed(2));
       } else {
-        return this.invoice.subtotal;
+        return parseFloat(this.invoice.subtotal.toFixed(2));
       }
     },
     balance: function balance() {
       if (this.settings.show_tax) {
-        return this.invoice.balance;
+        return parseFloat(this.invoice.balance.toFixed(2));
       } else {
-        return this.invoice.balance - this.withTax;
+        return parseFloat((this.invoice.balance - this.withTax).toFixed(2));
       }
-    },
+    }
+  },
+  methods: {
     itemsTotal: function itemsTotal(quan, unit_price) {
       return parseFloat((quan * unit_price).toFixed(2));
     }
@@ -74974,9 +74979,7 @@ var render = function() {
                 _vm._v(" "),
                 _c("span", [
                   _vm._v(
-                    _vm._s(
-                      _vm.invoice.subtotal + " " + _vm.invoice.settings.currency
-                    )
+                    _vm._s(_vm.subtotal + " " + _vm.invoice.settings.currency)
                   )
                 ])
               ]),
@@ -96886,8 +96889,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
