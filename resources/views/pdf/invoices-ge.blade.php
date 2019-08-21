@@ -106,9 +106,9 @@
                 <td align="center" style="width: 10%;">{{ $item->quantity }}</td>
                 @if ($invoice->settings->show_tax)
                     <td align="center" style="width: 10%;">{{ $item->itemtax }}</td>
-                    <td align="right" style="width: 10%;">{{ $item->unitprice * $item->quantity + $item->unitprice * $item->quantity * $item->itemtax/100}}</td>
+                    <td align="right" style="width: 10%;">{{ round($item->unitprice * $item->quantity + $item->unitprice * $item->quantity * $item->itemtax/100, 2) }}</td>
                 @else
-                    <td align="right" style="width: 20%;">{{ $item->unitprice * $item->quantity }}</td>
+                    <td align="right" style="width: 20%;">{{ round($item->unitprice * $item->quantity, 2) }}</td>
                 @endif
             </tr>
         @endforeach
