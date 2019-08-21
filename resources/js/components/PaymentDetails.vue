@@ -116,7 +116,7 @@
                 dataForm: {
                     date: new Date().toISOString().slice(0,10),
                     amount: this.invoice.balance,
-                    receiving_account: null,
+                    receiving_account: 'cash',
                     notes: '',
                     invoice_id: this.invoice.id,
                 },
@@ -150,8 +150,6 @@
                     location.href = '/invoices/' + this.id;
                     this.spinnerVisible = false
                 } catch(e) {
-                    // this.resetInvoice()
-                    // this.$v.$reset()
                     console.log('some error')
                     this.spinnerVisible = false
                 }

@@ -74,9 +74,9 @@ class Invoice extends Model
         return $filters->apply($query);
     }
 
-    public function getPdfInvoiceDateAttribute($value)
+    public function getPdfInvoiceDateAttribute()
     {
-        $date = Carbon::parse($value);
+        $date = Carbon::parse($this->attributes['invoice_date']);
 
         if ($this->settings->date_format == 'dd.MM.yyyy') {
             $format = 'd.m.Y';
@@ -93,9 +93,9 @@ class Invoice extends Model
         return $date->format($format);
     }
 
-    public function getPdfDueDateAttribute($value)
+    public function getPdfDueDateAttribute()
     {
-        $date = Carbon::parse($value);
+        $date = Carbon::parse($this->attributes['due_date']);
 
         if ($this->settings->date_format == 'dd.MM.yyyy') {
             $format = 'd.m.Y';
@@ -110,5 +110,25 @@ class Invoice extends Model
         }
 
         return $date->format($format);
+    }
+
+    public function setAmountPaidAttribute($value)
+    {
+        $this->attributes['amount_paid'] = round($value, 2);
+    }
+
+    public function setSubtotalAttribute($value)
+    {
+        $this->attributes['subtotal'] = round($value, 2);
+    }
+
+    public function setTotalAttribute($value)
+    {
+        $this->attributes['total'] = round($value, 2);
+    }
+
+    public function setBalanceAttribute($value)
+    {
+        $this->attributes['balance'] = round($value, 2);
     }
 }

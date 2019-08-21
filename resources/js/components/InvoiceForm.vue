@@ -371,11 +371,6 @@
                         return true
                     }
                 },
-                /*selectedFile: {
-                    isCorrectType(v) {
-                        return integer(v) || isObject(v)
-                    }
-                },*/
                 selectedDateFrom:{
                     required
                 },
@@ -433,7 +428,6 @@
             updateNextNumber() {
                 return axios.get('/counters').then(response => {
                     this.nextInvoiceNumberResponse = response.data.invoiceNumber;
-                    console.log(this.invoiceNumbers)
                 })
             },
             resetSelectedNumber() {
@@ -447,7 +441,6 @@
             resetInvoice() {
                 this.invoice.selectedCompany = NaN
                 this.invoice.selectedCustomer = {}
-                //this.invoice.selectedFile = null
                 this.invoice.selectedDateFrom = new Date().toISOString().slice(0, 10)
                 this.invoice.selectedDateTo = new Date().toISOString().slice(0, 10)
                 this.invoice.selectedInvoiceNumber = this.nextInvoiceNumberResponse;
@@ -464,7 +457,6 @@
                     }
                 ]
                 this.notes = ''
-                //this.isTableInvalid = false
             },
             async onSubmit() {
                 try {
@@ -474,34 +466,22 @@
                         this.spinnerVisible = true
                         this.invoice.selectedNotes = this.notes;
                         this.invoice.selectedSettings = [this.defaultSettings];
-                        console.log(JSON.stringify(this.invoice));
                         if (this.mode === 'create') {
                             await axios.post('/invoices', this.invoice).then(response => {
                                 this.createdInvoiceId = response.data.invoice.id
                                 this.spinnerVisible = false
                             });
-                            console.log(this.createdInvoiceId)
                             location.href = '/invoices/' + this.createdInvoiceId;
                         }
                         else if(this.mode === 'edit') {
-                            console.log(this.currentInvoice.id)
                             await axios.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(response => {
                                 this.createdInvoiceId = response.data.invoice.id
                                 this.spinnerVisible = false
                             });
                         }
                         location.href = '/invoices/' + this.createdInvoiceId;
-                        //await this.updateNextNumber();
-                        //this.resetInvoice();
-                        //eventBus.$emit('update', true)
-                        //this.$v.$reset()
-                        //eventBus.$emit('reset', true)
-                        //console.log('resetting')
                     }
                 } catch(e) {
-                    // this.resetInvoice()
-                    // this.$v.$reset()
-                    console.log('some error')
                     this.spinnerVisible = false
                 }
             },
@@ -510,7 +490,6 @@
             },
             async editNumber() {
                 try {
-                    console.log(JSON.stringify(this.selectedNumber));
                     await axios.patch('/counters/' + this.formatNumber.id, this.selectedNumber);
                     this.invoice.selectedInvoiceNumber = this.invoiceNum;
                     this.updateNextNumber();
@@ -518,9 +497,6 @@
                     console.log(e)
                 }
             },
-            /*updateInvoiceNum() {
-                //axios.get('/')
-            },*/
             getInvoiceNotes(variable){
                 this.notes = variable;
             },
