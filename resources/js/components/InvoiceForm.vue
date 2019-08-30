@@ -466,6 +466,8 @@
                         this.spinnerVisible = true
                         this.invoice.selectedNotes = this.notes;
                         this.invoice.selectedSettings = [this.defaultSettings];
+                        this.invoice.selectedDateFrom = this.invoice.selectedDateFrom.toISOString().slice(0,10);
+                        this.invoice.selectedDateTo = this.invoice.selectedDateTo.toISOString().slice(0,10);
                         if (this.mode === 'create') {
                             await axios.post('/invoices', this.invoice).then(response => {
                                 this.createdInvoiceId = response.data.invoice.id
