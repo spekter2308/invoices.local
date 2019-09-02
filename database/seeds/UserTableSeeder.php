@@ -13,7 +13,7 @@ class UserTableSeeder extends Seeder
     {
             \App\User::updateOrCreate([
                'name' => 'Admin',
-               'email' => 'admin@gmail.com',
+               'email' => 'chance.ck@gmail.com',
                'password' => Hash::make('2.jXyK:Eq68.#w(`'),
             ]);
     }

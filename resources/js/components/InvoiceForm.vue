@@ -324,8 +324,8 @@
                 invoice: {
                     selectedCompany: this.invoiceCompany.id || NaN,
                     selectedCustomer: this.invoiceCustomer.id || {},
-                    selectedDateFrom: this.currentInvoice.invoice_date || new Date().toISOString().slice(0,10),
-                    selectedDateTo: this.currentInvoice.due_date || new Date().toISOString().slice(0,10),
+                    selectedDateFrom: this.currentInvoice.invoice_date || new Date(),
+                    selectedDateTo: this.currentInvoice.due_date || new Date(),
                     selectedInvoiceNumber: this.invoiceNumber,
                     selectedItems: this.invoiceItems,
                     selectedSettings: [],

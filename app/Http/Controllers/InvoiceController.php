@@ -433,6 +433,7 @@ class InvoiceController extends Controller
         DB::table('invoices')->whereIn('id', $ids['parameters'])->delete();
 
         if (\request()->wantsJson()) {
+            session()->flash('show-success', 'Invoices has been deleted success.');
             return response(['success'], 204);
         }
         return redirect()
