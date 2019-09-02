@@ -422,8 +422,9 @@ class InvoiceController extends Controller
     {
         $ids = \request()->all();
 
-        foreach ($ids as $id) {
-            if(\Gate::denies('update', Invoice::find($id))){
+        foreach ($ids['parameters'] as $id) {
+            $invoice = Invoice::find($id);
+            if(\Gate::denies('delete', $invoice)){
                 session()->flash('flash', 'Access denied. You cann\'t delete selected invoices.');
                 return \response('success', 204);
             }
