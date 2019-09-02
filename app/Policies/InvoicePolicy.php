@@ -76,6 +76,19 @@ class InvoicePolicy
         return false;
     }
 
+    public function sendMail(User $user, Invoice $invoice)
+    {
+        if ($user->role() == 'admin') {
+            return true;
+        }
+        if ($user->role() == 'user') {
+            if ($user->id == $invoice->user_id) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Determine whether the user can restore the invoice.
      *

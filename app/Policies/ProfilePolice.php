@@ -19,7 +19,10 @@ class ProfilePolice
      */
     public function view(User $user, Company $company)
     {
-        return true;
+        if ($user->role() == 'admin') {
+            return true;
+        }
+        return false;
     }
 
     /**

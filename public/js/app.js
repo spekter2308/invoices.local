@@ -4216,7 +4216,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     deleteInvoice: function deleteInvoice() {
-      //console.log(JSON.stringify(this.$store.state.checkbox));
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/invoices/multiDelete', {
         parameters: this.$store.state.checkbox
       }).then(function (response) {
@@ -4224,8 +4223,6 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     changeStatus: function changeStatus(status) {
-      //console.log(JSON.stringify(this.$store.state.checkbox));
-      //console.log(JSON.stringify(status));
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/invoices/multi-update/status', {
         params: {
           ids: this.$store.state.checkbox,
@@ -96863,8 +96860,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

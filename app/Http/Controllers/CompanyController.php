@@ -19,6 +19,12 @@ class CompanyController extends Controller
 
     public function index()
     {
+        if(\Gate::denies('create', $this->company)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t view companies.']);
+        }
+
         $company = $this->company->latest()->paginate(15);
 
         return view('company.index')->with([
@@ -28,7 +34,9 @@ class CompanyController extends Controller
 
     public function create()
     {
-        if(\Gate::denies('create', Company::class)){
+        $company = new Company();
+
+        if(\Gate::denies('create', $company)){
             return redirect()
                 ->back()
                 ->with(['flash' => 'Access denied. You cann\'t create company.']);
@@ -42,6 +50,12 @@ class CompanyController extends Controller
     public function update($id)
     {
         $company = $this->company->find($id);
+
+        if(\Gate::denies('update', $company)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t update company.']);
+        }
 
         return view('company.create')->with([
             'company' => $company
@@ -75,11 +89,7 @@ class CompanyController extends Controller
     public function updateSave($id, Request $request)
     {
         $company = $this->company->findOrFail($id);
-        if(\Gate::denies('update', $company)){
-            return redirect()
-                ->back()
-                ->with(['flash' => 'Access denied. You cann\'t update company.']);
-        }
+
 
         $data = $request->all();
         $validator = $this->validateCompany($data);

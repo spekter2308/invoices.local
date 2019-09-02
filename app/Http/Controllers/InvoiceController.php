@@ -422,6 +422,13 @@ class InvoiceController extends Controller
     {
         $ids = \request()->all();
 
+        foreach ($ids as $id) {
+            if(\Gate::denies('update', Invoice::find($id))){
+                session()->flash('flash', 'Access denied. You cann\'t delete selected invoices.');
+                return \response('success', 204);
+            }
+        }
+
         DB::table('invoices')->whereIn('id', $ids['parameters'])->delete();
 
         if (\request()->wantsJson()) {
@@ -453,6 +460,12 @@ class InvoiceController extends Controller
 
         foreach ($attributes['ids'] as $id) {
             $invoice = Invoice::find($id);
+
+            if(\Gate::denies('update', $invoice)){
+                session()->flash('flash', 'Access denied. You cann\'t change statuses for selected invoices.');
+                return \response('success', 204);
+            }
+
             $old_status = $invoice->status;
             $invoice->update(['status' => $attributes['status']]);
 
@@ -478,6 +491,13 @@ class InvoiceController extends Controller
     {
         $attributes = \request()->input();
         $invoice = Invoice::find($id);
+
+        if(\Gate::denies('update', $invoice)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t change payment history.']);
+        }
+
         $old_status = $invoice->status;
 
         $invoice->update([
@@ -500,6 +520,12 @@ class InvoiceController extends Controller
     public function recordPayment($id)
     {
         $invoice = Invoice::findOrFail($id);
+
+        if(\Gate::denies('update', $invoice)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t change payment history.']);
+        }
 
         if ($invoice->settings->date_format == 'dd.MM.yyyy') {
             $format = 'd.m.Y';

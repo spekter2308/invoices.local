@@ -23,12 +23,9 @@
         },
         methods: {
             deleteInvoice() {
-                //console.log(JSON.stringify(this.$store.state.checkbox));
                 axios.post('/invoices/multiDelete', {parameters: this.$store.state.checkbox}).then(response => location.reload());
             },
             changeStatus(status) {
-                //console.log(JSON.stringify(this.$store.state.checkbox));
-                //console.log(JSON.stringify(status));
                 axios.post('/invoices/multi-update/status',
                     {params: {
                         ids: this.$store.state.checkbox,

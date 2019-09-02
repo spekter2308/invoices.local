@@ -44,17 +44,17 @@ Route::get('invoice/invoice-show', 'InvoiceController@showForCustomer');
 
 //Invoice items part
 Route::get('items/select-items', 'InvoiceItemController@selectItems');
-Route::get('items', 'InvoiceItemController@index');
-Route::post('items', 'InvoiceItemController@store');
-Route::post('items/{item}', 'InvoiceItemController@update');
-Route::delete('items/destroy/{item}', 'InvoiceItemController@destroy');
+Route::get('items', 'InvoiceItemController@index')->middleware('admin');
+Route::post('items', 'InvoiceItemController@store')->middleware('admin');
+Route::post('items/{item}', 'InvoiceItemController@update')->middleware('admin');
+Route::delete('items/destroy/{item}', 'InvoiceItemController@destroy')->middleware('admin');
 
 //invoice email part
 Route::get('invoice-mail/create/{invoice}', 'InvoiceMailController@create');
 Route::post('invoice-mail/{invoice}', 'InvoiceMailController@store');
 
 //customers part
-Route::get('customers', 'CustomerController@index');
+Route::get('customers', 'CustomerController@index')->middleware('admin');
 Route::get('customers/create', 'CustomerController@create');
 Route::post('customers', 'CustomerController@store');
 Route::post('customers/{customer}', 'CustomerController@update');

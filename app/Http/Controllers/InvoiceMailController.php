@@ -15,6 +15,12 @@ class InvoiceMailController extends Controller
     {
         $invoice = Invoice::findOrFail($id);
 
+        if(\Gate::denies('sendMail', $invoice)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t send email.']);
+        }
+
         $encrypt = \Crypt::encryptString($id);
 
         if ($invoice->settings->date_format == 'dd.MM.yyyy') {
