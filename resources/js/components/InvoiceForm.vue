@@ -441,8 +441,6 @@
             resetInvoice() {
                 this.invoice.selectedCompany = NaN
                 this.invoice.selectedCustomer = {}
-                this.invoice.selectedDateFrom = new Date().toISOString().slice(0, 10)
-                this.invoice.selectedDateTo = new Date().toISOString().slice(0, 10)
                 this.invoice.selectedInvoiceNumber = this.nextInvoiceNumberResponse;
                 this.invoice.selectedItems = [
                     {
@@ -466,8 +464,7 @@
                         this.spinnerVisible = true
                         this.invoice.selectedNotes = this.notes;
                         this.invoice.selectedSettings = [this.defaultSettings];
-                        this.invoice.selectedDateFrom = this.invoice.selectedDateFrom.toISOString().slice(0,10);
-                        this.invoice.selectedDateTo = this.invoice.selectedDateTo.toISOString().slice(0,10);
+                        console.log(this.invoice.selectedDateTo, this.invoice.selectedDateFrom);
                         if (this.mode === 'create') {
                             await axios.post('/invoices', this.invoice).then(response => {
                                 this.createdInvoiceId = response.data.invoice.id

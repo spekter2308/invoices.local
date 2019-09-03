@@ -236,7 +236,11 @@
                 return this.invoice.company.address.replace(/\n/g, '<br>');
             },
             replaceCustomerAddress() {
-                return this.invoice.customer.address.replace(/\n/g, '<br>');
+                if (this.invoice.customer.address) {
+                    return this.invoice.customer.address.replace(/\n/g, '<br>');
+                } else {
+                    return '';
+                }
             },
             getNotes() {
                 return this.invoice.invoice_notes.replace(/\n/g, '<br>');

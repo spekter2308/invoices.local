@@ -26,7 +26,6 @@
                <div class="form-group-table">
                    <input type="number" class="form-control"
                           name="item-unit-price[]" placeholder="1.0"
-                          min="0.01"
                           step="0.01"
                           @keypress="checkForFloats"
                           @blur="makeDirty"
@@ -95,7 +94,6 @@
                <div class="form-group-table">
                    <input type="number" class="form-control"
                           name="item-unit-price[]" placeholder="1.0"
-                          min="0.01"
                           step="0.01"
                           @keypress="checkForFloats"
                           @blur="makeDirty"

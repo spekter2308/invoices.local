@@ -324,6 +324,7 @@ class InvoiceController extends Controller
 
         $data['selectedDateFrom'] = Carbon::parse($data['selectedDateFrom']);
         $data['selectedDateTo'] = Carbon::parse($data['selectedDateTo']);
+        //dd($data['selectedDateFrom'], $data['selectedDateTo'], $data['selectedDateFrom1'], $data['selectedDateTo1']);
 
         if (is_array($data['selectedCustomer'])) {
             $customer = (new Customer())->create([

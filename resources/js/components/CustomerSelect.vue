@@ -104,7 +104,7 @@
                 required
             },
             enteredaddress: {
-                required
+
             }
         },
         mounted() {
