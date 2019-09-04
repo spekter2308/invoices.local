@@ -60,6 +60,19 @@ class InvoiceController extends Controller
 
         $invoices = $invoices->paginate(15);
 
+        $invoices_usd = $invoices->where('settings.currency', '=', '$');
+        $invoices_euro = $invoices->where('settings.currency', '=', '€');
+        $invoices_pound = $invoices->where('settings.currency', '=', '£');
+
+        $invoices->allBalanceUsd = $this->getAllBalance($invoices_usd->all());
+        $invoices->allTotalUsd= $this->getAllTotal($invoices_usd->all());
+
+        $invoices->allTotalEuro= $this->getAllTotal($invoices_euro->all());
+        $invoices->allBalanceEuro= $this->getAllTotal($invoices_euro->all());
+
+        $invoices->allTotalPound= $this->getAllTotal($invoices_pound->all());
+        $invoices->allBalancePound= $this->getAllTotal($invoices_pound->all());
+
         return view('invoices.index', [
             'invoices' => $invoices,
             'filters' => $getFilters
@@ -324,7 +337,6 @@ class InvoiceController extends Controller
 
         $data['selectedDateFrom'] = Carbon::parse($data['selectedDateFrom']);
         $data['selectedDateTo'] = Carbon::parse($data['selectedDateTo']);
-        //dd($data['selectedDateFrom'], $data['selectedDateTo'], $data['selectedDateFrom1'], $data['selectedDateTo1']);
 
         if (is_array($data['selectedCustomer'])) {
             $customer = (new Customer())->create([
@@ -365,9 +377,9 @@ class InvoiceController extends Controller
         }
 
         if ($invoice->settings->show_tax) {
-            $balance = $invoice->total - $invoice->amount_paid;
+            $balance = $total - $invoice->amount_paid;
         } else {
-            $balance = $invoice->subtotal - $invoice->amount_paid;
+            $balance = $subtotal - $invoice->amount_paid;
         }
 
         $invoice->update([
@@ -775,5 +787,38 @@ class InvoiceController extends Controller
                 return $pdf->download('Invoice ' . $invoice->number . '.pdf');
             }
         }
+    }
+
+    /**
+     * Get result total for invoices
+     *
+     * @param $invoices
+     */
+    protected function getAllTotal($invoices)
+    {
+        $total = 0;
+        foreach ($invoices as $invoice) {
+            if ($invoice->settings->show_tax) {
+                $total += $invoice->total;
+            } else {
+                $total += $invoice->subtotal;
+            }
+        }
+
+        return $total;
+    }
+
+    /**
+     * Get result balance for invoices
+     *
+     * @param $invoices
+     */
+    protected function getAllBalance($invoices)
+    {
+        $balance = 0;
+        foreach ($invoices as $invoice) {
+            $balance += $invoice->balance;
+        }
+        return $balance;
     }
 }

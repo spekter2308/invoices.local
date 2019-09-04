@@ -41,7 +41,7 @@
                                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Invoices</a>
                                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                        <a class="dropdown-item" href="/invoices/create">New Invlice</a>
+                                        <a class="dropdown-item" href="/invoices/create">New Invoice</a>
                                         <a class="dropdown-item" href="/invoices">List of Invoices</a>
                                         <a class="dropdown-item" href="/items">Items</a>
                                     </div>

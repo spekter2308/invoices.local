@@ -60,16 +60,31 @@
                         </thead>
                         <tbody>
                         @include('invoices/includes/invoice_table_body')
+
+                        <tr>
+                            <td colspan="3">
+                                @if($invoices->total() > $invoices->count())
+                                    <br>
+                                    <nav class="pagination" role="navigation" aria-label="pagination">
+                                        {{ $invoices->onEachSide(1)->appends($filters)->links() }}
+                                    </nav>
+                                @endif
+                            </td>
+                            <td colspan="3"></td>
+                            <td>
+                                <div>{{ $invoices->allTotalUsd }}</div>
+                                <div>{{ $invoices->allTotalEuro }}</div>
+                                <div>{{ $invoices->allTotalPound }}</div>
+                            </td>
+                            <td>
+                                <div>{{ $invoices->allBalanceUsd }}$</div>
+                                <div>{{ $invoices->allBalanceEuro }}€</div>
+                                <div>{{ $invoices->allBalancePound }}£</div>
+                            </td>
+                            <td colspan="2"></td>
+                        </tr>
                         </tbody>
                     </table>
-    
-                    @if($invoices->total() > $invoices->count())
-                        <br>
-                        <nav class="pagination" role="navigation" aria-label="pagination">
-                            {{ $invoices->appends($filters)->links() }}
-                        </nav>
-                    @endif
-                    
                 </div>
             </div>
         </div>
