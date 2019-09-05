@@ -34,6 +34,7 @@ Vue.component('change-status', require('./components/ChangeStatus').default);
 Vue.component('edit-item', require('./components/EditSelectItem').default);
 Vue.component('payment-details', require('./components/PaymentDetails').default);
 Vue.component('customization-options', require('./components/CustomizationOptions').default);
+Vue.component('items-per-page', require('./components/ItemsPerPage').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

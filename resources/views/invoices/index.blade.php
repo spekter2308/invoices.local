@@ -70,16 +70,18 @@
                                     </nav>
                                 @endif
                             </td>
-                            <td colspan="3"></td>
-                            <td>
-                                <div>{{ $invoices->allTotalUsd }}</div>
-                                <div>{{ $invoices->allTotalEuro }}</div>
-                                <div>{{ $invoices->allTotalPound }}</div>
+                            <td colspan="3">
+                                <items-per-page></items-per-page>
                             </td>
                             <td>
-                                <div>{{ $invoices->allBalanceUsd }}$</div>
-                                <div>{{ $invoices->allBalanceEuro }}€</div>
-                                <div>{{ $invoices->allBalancePound }}£</div>
+                                <div>{{ $allTotalUsd }}</div>
+                                <div>{{ $allTotalEuro }}</div>
+                                <div>{{ $allTotalPound }}</div>
+                            </td>
+                            <td>
+                                <div>{{ $allBalanceUsd }}$</div>
+                                <div>{{ $allBalanceEuro }}€</div>
+                                <div>{{ $allBalancePound }}£</div>
                             </td>
                             <td colspan="2"></td>
                         </tr>

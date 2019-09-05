@@ -37,6 +37,8 @@ class InvoiceController extends Controller
 
     public function index(Request $request, InvoiceFilters $filters)
     {
+        dd($request->input());
+
         $getFilters = [];
         if ($request->query->count()) {
             $invoices = $this->getInvoices($filters);
@@ -58,24 +60,30 @@ class InvoiceController extends Controller
             $invoices = $invoices->where('invoice_date', '>=', $from)->where('invoice_date', '<=', $to);
         }
 
+        $invoices_usd = $invoices->get()->where('settings.currency', '=', '$');
+        $invoices_euro = $invoices->get()->where('settings.currency', '=', '€');
+        $invoices_pound = $invoices->get()->where('settings.currency', '=', '£');
+
+        $allBalanceUsd = $this->getAllBalance($invoices_usd->all());
+        $allTotalUsd= $this->getAllTotal($invoices_usd->all());
+
+        $allTotalEuro= $this->getAllTotal($invoices_euro->all());
+        $allBalanceEuro= $this->getAllTotal($invoices_euro->all());
+
+        $allTotalPound= $this->getAllTotal($invoices_pound->all());
+        $allBalancePound= $this->getAllTotal($invoices_pound->all());
+
         $invoices = $invoices->paginate(15);
-
-        $invoices_usd = $invoices->where('settings.currency', '=', '$');
-        $invoices_euro = $invoices->where('settings.currency', '=', '€');
-        $invoices_pound = $invoices->where('settings.currency', '=', '£');
-
-        $invoices->allBalanceUsd = $this->getAllBalance($invoices_usd->all());
-        $invoices->allTotalUsd= $this->getAllTotal($invoices_usd->all());
-
-        $invoices->allTotalEuro= $this->getAllTotal($invoices_euro->all());
-        $invoices->allBalanceEuro= $this->getAllTotal($invoices_euro->all());
-
-        $invoices->allTotalPound= $this->getAllTotal($invoices_pound->all());
-        $invoices->allBalancePound= $this->getAllTotal($invoices_pound->all());
 
         return view('invoices.index', [
             'invoices' => $invoices,
-            'filters' => $getFilters
+            'filters' => $getFilters,
+            'allBalanceUsd' => $allBalanceUsd,
+            'allTotalUsd' => $allTotalUsd,
+            'allBalanceEuro' => $allBalanceEuro,
+            'allTotalEuro' => $allTotalEuro,
+            'allBalancePound' => $allBalancePound,
+            'allTotalPound' => $allTotalPound,
         ]);
     }
 

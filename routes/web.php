@@ -21,6 +21,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 
 //invoice part
 Route::get('invoices', 'InvoiceController@index')->name('invoice-index');
+Route::post('invoices/getPage', 'InvoiceController@getPage');
 Route::get('invoices/create', 'InvoiceController@create');
 Route::get('invoices/duplicate/{invoice}', 'InvoiceController@duplicate');
 Route::get('invoices/{invoice}', 'InvoiceController@show');
