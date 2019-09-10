@@ -5195,37 +5195,35 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.spinnerVisible = true;
                 this.invoice.selectedNotes = this.notes;
                 this.invoice.selectedSettings = [this.defaultSettings];
+                console.log(this.invoice.selectedDateFrom, this.invoice.selectedDateTo);
 
                 if (!(this.mode === 'create')) {
-                  _context.next = 13;
+                  _context.next = 14;
                   break;
                 }
 
-                _context.next = 10;
+                _context.next = 11;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices', this.invoice).then(function (response) {
                   _this2.createdInvoiceId = response.data.invoice.id;
                   _this2.spinnerVisible = false;
                 });
 
-              case 10:
+              case 11:
                 location.href = '/invoices/' + this.createdInvoiceId;
-                _context.next = 16;
+                _context.next = 17;
                 break;
 
-              case 13:
+              case 14:
                 if (!(this.mode === 'edit')) {
-                  _context.next = 16;
+                  _context.next = 17;
                   break;
                 }
 
-                _context.next = 16;
+                _context.next = 17;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(function (response) {
                   _this2.createdInvoiceId = response.data.invoice.id;
                   _this2.spinnerVisible = false;
                 });
-
-              case 16:
-                location.href = '/invoices/' + this.createdInvoiceId;
 
               case 17:
                 _context.next = 22;

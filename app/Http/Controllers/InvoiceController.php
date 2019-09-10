@@ -37,8 +37,6 @@ class InvoiceController extends Controller
 
     public function index(Request $request, InvoiceFilters $filters)
     {
-        dd($request->input());
-
         $getFilters = [];
         if ($request->query->count()) {
             $invoices = $this->getInvoices($filters);
@@ -343,8 +341,8 @@ class InvoiceController extends Controller
             $data['selectedInvoiceNumber'] = $this->checkInvoiceNumber($data['selectedInvoiceNumber']);
         }
 
-        $data['selectedDateFrom'] = Carbon::parse($data['selectedDateFrom']);
-        $data['selectedDateTo'] = Carbon::parse($data['selectedDateTo']);
+        $data['selectedDateFrom'] = Carbon::parse($data['selectedDateFrom'])->setTimezone('Europe/Kiev')->format('Y-m-d');
+        $data['selectedDateTo'] = Carbon::parse($data['selectedDateTo'])->setTimezone('Europe/Kiev')->format('Y-m-d');
 
         if (is_array($data['selectedCustomer'])) {
             $customer = (new Customer())->create([
