@@ -38,6 +38,7 @@ class InvoiceController extends Controller
     public function index(Request $request, InvoiceFilters $filters)
     {
         $getFilters = [];
+
         if ($request->query->count()) {
             $invoices = $this->getInvoices($filters);
 
@@ -45,7 +46,7 @@ class InvoiceController extends Controller
                 $getFilters[$key] = $filter;
             }
         } else {
-            $invoices = Invoice::latest()->where('status', '!=', 'Archive');
+            $invoices = Invoice::orderByRaw('CAST(number as UNSIGNED) ASC')->where('status', '!=', 'Archive');
         }
 
         //return $getFilters;
@@ -70,6 +71,7 @@ class InvoiceController extends Controller
 
         $allTotalPound= $this->getAllTotal($invoices_pound->all());
         $allBalancePound= $this->getAllTotal($invoices_pound->all());
+
 
         $invoices = $invoices->paginate(15);
 
@@ -698,7 +700,7 @@ class InvoiceController extends Controller
 
     protected function getInvoices($filters)
     {
-        $invoices = Invoice::latest()->filter($filters);
+        $invoices = Invoice::orderBy('number', 'asc')->filter($filters);
 
         return $invoices;
     }
