@@ -82,7 +82,7 @@
                 @endif>
             {{ $invoice->status }}
         </td>
-        <td>
+        <td style="display: flex; flex-direction: row; justify-content: space-around;">
             @if ($invoice->status != "Paid")
                 <a href="{{route('mark-as-paid', ['id' => $invoice->id])}}" class="btn btn-sm btn-success">
                     Mark Paid
@@ -92,6 +92,9 @@
                     Mark Unpaid
                 </a>
             @endif
+            <a href="invoices/duplicate/{{$invoice->id}}" class="btn btn-sm btn-primary">
+                Duplicate
+            </a>
         </td>
     </tr>
 @empty
