@@ -5040,8 +5040,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       invoice: {
         selectedCompany: this.invoiceCompany.id || NaN,
         selectedCustomer: this.invoiceCustomer.id || {},
-        selectedDateFrom: this.currentInvoice.invoice_date || new Date(),
-        selectedDateTo: this.currentInvoice.due_date || new Date(),
+        selectedDateFrom: this.currentInvoice.duplicateDateFrom || this.currentInvoice.invoice_date || new Date(),
+        selectedDateTo: this.currentInvoice.duplicateDateTo || this.currentInvoice.due_date || new Date(),
         selectedInvoiceNumber: this.invoiceNumber,
         selectedItems: this.invoiceItems,
         selectedSettings: [],
@@ -5347,9 +5347,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return parseFloat(total.toFixed(2));
     },
     balance: function balance() {
+      if (this.mode === 'create') {
+        return this.total;
+      }
+
       return parseFloat((this.total - this.amount_paid).toFixed(2));
     },
     amount_paid: function amount_paid() {
+      if (this.mode === 'create') {
+        return 0;
+      }
+
       return this.invoicePaid === '0' ? 0 : this.invoicePaid;
     },
     invoiceNum: function invoiceNum() {
@@ -13222,7 +13230,7 @@ var components = {
 /*!***********************************************************!*\
   !*** ./node_modules/bootstrap-vue/es/components/index.js ***!
   \***********************************************************/
-/*! exports provided: default, BVModalPlugin, BVToastPlugin, AlertPlugin, BadgePlugin, BreadcrumbPlugin, ButtonPlugin, ButtonGroupPlugin, ButtonToolbarPlugin, InputGroupPlugin, CardPlugin, CarouselPlugin, LayoutPlugin, CollapsePlugin, DropdownPlugin, EmbedPlugin, FormPlugin, FormGroupPlugin, FormCheckboxPlugin, FormRadioPlugin, FormInputPlugin, FormTextareaPlugin, FormFilePlugin, FormSelectPlugin, ImagePlugin, JumbotronPlugin, LinkPlugin, ListGroupPlugin, MediaPlugin, ModalPlugin, NavPlugin, NavbarPlugin, PaginationPlugin, PaginationNavPlugin, PopoverPlugin, ProgressPlugin, SpinnerPlugin, TablePlugin, TabsPlugin, ToastPlugin, TooltipPlugin, Alert, Badge, Breadcrumb, Button, ButtonGroup, ButtonToolbar, InputGroup, Card, Carousel, Layout, Collapse, Dropdown, Embed, Form, FormGroup, FormCheckbox, FormRadio, FormInput, FormTextarea, FormFile, FormSelect, Image, Jumbotron, Link, ListGroup, Media, Modal, Nav, Navbar, Pagination, PaginationNav, Popover, Progress, Spinner, Table, Tabs, Toast, Tooltip, BAlert, BBadge, BBreadcrumb, BBreadcrumbItem, BBreadcrumbLink, BButton, BButtonClose, BButtonGroup, BButtonToolbar, BInputGroup, BInputGroupAddon, BInputGroupPrepend, BInputGroupAppend, BInputGroupText, BCard, BCardHeader, BCardBody, BCardTitle, BCardSubTitle, BCardFooter, BCardImg, BCardImgLazy, BCardText, BCardGroup, BCarousel, BCarouselSlide, BContainer, BRow, BCol, BFormRow, BCollapse, BDropdown, BDropdownItem, BDropdownItemButton, BDropdownHeader, BDropdownDivider, BDropdownForm, BDropdownText, BDropdownGroup, BEmbed, BForm, BFormDatalist, BFormText, BFormInvalidFeedback, BFormValidFeedback, BFormGroup, BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup, BFormInput, BFormTextarea, BFormFile, BFormSelect, BImg, BImgLazy, BJumbotron, BLink, BListGroup, BListGroupItem, BMedia, BMediaAside, BMediaBody, BModal, BNav, BNavItem, BNavText, BNavForm, BNavItemDropdown, BNavbar, BNavbarNav, BNavbarBrand, BNavbarToggle, BPagination, BPaginationNav, BPopover, BProgress, BProgressBar, BSpinner, BTable, BTabs, BTab, BToast, BToaster, BTooltip */
+/*! exports provided: BVModalPlugin, BVToastPlugin, AlertPlugin, BadgePlugin, BreadcrumbPlugin, ButtonPlugin, ButtonGroupPlugin, ButtonToolbarPlugin, InputGroupPlugin, CardPlugin, CarouselPlugin, LayoutPlugin, CollapsePlugin, DropdownPlugin, EmbedPlugin, FormPlugin, FormGroupPlugin, FormCheckboxPlugin, FormRadioPlugin, FormInputPlugin, FormTextareaPlugin, FormFilePlugin, FormSelectPlugin, ImagePlugin, JumbotronPlugin, LinkPlugin, ListGroupPlugin, MediaPlugin, ModalPlugin, NavPlugin, NavbarPlugin, PaginationPlugin, PaginationNavPlugin, PopoverPlugin, ProgressPlugin, SpinnerPlugin, TablePlugin, TabsPlugin, ToastPlugin, TooltipPlugin, Alert, Badge, Breadcrumb, Button, ButtonGroup, ButtonToolbar, InputGroup, Card, Carousel, Layout, Collapse, Dropdown, Embed, Form, FormGroup, FormCheckbox, FormRadio, FormInput, FormTextarea, FormFile, FormSelect, Image, Jumbotron, Link, ListGroup, Media, Modal, Nav, Navbar, Pagination, PaginationNav, Popover, Progress, Spinner, Table, Tabs, Toast, Tooltip, BAlert, BBadge, BBreadcrumb, BBreadcrumbItem, BBreadcrumbLink, BButton, BButtonClose, BButtonGroup, BButtonToolbar, BInputGroup, BInputGroupAddon, BInputGroupPrepend, BInputGroupAppend, BInputGroupText, BCard, BCardHeader, BCardBody, BCardTitle, BCardSubTitle, BCardFooter, BCardImg, BCardImgLazy, BCardText, BCardGroup, BCarousel, BCarouselSlide, BContainer, BRow, BCol, BFormRow, BCollapse, BDropdown, BDropdownItem, BDropdownItemButton, BDropdownHeader, BDropdownDivider, BDropdownForm, BDropdownText, BDropdownGroup, BEmbed, BForm, BFormDatalist, BFormText, BFormInvalidFeedback, BFormValidFeedback, BFormGroup, BFormCheckbox, BFormCheckboxGroup, BFormRadio, BFormRadioGroup, BFormInput, BFormTextarea, BFormFile, BFormSelect, BImg, BImgLazy, BJumbotron, BLink, BListGroup, BListGroupItem, BMedia, BMediaAside, BMediaBody, BModal, BNav, BNavItem, BNavText, BNavForm, BNavItemDropdown, BNavbar, BNavbarNav, BNavbarBrand, BNavbarToggle, BPagination, BPaginationNav, BPopover, BProgress, BProgressBar, BSpinner, BTable, BTabs, BTab, BToast, BToaster, BTooltip, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23827,7 +23835,7 @@ var NAME = 'BTooltip'; // @vue/component
 /*!***********************************************************!*\
   !*** ./node_modules/bootstrap-vue/es/directives/index.js ***!
   \***********************************************************/
-/*! exports provided: default, VBTogglePlugin, VBModalPlugin, VBScrollspyPlugin, VBTooltipPlugin, VBPopoverPlugin, BToggle, BModal, BScrollspy, BTooltip, BPopover, VBToggle, VBModal, VBScrollspy, VBTooltip, VBPopover */
+/*! exports provided: VBTogglePlugin, VBModalPlugin, VBScrollspyPlugin, VBTooltipPlugin, VBPopoverPlugin, BToggle, BModal, BScrollspy, BTooltip, BPopover, VBToggle, VBModal, VBScrollspy, VBTooltip, VBPopover, default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -97021,8 +97029,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

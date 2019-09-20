@@ -71,7 +71,7 @@
                                 @endif
                             </td>
                             <td colspan="3">
-                                <items-per-page></items-per-page>
+                                {{--<items-per-page></items-per-page>--}}
                             </td>
                             <td>
                                 <div>{{ $allTotalUsd }}</div>

@@ -115,7 +115,11 @@ class InvoiceController extends Controller
                 ];
                 $invoiceItems[] = $items;
             }
-            //return $invoiceItems;
+
+            $invoice->duplicateDateFrom = Carbon::now();
+            $diffInDays = Carbon::parse($invoice->invoice_date)->diffInDays(Carbon::parse($invoice->due_date));
+            $invoice->duplicateDateTo = Carbon::now()->addDays($diffInDays);
+
             session()->forget('id');
         } else {
             $invoice = '{}';
@@ -700,7 +704,7 @@ class InvoiceController extends Controller
 
     protected function getInvoices($filters)
     {
-        $invoices = Invoice::orderBy('number', 'asc')->filter($filters);
+        $invoices = Invoice::orderByRaw('CAST(number as UNSIGNED) ASC')->filter($filters);
 
         return $invoices;
     }
