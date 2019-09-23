@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Customer;
 use App\Http\Controllers\Controller;
+use App\Services\StatementService;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -17,7 +18,6 @@ class CustomerController extends Controller
     {
         $customers = Customer::latest()->with('invoices')->paginate(15);
         $customers = $this->getFinancicalData($customers);
-        //return $customers;
 
         return view('customers.index', [
             'customers' => $customers,
@@ -103,5 +103,15 @@ class CustomerController extends Controller
             'last_name' => 'nullable|min:3|max:30',
             'additional_phone' => 'nullable|numeric'
         ]);
+    }
+
+    public function statementUploadExcel($id, StatementService $statement_excel)
+    {
+        return $statement_excel->generateStatementExcel($id);
+    }
+
+    public function statementUploadPdf($id, StatementService $statement_pdf)
+    {
+        return $statement_pdf->generateStatementPdf($id);
     }
 }

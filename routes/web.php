@@ -62,6 +62,8 @@ Route::post('customers/{customer}', 'CustomerController@update');
 Route::get('customers/{customer}/edit', 'CustomerController@edit');
 Route::patch('customers/{customer}', 'CustomerController@update');
 Route::delete('customers/{customer}', 'CustomerController@destroy');
+Route::get('customers/statement-excel/{customer}', 'CustomerController@statementUploadExcel');
+Route::get('customers/statement-pdf/{customer}', 'CustomerController@statementUploadPdf');
 
 
 //companies part

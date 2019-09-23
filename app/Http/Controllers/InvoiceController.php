@@ -772,7 +772,6 @@ class InvoiceController extends Controller
 
     public function generatePdf($invoice, $print = false)
     {
-
         $invoice = Invoice::findOrFail($invoice);
 
         $tax = $invoice->total - $invoice->subtotal;
