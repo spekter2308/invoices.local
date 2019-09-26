@@ -46,7 +46,7 @@ class InvoiceController extends Controller
                 $getFilters[$key] = $filter;
             }
         } else {
-            $invoices = Invoice::orderByRaw('CAST(number as UNSIGNED) ASC')->where('status', '!=', 'Archive');
+            $invoices = Invoice::orderByRaw('CAST(number as UNSIGNED) DESC')->where('status', '!=', 'Archive');
         }
 
         //return $getFilters;
@@ -704,7 +704,7 @@ class InvoiceController extends Controller
 
     protected function getInvoices($filters)
     {
-        $invoices = Invoice::orderByRaw('CAST(number as UNSIGNED) ASC')->filter($filters);
+        $invoices = Invoice::orderByRaw('CAST(number as UNSIGNED) DESC')->filter($filters);
 
         return $invoices;
     }
