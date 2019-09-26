@@ -1,3 +1,8 @@
+if ($('#customreTabs a[href="#finance-info"]').hasClass('active')) {
+    $('#contact-info').removeClass('active');
+    $('#finance-info').addClass('active');
+}
+
 $('#customreTabs a[href="#finance-info"]').click(function (e) {
     e.preventDefault()
     $(this).tab('show')

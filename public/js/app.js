@@ -5040,8 +5040,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       invoice: {
         selectedCompany: this.invoiceCompany.id || NaN,
         selectedCustomer: this.invoiceCustomer.id || {},
-        selectedDateFrom: this.currentInvoice.invoice_date || new Date(),
-        selectedDateTo: this.currentInvoice.due_date || new Date(),
+        selectedDateFrom: this.currentInvoice.duplicateDateFrom || this.currentInvoice.invoice_date || new Date(),
+        selectedDateTo: this.currentInvoice.duplicateDateTo || this.currentInvoice.due_date || new Date(),
         selectedInvoiceNumber: this.invoiceNumber,
         selectedItems: this.invoiceItems,
         selectedSettings: [],
@@ -5195,35 +5195,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 this.spinnerVisible = true;
                 this.invoice.selectedNotes = this.notes;
                 this.invoice.selectedSettings = [this.defaultSettings];
-                console.log(this.invoice.selectedDateFrom, this.invoice.selectedDateTo);
 
                 if (!(this.mode === 'create')) {
-                  _context.next = 14;
+                  _context.next = 13;
                   break;
                 }
 
-                _context.next = 11;
+                _context.next = 10;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post('/invoices', this.invoice).then(function (response) {
                   _this2.createdInvoiceId = response.data.invoice.id;
                   _this2.spinnerVisible = false;
                 });
 
-              case 11:
+              case 10:
                 location.href = '/invoices/' + this.createdInvoiceId;
-                _context.next = 17;
+                _context.next = 16;
                 break;
 
-              case 14:
+              case 13:
                 if (!(this.mode === 'edit')) {
-                  _context.next = 17;
+                  _context.next = 16;
                   break;
                 }
 
-                _context.next = 17;
+                _context.next = 16;
                 return axios__WEBPACK_IMPORTED_MODULE_1___default.a.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(function (response) {
                   _this2.createdInvoiceId = response.data.invoice.id;
                   _this2.spinnerVisible = false;
                 });
+
+              case 16:
+                location.href = '/invoices/' + this.createdInvoiceId;
 
               case 17:
                 _context.next = 22;
@@ -5345,9 +5347,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       return parseFloat(total.toFixed(2));
     },
     balance: function balance() {
+      if (this.mode === 'create') {
+        return this.total;
+      }
+
       return parseFloat((this.total - this.amount_paid).toFixed(2));
     },
     amount_paid: function amount_paid() {
+      if (this.mode === 'create') {
+        return 0;
+      }
+
       return this.invoicePaid === '0' ? 0 : this.invoicePaid;
     },
     invoiceNum: function invoiceNum() {
@@ -96887,6 +96897,11 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports) {
 
+if ($('#customreTabs a[href="#finance-info"]').hasClass('active')) {
+  $('#contact-info').removeClass('active');
+  $('#finance-info').addClass('active');
+}
+
 $('#customreTabs a[href="#finance-info"]').click(function (e) {
   e.preventDefault();
   $(this).tab('show');
@@ -97019,8 +97034,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

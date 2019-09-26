@@ -7,11 +7,11 @@
     
                 <ul class="nav nav-tabs" id="customreTabs" role="tablist">
                     <li role="presentation" class="nav-item">
-                        <a class="nav-link active" href="#contact-info" aria-controls="home" role="tab"
+                        <a class="nav-link @if(!session('flash')) active @endif" href="#contact-info" aria-controls="home" role="tab"
                                                               data-toggle="tab">Contact Information</a>
                     </li>
                     <li role="presentation" class="nav-item">
-                        <a class="nav-link" href="#finance-info" aria-controls="finance-info" role="tab"
+                        <a class="nav-link @if(session('flash')) active @endif" href="#finance-info" aria-controls="finance-info" role="tab"
                                                data-toggle="tab">Financial Information</a>
                     </li>
                 </ul>
@@ -58,6 +58,7 @@
                                 <th class="pb-2 pt-2 pl-5">Total</th>
                                 <th class="pb-2 pt-2 pl-5">Payment</th>
                                 <th class="pb-2 pt-2 pl-5">Balance</th>
+                                <th class="pb-2 pt-2 pl-5 pr-0">Statements</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -71,9 +72,10 @@
                                     <td class="pb-2 pt-2 pl-5">{{ $customer->total }}</td>
                                     <td class="pb-2 pt-2 pl-5">{{ $customer->amount_paid }}</td>
                                     <td class="pb-2 pt-2 pl-5">{{ $customer->balance }}</td>
-    
-                                   
-                                    {{--<td>{{ $post->published_at ? \Carbon\Carbon::parse($post->published_at)->format('d.M H:i') : '' }}</td>--}}
+                                    <td class="pb-2 pt-2 pl-5">
+                                        <a href="/customers/statement-excel/{{ $customer->id }}" class="btn btn-sm btn-primary">xlsx</a>
+                                        <a href="/customers/statement-pdf/{{ $customer->id }}" class="btn btn-sm btn-primary">pdf</a>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>

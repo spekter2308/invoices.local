@@ -324,8 +324,8 @@
                 invoice: {
                     selectedCompany: this.invoiceCompany.id || NaN,
                     selectedCustomer: this.invoiceCustomer.id || {},
-                    selectedDateFrom: this.currentInvoice.invoice_date || new Date(),
-                    selectedDateTo: this.currentInvoice.due_date || new Date(),
+                    selectedDateFrom: (this.currentInvoice.duplicateDateFrom || this.currentInvoice.invoice_date) || new Date(),
+                    selectedDateTo: (this.currentInvoice.duplicateDateTo || this.currentInvoice.due_date) || new Date(),
                     selectedInvoiceNumber: this.invoiceNumber,
                     selectedItems: this.invoiceItems,
                     selectedSettings: [],
@@ -545,9 +545,15 @@
                 return parseFloat(total.toFixed(2));
             },
             balance() {
+                if (this.mode === 'create') {
+                    return this.total;
+                }
                 return parseFloat((this.total - this.amount_paid).toFixed(2));
             },
             amount_paid(){
+                if (this.mode === 'create') {
+                    return 0;
+                }
                 return (this.invoicePaid === '0') ? 0 : this.invoicePaid;
             },
             invoiceNum(){
