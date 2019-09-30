@@ -69,9 +69,52 @@
                                 <tr>
                                     <td><a href="/customers/{{ $customer->id }}/edit">{{ $customer->name }}</a></td>
                                     <td></td>
-                                    <td class="pb-2 pt-2 pl-5">{{ $customer->total }}</td>
-                                    <td class="pb-2 pt-2 pl-5">{{ $customer->amount_paid }}</td>
-                                    <td class="pb-2 pt-2 pl-5">{{ $customer->balance }}</td>
+                                    @if ($customer->total_usd || $customer->total_euro || $customer->total_pound)
+                                        <td class="pb-2 pt-2 pl-5">
+                                            <div style="display: flex; flex-direction: column;">
+                                                @if ($customer->total_usd)
+                                                    <span>${{ $customer->total_usd }}</span>
+                                                @endif
+                                                @if ($customer->total_euro)
+                                                    <span>€{{ $customer->total_euro }}</span>
+                                                @endif
+                                                @if ($customer->total_pound)
+                                                    <span>£{{ $customer->total_pound }}</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                        <td class="pb-2 pt-2 pl-5">
+                                            <div style="display: inline-flex; flex-direction: column;">
+                                                @if ($customer->total_usd)
+                                                    <span>${{ $customer->amount_paid_usd }}</span>
+                                                @endif
+                                                @if ($customer->total_euro)
+                                                    <span>€{{ $customer->amount_paid_euro }}</span>
+                                                @endif
+                                                @if ($customer->total_pound)
+                                                    <span>£{{ $customer->amount_paid_pound }}</span>
+                                                @endif
+            
+                                            </div>
+                                        </td>
+                                        <td class="pb-2 pt-2 pl-5">
+                                            <div style="display: inline-flex; flex-direction: column;">
+                                                @if ($customer->total_usd)
+                                                    <span>${{ $customer->balance_usd }}</span>
+                                                @endif
+                                                @if ($customer->total_euro)
+                                                    <span>€{{ $customer->balance_euro }}</span>
+                                                @endif
+                                                @if ($customer->total_pound)
+                                                    <span>£{{ $customer->balance_pound }}</span>
+                                                @endif
+                                            </div>
+                                        </td>
+                                    @else
+                                        <td class="pb-2 pt-2 pl-5">0</td>
+                                        <td class="pb-2 pt-2 pl-5">0</td>
+                                        <td class="pb-2 pt-2 pl-5">0</td>
+                                    @endif
                                     <td class="pb-2 pt-2 pl-5">
                                         <a href="/customers/statement-excel/{{ $customer->id }}" class="btn btn-sm btn-primary">xlsx</a>
                                         <a href="/customers/statement-pdf/{{ $customer->id }}" class="btn btn-sm btn-primary">pdf</a>

@@ -80,15 +80,36 @@ class CustomerController extends Controller
     {
         foreach ($customers as &$customer) {
             foreach ($customer->invoices as $invoice) {
-                if ($invoice->settings->show_tax) {
-                    $customer['total'] += $invoice->total;
-                } else {
-                    $customer['total'] += $invoice->subtotal;
+                if ($invoice->settings->currency == '$') {
+                    if ($invoice->settings->show_tax) {
+                        $customer['total_usd'] += $invoice->total;
+                    } else {
+                        $customer['total_usd'] += $invoice->subtotal;
+                    }
+                    $customer['amount_paid_usd'] += $invoice->amount_paid;
+                    $customer['balance_usd'] += $invoice->balance;
+                }
+                if ($invoice->settings->currency == '€') {
+                    if ($invoice->settings->show_tax) {
+                        $customer['total_euro'] += $invoice->total;
+                    } else {
+                        $customer['total_euro'] += $invoice->subtotal;
+                    }
+                    $customer['amount_paid_euro'] += $invoice->amount_paid;
+                    $customer['balance_euro'] += $invoice->balance;
+                }
+                if ($invoice->settings->currency == '£') {
+                    if ($invoice->settings->show_tax) {
+                        $customer['total_pound'] += $invoice->total;
+                    } else {
+                        $customer['total_pound'] += $invoice->subtotal;
+                    }
+                    $customer['amount_paid_pound'] += $invoice->amount_paid;
+                    $customer['balance_pound'] += $invoice->balance;
                 }
             }
-            $customer['amount_paid'] = $customer->invoices->sum('amount_paid');
-            $customer['balance'] = $customer['total'] - $customer['amount_paid'];
         }
+
         return $customers;
     }
 
