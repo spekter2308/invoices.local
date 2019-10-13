@@ -39,6 +39,8 @@ class InvoiceController extends Controller
     {
         $getFilters = [];
 
+        //dd($request->query);
+
         if ($request->query->count()) {
             $invoices = $this->getInvoices($filters);
 
@@ -48,8 +50,6 @@ class InvoiceController extends Controller
         } else {
             $invoices = Invoice::orderByRaw('CAST(number as UNSIGNED) DESC')->where('status', '!=', 'Archive');
         }
-
-        //return $getFilters;
 
         if ($request->has(['from', 'to'])) {
 
@@ -72,19 +72,23 @@ class InvoiceController extends Controller
         $allTotalPound= $this->getAllTotal($invoices_pound->all());
         $allBalancePound= $this->getAllTotal($invoices_pound->all());
 
-
-        $invoices = $invoices->paginate(15);
-
-        return view('invoices.index', [
-            'invoices' => $invoices,
-            'filters' => $getFilters,
+        $invoices = $invoices->paginate(3);
+        $finance = [
             'allBalanceUsd' => $allBalanceUsd,
             'allTotalUsd' => $allTotalUsd,
             'allBalanceEuro' => $allBalanceEuro,
             'allTotalEuro' => $allTotalEuro,
             'allBalancePound' => $allBalancePound,
-            'allTotalPound' => $allTotalPound,
-        ]);
+            'allTotalPound' => $allTotalPound
+        ];
+        $invoices->allBalanceUsd = $allBalanceUsd;
+        $invoices->allTotalUsd = $allTotalUsd;
+        $invoices->allBalanceEuro = $allBalanceEuro;
+        $invoices->allTotalEuro = $allTotalEuro;
+        $invoices->allBalancePound = $allBalancePound;
+        $invoices->allTotalPound = $allTotalPound;
+
+        return \response()->json(array('invoices' => $invoices, 'filters' => $getFilters, 'finance' => $finance));
     }
 
        public function create()

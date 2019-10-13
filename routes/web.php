@@ -17,11 +17,12 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+//Route::get('/home', 'HomeController@index')->name('home');
 
 //invoice part
-Route::get('invoices', 'InvoiceController@index')->name('invoice-index');
-Route::post('invoices/getPage', 'InvoiceController@getPage');
+Route::get('invoices', function () { return view('layouts.app'); })->middleware('auth');
+Route::get('api/invoices', 'InvoiceController@index')->name('invoice-index');
+Route::post('invoices/setPageCount', 'InvoiceController@setPageCount');
 Route::get('invoices/create', 'InvoiceController@create');
 Route::get('invoices/duplicate/{invoice}', 'InvoiceController@duplicate');
 Route::get('invoices/{invoice}', 'InvoiceController@show');

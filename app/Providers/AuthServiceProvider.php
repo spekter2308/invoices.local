@@ -11,6 +11,7 @@ use App\Policies\InvoiceItemPolicy;
 use App\Policies\InvoicePolicy;
 use App\Policies\ProfilePolice;
 use App\Policies\UserPolicy;
+use Laravel\Passport\Passport;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
@@ -38,6 +39,6 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        //Passport::routes();
     }
 }

@@ -38,7 +38,7 @@ class InvoiceFilters extends Filters
      */
     protected function status($status)
     {
-        if (!$status) {
+        if (!$status || $status == 'All') {
             return $this->builder->where('status', '!=', 'Archive');
         }
 

@@ -78,6 +78,10 @@
             } else {
                 this.getDate();
             }
+        },
+        computed: {
+            getUriParams() {
+            }
         }
     }
 </script>
