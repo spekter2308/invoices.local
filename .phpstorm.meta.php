@@ -5,7 +5,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2019-09-30 20:13:39.
+    * Generated on 2019-10-14 20:37:24.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -32,6 +32,8 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'League\OAuth2\Server\AuthorizationServer' => \League\OAuth2\Server\AuthorizationServer::class,
+        'League\OAuth2\Server\ResourceServer' => \League\OAuth2\Server\ResourceServer::class,
         'Maatwebsite\Excel\Files\Filesystem' => \Maatwebsite\Excel\Files\Filesystem::class,
         'Maatwebsite\Excel\Files\TemporaryFileFactory' => \Maatwebsite\Excel\Files\TemporaryFileFactory::class,
         'Maatwebsite\Excel\Transactions\TransactionHandler' => \Maatwebsite\Excel\Transactions\DbTransactionHandler::class,
@@ -187,6 +189,8 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'League\OAuth2\Server\AuthorizationServer' => \League\OAuth2\Server\AuthorizationServer::class,
+        'League\OAuth2\Server\ResourceServer' => \League\OAuth2\Server\ResourceServer::class,
         'Maatwebsite\Excel\Files\Filesystem' => \Maatwebsite\Excel\Files\Filesystem::class,
         'Maatwebsite\Excel\Files\TemporaryFileFactory' => \Maatwebsite\Excel\Files\TemporaryFileFactory::class,
         'Maatwebsite\Excel\Transactions\TransactionHandler' => \Maatwebsite\Excel\Transactions\DbTransactionHandler::class,
@@ -342,6 +346,8 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'League\OAuth2\Server\AuthorizationServer' => \League\OAuth2\Server\AuthorizationServer::class,
+        'League\OAuth2\Server\ResourceServer' => \League\OAuth2\Server\ResourceServer::class,
         'Maatwebsite\Excel\Files\Filesystem' => \Maatwebsite\Excel\Files\Filesystem::class,
         'Maatwebsite\Excel\Files\TemporaryFileFactory' => \Maatwebsite\Excel\Files\TemporaryFileFactory::class,
         'Maatwebsite\Excel\Transactions\TransactionHandler' => \Maatwebsite\Excel\Transactions\DbTransactionHandler::class,
@@ -497,6 +503,8 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'League\OAuth2\Server\AuthorizationServer' => \League\OAuth2\Server\AuthorizationServer::class,
+        'League\OAuth2\Server\ResourceServer' => \League\OAuth2\Server\ResourceServer::class,
         'Maatwebsite\Excel\Files\Filesystem' => \Maatwebsite\Excel\Files\Filesystem::class,
         'Maatwebsite\Excel\Files\TemporaryFileFactory' => \Maatwebsite\Excel\Files\TemporaryFileFactory::class,
         'Maatwebsite\Excel\Transactions\TransactionHandler' => \Maatwebsite\Excel\Transactions\DbTransactionHandler::class,
@@ -652,6 +660,8 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'League\OAuth2\Server\AuthorizationServer' => \League\OAuth2\Server\AuthorizationServer::class,
+        'League\OAuth2\Server\ResourceServer' => \League\OAuth2\Server\ResourceServer::class,
         'Maatwebsite\Excel\Files\Filesystem' => \Maatwebsite\Excel\Files\Filesystem::class,
         'Maatwebsite\Excel\Files\TemporaryFileFactory' => \Maatwebsite\Excel\Files\TemporaryFileFactory::class,
         'Maatwebsite\Excel\Transactions\TransactionHandler' => \Maatwebsite\Excel\Transactions\DbTransactionHandler::class,
@@ -807,6 +817,8 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'League\OAuth2\Server\AuthorizationServer' => \League\OAuth2\Server\AuthorizationServer::class,
+        'League\OAuth2\Server\ResourceServer' => \League\OAuth2\Server\ResourceServer::class,
         'Maatwebsite\Excel\Files\Filesystem' => \Maatwebsite\Excel\Files\Filesystem::class,
         'Maatwebsite\Excel\Files\TemporaryFileFactory' => \Maatwebsite\Excel\Files\TemporaryFileFactory::class,
         'Maatwebsite\Excel\Transactions\TransactionHandler' => \Maatwebsite\Excel\Transactions\DbTransactionHandler::class,
@@ -962,6 +974,8 @@ namespace PHPSTORM_META {
         'Illuminate\Notifications\ChannelManager' => \Illuminate\Notifications\ChannelManager::class,
         'Illuminate\Routing\Contracts\ControllerDispatcher' => \Illuminate\Routing\ControllerDispatcher::class,
         'Illuminate\Session\Middleware\StartSession' => \Illuminate\Session\Middleware\StartSession::class,
+        'League\OAuth2\Server\AuthorizationServer' => \League\OAuth2\Server\AuthorizationServer::class,
+        'League\OAuth2\Server\ResourceServer' => \League\OAuth2\Server\ResourceServer::class,
         'Maatwebsite\Excel\Files\Filesystem' => \Maatwebsite\Excel\Files\Filesystem::class,
         'Maatwebsite\Excel\Files\TemporaryFileFactory' => \Maatwebsite\Excel\Files\TemporaryFileFactory::class,
         'Maatwebsite\Excel\Transactions\TransactionHandler' => \Maatwebsite\Excel\Transactions\DbTransactionHandler::class,

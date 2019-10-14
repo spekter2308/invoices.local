@@ -4,20 +4,18 @@
        <div v-if="this.showTax" class="items-table-row-with-tax" item-list>
            <div class="item-name">
                <div class="form-group-table">
-                   <select class="form-control" v-model="tableItem.item"
-                           @blur="makeDirty">
+                   <select class="form-control" v-model="tableItem.item" >
                        <option v-for="item in tableItems">{{item.name}}</option>
                    </select>
-                   <template v-if="isDirty && tableItem.dirty">
+                   <!--<template v-if="isDirty && tableItem.dirty">
                        <small class="error-control" v-if="!itemRequired">Item name is required</small>
-                   </template>
+                   </template>-->
                </div>
            </div>
            <div class="item-description">
                <div class="form-group-table">
                 <textarea class="form-control"
                           rows="1" name="item-description[]"
-                          @blur="makeDirty"
                           v-model="tableItem.description">
                 </textarea>
                </div>
@@ -72,20 +70,18 @@
        <div v-else class="items-table-row" item-list>
            <div class="item-name">
                <div class="form-group-table">
-                   <select class="form-control" v-model="tableItem.item"
-                           @blur="makeDirty">
+                   <select class="form-control" v-model="tableItem.item" >
                        <option v-for="item in tableItems">{{item.name}}</option>
                    </select>
-                   <template v-if="isDirty && tableItem.dirty">
+                   <!--<template v-if="isDirty && tableItem.dirty">
                        <small class="error-control" v-if="!itemRequired">Item name is required</small>
-                   </template>
+                   </template>-->
                </div>
            </div>
            <div class="item-description">
                <div class="form-group-table">
                 <textarea class="form-control"
                           rows="1" name="item-description[]"
-                          @blur="makeDirty"
                           v-model="tableItem.description">
                 </textarea>
                 </div>
@@ -160,21 +156,23 @@
             })
         },
         watch: {
-            correct(v) {
-                this.tableItem.correct = this.correct
+            correct: {
+                handler() {
+                    this.tableItem.correct = this.correct
+                },
+                immediate: true
             }
         },
         computed: {
             correct() {
-              return this.itemRequired
-                  && this.quantityRequired
+              return this.quantityRequired
                   && this.quantityFloat
                   && this.unitPriceRequired
                   && this.unitPriceFloat
             },
-            itemRequired() {
+            /*itemRequired() {
                 return required(this.tableItem.item)
-            },
+            },*/
             quantityRequired() {
                 return required(this.tableItem.quantity)
             },

@@ -9,46 +9,45 @@
             <div class="level">
                <span class="flex">
                    <h1>List of Invoices</h1>
-                   <button class="btn btn-link js-show-invoice-filter" @click="showFilter = !showFilter">Show filter</button>
+                   <button class="btn btn-link" @click="showFilter = !showFilter">Show filter</button>
                </span>
                 <a href="/invoices/create" class="btn btn-primary">New Invoice</a>
             </div>
             <!--filter by date part-->
-            <div v-if="showFilter">
+            <div v-show="showFilter">
                 <hr>
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group row ">
                             <label for="time_frame" class="col-md-6 p-2">Time Frame</label>
-                           <!-- <select @change="getDate" v-model="selected" class="form-control col-md-6" id="time_frame">
+                            <select @change="getDate" v-model="periodDate" class="form-control col-md-6" id="time_frame">
                                 <option value="1">All time</option>
                                 <option value="2">This Month</option>
                                 <option value="3">Last Month</option>
                                 <option value="4">This Year</option>
-                            </select>-->
+                            </select>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group row">
-                            <!--<div class="col-6">
+                            <div class="col-6">
                                 <div class="row text-right">
                                     <label for="time_frame" class="col-4 p-2">From</label>
-                                    <datapicker v-model="from" format="MM/dd/yyyy" class="col-8"></datapicker>
+                                    <datapicker v-model="dateFrom" format="MM/dd/yyyy" class="col-8"></datapicker>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="row text-right">
                                     <label for="time_frame" class="col-4 p-2">To</label>
-                                    <datapicker v-model="to" format="MM/dd/yyyy" class="col-8"></datapicker>
+                                    <datapicker v-model="dateTo" format="MM/dd/yyyy" class="col-8"></datapicker>
                                 </div>
-                            </div>-->
+                            </div>
 
                         </div>
                     </div>
-                    <!--<div class="col-md-3 text-right">
-                        <a @click="filterShow" :href="href" class="btn btn-primary m-2">Show</a>
-                    </div>-->
-
+                    <div class="col-md-3 text-right">
+                        <a @click="filterDateShow" class="btn btn-primary m-2 spinner" style="color: white;">Show</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -207,10 +206,25 @@
         },
         data() {
             return {
+                spinnerVisible: false,
+                periodDate: 1,
+                dateFrom: null,
+                dateTo: null,
                 showFilter: false,
                 invoices: {},
                 filters: {},
                 finance: {},
+            }
+        },
+        beforeMount() {
+            var dateFrom = this.$route.query.from,
+                dateTo = this.$route.query.to;
+
+            if (dateFrom && dateTo) {
+                this.dateFrom = dateFrom;
+                this.dateTo = dateTo;
+            } else {
+                this.getDate();
             }
         },
         mounted() {
@@ -229,6 +243,13 @@
             this.getResults(page);
         },
         methods: {
+            getDate() {
+                axios.post('/invoices/get/date', {periodDate: this.periodDate}).then(response => {
+                        this.dateFrom = response.data.min_date;
+                        this.dateTo = response.data.max_date;
+                    }
+                );
+            },
             getParameterByName(name, url) {
                 if (!url) url = window.location.href;
                 name = name.replace(/[\[\]]/g, '\\$&');
@@ -254,6 +275,16 @@
                 this.filters.status = status;
                 this.getResults();
             },
+            filterDateShow() {
+                try {
+                    this.spinnerVisible = true
+                    this.filters.from = new Date(this.dateFrom).toJSON();
+                    this.filters.to = new Date(this.dateTo).toJSON();
+                    this.getResults();
+                } catch (e) {
+                    this.spinnerVisible = false
+                }
+            },
             clearFilters() {
                 this.filters = {};
             },
@@ -271,25 +302,23 @@
                         //this.$router.push({ path: 'invoices', query: { page: page} })
                         this.invoices = response.data.invoices;
                         this.finance = response.data.finance;
+                        this.spinnerVisible = false
                     }).catch(error => {throw error});
             },
-            /*getDataByUser(id, page) {
-                event.preventDefault();
-                if (typeof page === 'undefined') {
-                    page = 1;
+        },
+        watch: {
+            spinnerVisible(v) {
+                if (v === true) {
+                    this.showButton.innerHTML = `Show <div disabled="true" class="spinner-border spinner-border-sm" role="status" aria-hidden="true">`
+                } else {
+                    this.showButton.innerHTML = `Show <div class="" role="status" aria-hidden="true">`
                 }
-                axios.get('/api/invoices?byuser=' + id + '?page=' + page).then(response => {this.laravelData = response.data}).catch(error => {throw error});
             },
-            getDataByCompany(id, page) {
-                event.preventDefault();
-                if (typeof page === 'undefined') {
-                    page = 1;
-                }
-                axios.get('/api/invoices?bycompany=' + id + '?page=' + page).then(response => {this.laravelData = response.data}).catch(error => {throw error});
-            },*/
         },
         computed: {
-
+            getShowButton() {
+                return this.showButton = document.querySelector('.spinner');
+            }
         }
     }
 </script>

@@ -151,27 +151,6 @@
         components: {
             TableItem
         },
-        /*validations: {
-            items: {
-                required,
-                $each: {
-                    item: {
-                        required
-                    },
-                    quantity: {
-                        required,
-                        integer
-                    },
-                    unitprice: {
-                        required,
-                        float: v => /[+-]?([0-9]*[.])?[0-9]+/.test(v)
-                    },
-                    description: {
-
-                    }
-                }
-            }
-        },*/
         mounted() {
             axios.get('/items/select-items').then(response => (this.name = response.data));
 

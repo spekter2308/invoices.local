@@ -5572,18 +5572,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "InvoiceIndex",
   components: {},
   data: function data() {
     return {
+      spinnerVisible: false,
+      periodDate: 1,
+      dateFrom: null,
+      dateTo: null,
       showFilter: false,
       invoices: {},
       filters: {},
       finance: {}
     };
+  },
+  beforeMount: function beforeMount() {
+    var dateFrom = this.$route.query.from,
+        dateTo = this.$route.query.to;
+
+    if (dateFrom && dateTo) {
+      this.dateFrom = dateFrom;
+      this.dateTo = dateTo;
+    } else {
+      this.getDate();
+    }
   },
   mounted: function mounted() {
     var page = this.getParameterByName('page');
@@ -5604,6 +5618,16 @@ __webpack_require__.r(__webpack_exports__);
     this.getResults(page);
   },
   methods: {
+    getDate: function getDate() {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/invoices/get/date', {
+        periodDate: this.periodDate
+      }).then(function (response) {
+        _this.dateFrom = response.data.min_date;
+        _this.dateTo = response.data.max_date;
+      });
+    },
     getParameterByName: function getParameterByName(name, url) {
       if (!url) url = window.location.href;
       name = name.replace(/[\[\]]/g, '\\$&');
@@ -5628,11 +5652,21 @@ __webpack_require__.r(__webpack_exports__);
       this.filters.status = status;
       this.getResults();
     },
+    filterDateShow: function filterDateShow() {
+      try {
+        this.spinnerVisible = true;
+        this.filters.from = new Date(this.dateFrom).toJSON();
+        this.filters.to = new Date(this.dateTo).toJSON();
+        this.getResults();
+      } catch (e) {
+        this.spinnerVisible = false;
+      }
+    },
     clearFilters: function clearFilters() {
       this.filters = {};
     },
     getResults: function getResults() {
-      var _this = this;
+      var _this2 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
 
@@ -5649,29 +5683,28 @@ __webpack_require__.r(__webpack_exports__);
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api' + this.$route.fullPath).then(function (response) {
         //this.$router.push({ path: 'invoices', query: { page: page} })
-        _this.invoices = response.data.invoices;
-        _this.finance = response.data.finance;
+        _this2.invoices = response.data.invoices;
+        _this2.finance = response.data.finance;
+        _this2.spinnerVisible = false;
       })["catch"](function (error) {
         throw error;
       });
     }
-    /*getDataByUser(id, page) {
-        event.preventDefault();
-        if (typeof page === 'undefined') {
-            page = 1;
-        }
-        axios.get('/api/invoices?byuser=' + id + '?page=' + page).then(response => {this.laravelData = response.data}).catch(error => {throw error});
-    },
-    getDataByCompany(id, page) {
-        event.preventDefault();
-        if (typeof page === 'undefined') {
-            page = 1;
-        }
-        axios.get('/api/invoices?bycompany=' + id + '?page=' + page).then(response => {this.laravelData = response.data}).catch(error => {throw error});
-    },*/
-
   },
-  computed: {}
+  watch: {
+    spinnerVisible: function spinnerVisible(v) {
+      if (v === true) {
+        this.showButton.innerHTML = "Show <div disabled=\"true\" class=\"spinner-border spinner-border-sm\" role=\"status\" aria-hidden=\"true\">";
+      } else {
+        this.showButton.innerHTML = "Show <div class=\"\" role=\"status\" aria-hidden=\"true\">";
+      }
+    }
+  },
+  computed: {
+    getShowButton: function getShowButton() {
+      return this.showButton = document.querySelector('.spinner');
+    }
+  }
 });
 
 /***/ }),
@@ -6324,27 +6357,6 @@ var id = 1;
   components: {
     TableItem: _TableItem_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-
-  /*validations: {
-      items: {
-          required,
-          $each: {
-              item: {
-                  required
-              },
-              quantity: {
-                  required,
-                  integer
-              },
-              unitprice: {
-                  required,
-                  float: v => /[+-]?([0-9]*[.])?[0-9]+/.test(v)
-              },
-              description: {
-               }
-          }
-      }
-  },*/
   mounted: function mounted() {
     var _this = this;
 
@@ -6739,10 +6751,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "TableItem",
@@ -6772,17 +6780,21 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   watch: {
-    correct: function correct(v) {
-      this.tableItem.correct = this.correct;
+    correct: {
+      handler: function handler() {
+        this.tableItem.correct = this.correct;
+      },
+      immediate: true
     }
   },
   computed: {
     correct: function correct() {
-      return this.itemRequired && this.quantityRequired && this.quantityFloat && this.unitPriceRequired && this.unitPriceFloat;
+      return this.quantityRequired && this.quantityFloat && this.unitPriceRequired && this.unitPriceFloat;
     },
-    itemRequired: function itemRequired() {
-      return Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"])(this.tableItem.item);
-    },
+
+    /*itemRequired() {
+        return required(this.tableItem.item)
+    },*/
     quantityRequired: function quantityRequired() {
       return Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"])(this.tableItem.quantity);
     },
@@ -77244,7 +77256,7 @@ var render = function() {
                   _c(
                     "button",
                     {
-                      staticClass: "btn btn-link js-show-invoice-filter",
+                      staticClass: "btn btn-link",
                       on: {
                         click: function($event) {
                           _vm.showFilter = !_vm.showFilter
@@ -77265,9 +77277,165 @@ var render = function() {
                 )
               ]),
               _vm._v(" "),
-              _vm.showFilter
-                ? _c("div", [_c("hr"), _vm._v(" "), _vm._m(0)])
-                : _vm._e()
+              _c(
+                "div",
+                {
+                  directives: [
+                    {
+                      name: "show",
+                      rawName: "v-show",
+                      value: _vm.showFilter,
+                      expression: "showFilter"
+                    }
+                  ]
+                },
+                [
+                  _c("hr"),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "row" }, [
+                    _c("div", { staticClass: "col-md-3" }, [
+                      _c("div", { staticClass: "form-group row " }, [
+                        _c(
+                          "label",
+                          {
+                            staticClass: "col-md-6 p-2",
+                            attrs: { for: "time_frame" }
+                          },
+                          [_vm._v("Time Frame")]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.periodDate,
+                                expression: "periodDate"
+                              }
+                            ],
+                            staticClass: "form-control col-md-6",
+                            attrs: { id: "time_frame" },
+                            on: {
+                              change: [
+                                function($event) {
+                                  var $$selectedVal = Array.prototype.filter
+                                    .call($event.target.options, function(o) {
+                                      return o.selected
+                                    })
+                                    .map(function(o) {
+                                      var val =
+                                        "_value" in o ? o._value : o.value
+                                      return val
+                                    })
+                                  _vm.periodDate = $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                },
+                                _vm.getDate
+                              ]
+                            }
+                          },
+                          [
+                            _c("option", { attrs: { value: "1" } }, [
+                              _vm._v("All time")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "2" } }, [
+                              _vm._v("This Month")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "3" } }, [
+                              _vm._v("Last Month")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "4" } }, [
+                              _vm._v("This Year")
+                            ])
+                          ]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-6" }, [
+                      _c("div", { staticClass: "form-group row" }, [
+                        _c("div", { staticClass: "col-6" }, [
+                          _c(
+                            "div",
+                            { staticClass: "row text-right" },
+                            [
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "col-4 p-2",
+                                  attrs: { for: "time_frame" }
+                                },
+                                [_vm._v("From")]
+                              ),
+                              _vm._v(" "),
+                              _c("datapicker", {
+                                staticClass: "col-8",
+                                attrs: { format: "MM/dd/yyyy" },
+                                model: {
+                                  value: _vm.dateFrom,
+                                  callback: function($$v) {
+                                    _vm.dateFrom = $$v
+                                  },
+                                  expression: "dateFrom"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-6" }, [
+                          _c(
+                            "div",
+                            { staticClass: "row text-right" },
+                            [
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "col-4 p-2",
+                                  attrs: { for: "time_frame" }
+                                },
+                                [_vm._v("To")]
+                              ),
+                              _vm._v(" "),
+                              _c("datapicker", {
+                                staticClass: "col-8",
+                                attrs: { format: "MM/dd/yyyy" },
+                                model: {
+                                  value: _vm.dateTo,
+                                  callback: function($$v) {
+                                    _vm.dateTo = $$v
+                                  },
+                                  expression: "dateTo"
+                                }
+                              })
+                            ],
+                            1
+                          )
+                        ])
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-3 text-right" }, [
+                      _c(
+                        "a",
+                        {
+                          staticClass: "btn btn-primary m-2 spinner",
+                          staticStyle: { color: "white" },
+                          on: { click: _vm.filterDateShow }
+                        },
+                        [_vm._v("Show")]
+                      )
+                    ])
+                  ])
+                ]
+              )
             ])
           ]),
           _vm._v(" "),
@@ -77661,7 +77829,7 @@ var render = function() {
                                               _c("i", {
                                                 staticClass: "fas fa-sync-alt"
                                               }),
-                                              _vm._m(1, true),
+                                              _vm._m(0, true),
                                               _vm._v(" "),
                                               _c(
                                                 "ul",
@@ -78078,26 +78246,6 @@ var render = function() {
   )
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-md-3" }, [
-        _c("div", { staticClass: "form-group row " }, [
-          _c(
-            "label",
-            { staticClass: "col-md-6 p-2", attrs: { for: "time_frame" } },
-            [_vm._v("Time Frame")]
-          )
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-md-6" }, [
-        _c("div", { staticClass: "form-group row" })
-      ])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -79321,61 +79469,45 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "item-name" }, [
-              _c(
-                "div",
-                { staticClass: "form-group-table" },
-                [
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.tableItem.item,
-                          expression: "tableItem.item"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      on: {
-                        blur: _vm.makeDirty,
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.tableItem,
-                            "item",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
+              _c("div", { staticClass: "form-group-table" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.tableItem.item,
+                        expression: "tableItem.item"
                       }
-                    },
-                    _vm._l(_vm.tableItems, function(item) {
-                      return _c("option", [_vm._v(_vm._s(item.name))])
-                    }),
-                    0
-                  ),
-                  _vm._v(" "),
-                  _vm.isDirty && _vm.tableItem.dirty
-                    ? [
-                        !_vm.itemRequired
-                          ? _c("small", { staticClass: "error-control" }, [
-                              _vm._v("Item name is required")
-                            ])
-                          : _vm._e()
-                      ]
-                    : _vm._e()
-                ],
-                2
-              )
+                    ],
+                    staticClass: "form-control",
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.tableItem,
+                          "item",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  _vm._l(_vm.tableItems, function(item) {
+                    return _c("option", [_vm._v(_vm._s(item.name))])
+                  }),
+                  0
+                )
+              ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "item-description" }, [
@@ -79393,7 +79525,6 @@ var render = function() {
                   attrs: { rows: "1", name: "item-description[]" },
                   domProps: { value: _vm.tableItem.description },
                   on: {
-                    blur: _vm.makeDirty,
                     input: function($event) {
                       if ($event.target.composing) {
                         return
@@ -79601,61 +79732,45 @@ var render = function() {
           { staticClass: "items-table-row", attrs: { "item-list": "" } },
           [
             _c("div", { staticClass: "item-name" }, [
-              _c(
-                "div",
-                { staticClass: "form-group-table" },
-                [
-                  _c(
-                    "select",
-                    {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.tableItem.item,
-                          expression: "tableItem.item"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      on: {
-                        blur: _vm.makeDirty,
-                        change: function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.tableItem,
-                            "item",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        }
+              _c("div", { staticClass: "form-group-table" }, [
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.tableItem.item,
+                        expression: "tableItem.item"
                       }
-                    },
-                    _vm._l(_vm.tableItems, function(item) {
-                      return _c("option", [_vm._v(_vm._s(item.name))])
-                    }),
-                    0
-                  ),
-                  _vm._v(" "),
-                  _vm.isDirty && _vm.tableItem.dirty
-                    ? [
-                        !_vm.itemRequired
-                          ? _c("small", { staticClass: "error-control" }, [
-                              _vm._v("Item name is required")
-                            ])
-                          : _vm._e()
-                      ]
-                    : _vm._e()
-                ],
-                2
-              )
+                    ],
+                    staticClass: "form-control",
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.tableItem,
+                          "item",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  _vm._l(_vm.tableItems, function(item) {
+                    return _c("option", [_vm._v(_vm._s(item.name))])
+                  }),
+                  0
+                )
+              ])
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "item-description" }, [
@@ -79673,7 +79788,6 @@ var render = function() {
                   attrs: { rows: "1", name: "item-description[]" },
                   domProps: { value: _vm.tableItem.description },
                   on: {
-                    blur: _vm.makeDirty,
                     input: function($event) {
                       if ($event.target.composing) {
                         return

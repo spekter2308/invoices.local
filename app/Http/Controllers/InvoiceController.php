@@ -343,6 +343,8 @@ class InvoiceController extends Controller
         $old_total = $invoice->total;
         $previous_show_tax = $invoice->settings->show_tax;
         $old_total_without_tax = $invoice->subtotal;
+        $old_invoice_date = Carbon::parse($invoice->invoice_date)->setTimezone('Europe/Kiev')->format('Y-m-d');
+        $old_due_date = Carbon::parse($invoice->due_date)->setTimezone('Europe/Kiev')->format('Y-m-d');
 
         $data = $request->input();
 
@@ -413,6 +415,15 @@ class InvoiceController extends Controller
         $tax = $invoice->total - $invoice->subtotal;
         $totalWithoutTax = $invoice->subtotal;
 
+        $date_changes = '';
+        if ($old_invoice_date != $data['selectedDateFrom']) {
+            $date_changes .= " Invoice Date has been changed from $old_invoice_date to " . $data['selectedDateFrom'];
+        }
+
+        if ($old_due_date != $data['selectedDateTo']) {
+            $date_changes .= " Due Date has been changed from $old_due_date to " . $data['selectedDateTo'];
+        }
+
         $wasChanged = true;
         if ($invoice->settings->show_tax) {
             if ($previous_show_tax == $invoice->settings->show_tax) {
@@ -437,7 +448,13 @@ class InvoiceController extends Controller
             InvoiceHistory::create([
                 'invoice_id' => $invoice->id,
                 'user_id' => auth()->id(),
-                'changes' => $changes
+                'changes' => $changes . $date_changes
+            ]);
+        } elseif ($date_changes) {
+            InvoiceHistory::create([
+                'invoice_id' => $invoice->id,
+                'user_id' => auth()->id(),
+                'changes' => $date_changes
             ]);
         }
 
@@ -743,13 +760,13 @@ class InvoiceController extends Controller
         $response = [];
 
         $validator = \Validator::make($request->all(), [
-            'selected' => 'required|numeric'
+            'periodDate' => 'required|numeric'
         ]);
 
         if ($validator->fails())
             abort(500);
 
-        $selected = $request->selected;
+        $selected = $request->periodDate;
 
         switch ($selected) {
             case 1 :
@@ -769,6 +786,9 @@ class InvoiceController extends Controller
                 $response['max_date'] = Carbon::now()->endOfYear();
                 break;
             default:
+                $response['min_date'] = $invoice->min('invoice_date');
+                $response['max_date'] = $invoice->max('invoice_date');
+                break;
         }
 
         return \response()->json($response);
