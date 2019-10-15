@@ -72,14 +72,15 @@ class InvoiceController extends Controller
         $allTotalPound= $this->getAllTotal($invoices_pound->all());
         $allBalancePound= $this->getAllTotal($invoices_pound->all());
 
-        $invoices = $invoices->paginate(3);
+        $perPage = $request->per_page ?: 100;
+        $invoices = $invoices->paginate($perPage);
         $finance = [
-            'allBalanceUsd' => $allBalanceUsd,
-            'allTotalUsd' => $allTotalUsd,
-            'allBalanceEuro' => $allBalanceEuro,
-            'allTotalEuro' => $allTotalEuro,
-            'allBalancePound' => $allBalancePound,
-            'allTotalPound' => $allTotalPound
+            'allBalanceUsd' => round($allBalanceUsd, 2),
+            'allTotalUsd' => round($allTotalUsd, 2),
+            'allBalanceEuro' => round($allBalanceEuro, 2),
+            'allTotalEuro' => round($allTotalEuro, 2),
+            'allBalancePound' => round($allBalancePound, 2),
+            'allTotalPound' => round($allTotalPound, 2)
         ];
         $invoices->allBalanceUsd = $allBalanceUsd;
         $invoices->allTotalUsd = $allTotalUsd;

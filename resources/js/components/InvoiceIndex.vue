@@ -4,54 +4,54 @@
         <div class="col-md-12">
 
 
-    <div class="card">
-        <div class="card-header">
-            <div class="level">
-               <span class="flex">
-                   <h1>List of Invoices</h1>
-                   <button class="btn btn-link" @click="showFilter = !showFilter">Show filter</button>
-               </span>
-                <a href="/invoices/create" class="btn btn-primary">New Invoice</a>
-            </div>
-            <!--filter by date part-->
-            <div v-show="showFilter">
-                <hr>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="form-group row ">
-                            <label for="time_frame" class="col-md-6 p-2">Time Frame</label>
-                            <select @change="getDate" v-model="periodDate" class="form-control col-md-6" id="time_frame">
-                                <option value="1">All time</option>
-                                <option value="2">This Month</option>
-                                <option value="3">Last Month</option>
-                                <option value="4">This Year</option>
-                            </select>
-                        </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="level">
+                       <span class="flex">
+                           <h1>List of Invoices</h1>
+                           <button class="btn btn-link" @click="showFilter = !showFilter">Show filter</button>
+                       </span>
+                        <a href="/invoices/create" class="btn btn-primary">New Invoice</a>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <div class="col-6">
-                                <div class="row text-right">
-                                    <label for="time_frame" class="col-4 p-2">From</label>
-                                    <datapicker v-model="dateFrom" format="MM/dd/yyyy" class="col-8"></datapicker>
+                    <!--filter by date part-->
+                    <div v-show="showFilter">
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-3">
+                                <div class="form-group row ">
+                                    <label for="time_frame" class="col-md-6 p-2">Time Frame</label>
+                                    <select @change="getDate" v-model="periodDate" class="form-control col-md-6" id="time_frame">
+                                        <option value="1">All time</option>
+                                        <option value="2">This Month</option>
+                                        <option value="3">Last Month</option>
+                                        <option value="4">This Year</option>
+                                    </select>
                                 </div>
                             </div>
-                            <div class="col-6">
-                                <div class="row text-right">
-                                    <label for="time_frame" class="col-4 p-2">To</label>
-                                    <datapicker v-model="dateTo" format="MM/dd/yyyy" class="col-8"></datapicker>
-                                </div>
-                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-6">
+                                        <div class="row text-right">
+                                            <label for="time_frame" class="col-4 p-2">From</label>
+                                            <datapicker v-model="dateFrom" format="MM/dd/yyyy" class="col-8"></datapicker>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row text-right">
+                                            <label for="time_frame" class="col-4 p-2">To</label>
+                                            <datapicker v-model="dateTo" format="MM/dd/yyyy" class="col-8"></datapicker>
+                                        </div>
+                                    </div>
 
+                                </div>
+                            </div>
+                            <div class="col-md-3 text-right">
+                                <a @click="filterDateShow" class="btn btn-primary m-2 spinner" style="color: white;">Show</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-3 text-right">
-                        <a @click="filterDateShow" class="btn btn-primary m-2 spinner" style="color: white;">Show</a>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
 
             <div class="card-body">
                 <div class="level">
@@ -170,8 +170,9 @@
                                     <pagination :data="invoices" @pagination-change-page="getResults"></pagination>
                                 </td>
                                 <td colspan="2">
-                                    <!--<items-per-page style="max-width: 80px;"
-                                    ></items-per-page>-->
+                                    <items-per-page style="max-width: 80px;"
+                                        @clicked="getItemsPerPage"
+                                    ></items-per-page>
                                 </td>
                                 <td>
                                     <div>{{ finance.allTotalUsd }}</div>
@@ -214,6 +215,7 @@
                 invoices: {},
                 filters: {},
                 finance: {},
+                itemsPerPage: 100
             }
         },
         beforeMount() {
@@ -243,6 +245,12 @@
             this.getResults(page);
         },
         methods: {
+            getItemsPerPage(variable) {
+                this.itemsPerPage = variable.perPage;
+                this.filters.per_page = this.itemsPerPage;
+
+                this.getResults();
+            },
             getDate() {
                 axios.post('/invoices/get/date', {periodDate: this.periodDate}).then(response => {
                         this.dateFrom = response.data.min_date;

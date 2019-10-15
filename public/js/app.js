@@ -5572,6 +5572,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "InvoiceIndex",
@@ -5585,7 +5586,8 @@ __webpack_require__.r(__webpack_exports__);
       showFilter: false,
       invoices: {},
       filters: {},
-      finance: {}
+      finance: {},
+      itemsPerPage: 100
     };
   },
   beforeMount: function beforeMount() {
@@ -5618,6 +5620,11 @@ __webpack_require__.r(__webpack_exports__);
     this.getResults(page);
   },
   methods: {
+    getItemsPerPage: function getItemsPerPage(variable) {
+      this.itemsPerPage = variable.perPage;
+      this.filters.per_page = this.itemsPerPage;
+      this.getResults();
+    },
     getDate: function getDate() {
       var _this = this;
 
@@ -6170,7 +6177,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      value: {
+      selectedPerPage: {
         perPage: 100
       },
       options: [{
@@ -6188,11 +6195,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     updatePageCount: function updatePageCount() {
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/invoices', {
-        params: {
-          perPage: this.value.perPage
-        }
-      }).then(function (response) {});
+      console.log(this.selectedPerPage);
+      this.$emit('clicked', this.selectedPerPage);
     }
   }
 });
@@ -78201,7 +78205,17 @@ var render = function() {
                             1
                           ),
                           _vm._v(" "),
-                          _c("td", { attrs: { colspan: "2" } }),
+                          _c(
+                            "td",
+                            { attrs: { colspan: "2" } },
+                            [
+                              _c("items-per-page", {
+                                staticStyle: { "max-width": "80px" },
+                                on: { clicked: _vm.getItemsPerPage }
+                              })
+                            ],
+                            1
+                          ),
                           _vm._v(" "),
                           _c("td", [
                             _c("div", [
@@ -78908,7 +78922,7 @@ var render = function() {
       "track-by": "perPage",
       label: "perPage",
       options: _vm.options,
-      noOptions: _vm.value,
+      noOptions: _vm.selectedPerPage,
       searchable: false,
       "allow-empty": false,
       showLabels: false
@@ -78924,11 +78938,11 @@ var render = function() {
       }
     ]),
     model: {
-      value: _vm.value,
+      value: _vm.selectedPerPage,
       callback: function($$v) {
-        _vm.value = $$v
+        _vm.selectedPerPage = $$v
       },
-      expression: "value"
+      expression: "selectedPerPage"
     }
   })
 }
@@ -106648,8 +106662,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -1,5 +1,5 @@
 <template>
-    <multiselect @close="updatePageCount" v-model="value" track-by="perPage" label="perPage" :options="options" :noOptions="value" :searchable="false" :allow-empty="false" :showLabels="false">
+    <multiselect @close="updatePageCount" v-model="selectedPerPage" track-by="perPage" label="perPage" :options="options" :noOptions="selectedPerPage" :searchable="false" :allow-empty="false" :showLabels="false">
         <template slot-scope="{ option }"><strong>{{ option.perPage }}</strong></template>
     </multiselect>
 </template>
@@ -14,7 +14,7 @@
         },
         data () {
             return {
-                value: { perPage: 100 },
+                selectedPerPage: { perPage: 100 },
                 options: [
                     { perPage: 10 },
                     { perPage: 25 },
@@ -26,10 +26,8 @@
         },
         methods: {
             updatePageCount() {
-                axios.get('/invoices', { params: {perPage: this.value.perPage} }).then(response => {
-
-                    }
-                );
+                console.log(this.selectedPerPage)
+                this.$emit('clicked', this.selectedPerPage);
             }
         }
     }
