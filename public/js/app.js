@@ -5573,6 +5573,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "InvoiceIndex",
@@ -5587,7 +5588,10 @@ __webpack_require__.r(__webpack_exports__);
       invoices: {},
       filters: {},
       finance: {},
-      itemsPerPage: 100
+      itemsPerPage: 100,
+      orderBy: false,
+      sortedHead: '',
+      sortedHeadName: ''
     };
   },
   beforeMount: function beforeMount() {
@@ -5613,7 +5617,6 @@ __webpack_require__.r(__webpack_exports__);
     }
 
     if (this.getParameterByName('status')) {
-      console.log(this.filters);
       this.filters.status = this.getParameterByName('status');
     }
 
@@ -5661,7 +5664,23 @@ __webpack_require__.r(__webpack_exports__);
     },
     getResultsBySort: function getResultsBySort(sortParam) {
       event.preventDefault();
+
+      if (this.sortedHead != '') {
+        this.sortedHead.innerHTML = "".concat(this.sortedHeadName);
+      }
+
       this.filters.sortby = sortParam;
+      this.orderBy = !this.orderBy;
+      this.filters.order = this.orderBy;
+      this.sortedHead = this.$el.querySelector(".".concat(sortParam));
+      this.sortedHeadName = this.sortedHead.innerText;
+
+      if (this.orderBy && this.sortedHead != '') {
+        this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>");
+      } else {
+        this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
+      }
+
       this.getResults();
     },
     filterDateShow: function filterDateShow() {
@@ -5675,7 +5694,9 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     clearFilters: function clearFilters() {
+      event.preventDefault();
       this.filters = {};
+      this.getResults();
     },
     getResults: function getResults() {
       var _this2 = this;
@@ -5706,15 +5727,15 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     spinnerVisible: function spinnerVisible(v) {
       if (v === true) {
-        this.showButton.innerHTML = "Show <div disabled=\"true\" class=\"spinner-border spinner-border-sm\" role=\"status\" aria-hidden=\"true\">";
+        this.getShowButton.innerHTML = "Show <div disabled=\"true\" class=\"spinner-border spinner-border-sm\" role=\"status\" aria-hidden=\"true\">";
       } else {
-        this.showButton.innerHTML = "Show <div class=\"\" role=\"status\" aria-hidden=\"true\">";
+        this.getShowButton.innerHTML = "Show <div class=\"\" role=\"status\" aria-hidden=\"true\">";
       }
     }
   },
   computed: {
     getShowButton: function getShowButton() {
-      return this.showButton = document.querySelector('.spinner');
+      return document.querySelector('.spinner');
     }
   }
 });
@@ -77336,6 +77357,16 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c(
+                "a",
+                {
+                  staticClass: "btn btn-primary",
+                  staticStyle: { float: "right" },
+                  on: { click: _vm.clearFilters }
+                },
+                [_vm._v("Clear filters")]
+              ),
+              _vm._v(" "),
+              _c(
                 "div",
                 {
                   directives: [
@@ -77622,7 +77653,7 @@ var render = function() {
                   _c(
                     "th",
                     {
-                      staticClass: "click",
+                      staticClass: "click number",
                       attrs: { scope: "col" },
                       on: {
                         click: function($event) {
@@ -77640,7 +77671,7 @@ var render = function() {
                   _c(
                     "th",
                     {
-                      staticClass: "click",
+                      staticClass: "click customer",
                       attrs: { scope: "col" },
                       on: {
                         click: function($event) {
@@ -77654,7 +77685,7 @@ var render = function() {
                   _c(
                     "th",
                     {
-                      staticClass: "click",
+                      staticClass: "click company",
                       attrs: { scope: "col" },
                       on: {
                         click: function($event) {
@@ -77668,7 +77699,7 @@ var render = function() {
                   _c(
                     "th",
                     {
-                      staticClass: "click",
+                      staticClass: "click invoice_date",
                       attrs: { scope: "col" },
                       on: {
                         click: function($event) {
@@ -77679,12 +77710,24 @@ var render = function() {
                     [_vm._v("Date")]
                   ),
                   _vm._v(" "),
-                  _c("th", { attrs: { scope: "col" } }, [_vm._v("Days")]),
+                  _c(
+                    "th",
+                    {
+                      staticClass: "click diffdays",
+                      attrs: { scope: "col" },
+                      on: {
+                        click: function($event) {
+                          return _vm.getResultsBySort("diffdays")
+                        }
+                      }
+                    },
+                    [_vm._v("Days")]
+                  ),
                   _vm._v(" "),
                   _c(
                     "th",
                     {
-                      staticClass: "click",
+                      staticClass: "click subtotal",
                       attrs: { scope: "col" },
                       on: {
                         click: function($event) {
@@ -77698,7 +77741,7 @@ var render = function() {
                   _c(
                     "th",
                     {
-                      staticClass: "click",
+                      staticClass: "click balance",
                       attrs: { scope: "col" },
                       on: {
                         click: function($event) {
@@ -106806,8 +106849,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

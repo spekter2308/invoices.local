@@ -13,6 +13,7 @@
                        </span>
                         <a href="/invoices/create" class="btn btn-primary">New Invoice</a>
                     </div>
+                    <a style="float: right;" @click="clearFilters" class="btn btn-primary">Clear filters</a>
                     <!--filter by date part-->
                     <div v-show="showFilter">
                         <hr>
@@ -72,15 +73,15 @@
                             <th>
                                 <change-status></change-status>
                             </th>
-                            <th class="click" scope="col" @click="getResultsBySort('number')">
+                            <th class="click number" scope="col" @click="getResultsBySort('number')">
                                 Invoices
                             </th>
-                            <th class="click" scope="col" @click="getResultsBySort('customer')">Customer</th>
-                            <th class="click" scope="col" @click="getResultsBySort('company')">Company</th>
-                            <th class="click" scope="col" @click="getResultsBySort('invoice_date')">Date</th>
-                            <th scope="col">Days</th>
-                            <th class="click" scope="col" @click="getResultsBySort('subtotal')">Total</th>
-                            <th class="click" scope="col" @click="getResultsBySort('balance')">Balance</th>
+                            <th class="click customer" scope="col" @click="getResultsBySort('customer')">Customer</th>
+                            <th class="click company" scope="col" @click="getResultsBySort('company')">Company</th>
+                            <th class="click invoice_date" scope="col" @click="getResultsBySort('invoice_date')">Date</th>
+                            <th class="click diffdays" scope="col" @click="getResultsBySort('diffdays')">Days</th>
+                            <th class="click subtotal" scope="col" @click="getResultsBySort('subtotal')">Total</th>
+                            <th class="click balance" scope="col" @click="getResultsBySort('balance')">Balance</th>
                             <th scope="col">Status</th>
                             <th class="bg-white"></th>
                         </tr>
@@ -215,7 +216,10 @@
                 invoices: {},
                 filters: {},
                 finance: {},
-                itemsPerPage: 100
+                itemsPerPage: 100,
+                orderBy: false,
+                sortedHead: '',
+                sortedHeadName: ''
             }
         },
         beforeMount() {
@@ -238,7 +242,6 @@
                 this.filters.bycompany = this.getParameterByName('bycompany');
             }
             if (this.getParameterByName('status')) {
-                console.log(this.filters)
                 this.filters.status = this.getParameterByName('status');
             }
 
@@ -285,7 +288,19 @@
             },
             getResultsBySort(sortParam) {
                 event.preventDefault();
+                if (this.sortedHead != '') {
+                    this.sortedHead.innerHTML = `${this.sortedHeadName}`;
+                }
                 this.filters.sortby = sortParam;
+                this.orderBy = !this.orderBy;
+                this.filters.order = this.orderBy;
+                this.sortedHead = this.$el.querySelector(`.${sortParam}`);
+                this.sortedHeadName = this.sortedHead.innerText;
+                if (this.orderBy && this.sortedHead != '') {
+                    this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-down" aria-hidden="true"></i>`;
+                } else {
+                    this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-up" aria-hidden="true"></i>`;
+                }
                 this.getResults();
             },
             filterDateShow() {
@@ -299,7 +314,9 @@
                 }
             },
             clearFilters() {
+                event.preventDefault();
                 this.filters = {};
+                this.getResults();
             },
             getResults(page = 1) {
                 if (page =='' || page === null || page === undefined) {
@@ -322,15 +339,15 @@
         watch: {
             spinnerVisible(v) {
                 if (v === true) {
-                    this.showButton.innerHTML = `Show <div disabled="true" class="spinner-border spinner-border-sm" role="status" aria-hidden="true">`
+                    this.getShowButton.innerHTML = `Show <div disabled="true" class="spinner-border spinner-border-sm" role="status" aria-hidden="true">`
                 } else {
-                    this.showButton.innerHTML = `Show <div class="" role="status" aria-hidden="true">`
+                    this.getShowButton.innerHTML = `Show <div class="" role="status" aria-hidden="true">`
                 }
             },
         },
         computed: {
             getShowButton() {
-                return this.showButton = document.querySelector('.spinner');
+                return document.querySelector('.spinner');
             }
         }
     }

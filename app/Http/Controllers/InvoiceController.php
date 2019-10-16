@@ -39,8 +39,6 @@ class InvoiceController extends Controller
     {
         $getFilters = [];
 
-        //dd($request->query);
-
         if ($request->query->count()) {
             $invoices = $this->getInvoices($filters);
 
