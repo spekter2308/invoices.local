@@ -49,8 +49,6 @@ class InvoiceController extends Controller
             $invoices = Invoice::orderByRaw('CAST(number as UNSIGNED) DESC')->where('status', '!=', 'Archive');
         }
 
-        //return $getFilters;
-
         if ($request->has(['from', 'to'])) {
 
             $from = Carbon::createFromTimeString($request->from)->setTimezone('Europe/Kiev')->format('Y-m-d H:i:s');
@@ -72,19 +70,24 @@ class InvoiceController extends Controller
         $allTotalPound= $this->getAllTotal($invoices_pound->all());
         $allBalancePound= $this->getAllTotal($invoices_pound->all());
 
+        $perPage = $request->per_page ?: 100;
+        $invoices = $invoices->paginate($perPage);
+        $finance = [
+            'allBalanceUsd' => round($allBalanceUsd, 2),
+            'allTotalUsd' => round($allTotalUsd, 2),
+            'allBalanceEuro' => round($allBalanceEuro, 2),
+            'allTotalEuro' => round($allTotalEuro, 2),
+            'allBalancePound' => round($allBalancePound, 2),
+            'allTotalPound' => round($allTotalPound, 2)
+        ];
+        $invoices->allBalanceUsd = $allBalanceUsd;
+        $invoices->allTotalUsd = $allTotalUsd;
+        $invoices->allBalanceEuro = $allBalanceEuro;
+        $invoices->allTotalEuro = $allTotalEuro;
+        $invoices->allBalancePound = $allBalancePound;
+        $invoices->allTotalPound = $allTotalPound;
 
-        $invoices = $invoices->paginate(15);
-
-        return view('invoices.index', [
-            'invoices' => $invoices,
-            'filters' => $getFilters,
-            'allBalanceUsd' => $allBalanceUsd,
-            'allTotalUsd' => $allTotalUsd,
-            'allBalanceEuro' => $allBalanceEuro,
-            'allTotalEuro' => $allTotalEuro,
-            'allBalancePound' => $allBalancePound,
-            'allTotalPound' => $allTotalPound,
-        ]);
+        return \response()->json(array('invoices' => $invoices, 'filters' => $getFilters, 'finance' => $finance));
     }
 
        public function create()
@@ -339,6 +342,8 @@ class InvoiceController extends Controller
         $old_total = $invoice->total;
         $previous_show_tax = $invoice->settings->show_tax;
         $old_total_without_tax = $invoice->subtotal;
+        $old_invoice_date = Carbon::parse($invoice->invoice_date)->setTimezone('Europe/Kiev')->format('Y-m-d');
+        $old_due_date = Carbon::parse($invoice->due_date)->setTimezone('Europe/Kiev')->format('Y-m-d');
 
         $data = $request->input();
 
@@ -409,6 +414,15 @@ class InvoiceController extends Controller
         $tax = $invoice->total - $invoice->subtotal;
         $totalWithoutTax = $invoice->subtotal;
 
+        $date_changes = '';
+        if ($old_invoice_date != $data['selectedDateFrom']) {
+            $date_changes .= " Invoice Date has been changed from $old_invoice_date to " . $data['selectedDateFrom'];
+        }
+
+        if ($old_due_date != $data['selectedDateTo']) {
+            $date_changes .= " Due Date has been changed from $old_due_date to " . $data['selectedDateTo'];
+        }
+
         $wasChanged = true;
         if ($invoice->settings->show_tax) {
             if ($previous_show_tax == $invoice->settings->show_tax) {
@@ -433,7 +447,13 @@ class InvoiceController extends Controller
             InvoiceHistory::create([
                 'invoice_id' => $invoice->id,
                 'user_id' => auth()->id(),
-                'changes' => $changes
+                'changes' => $changes . $date_changes
+            ]);
+        } elseif ($date_changes) {
+            InvoiceHistory::create([
+                'invoice_id' => $invoice->id,
+                'user_id' => auth()->id(),
+                'changes' => $date_changes
             ]);
         }
 
@@ -704,7 +724,7 @@ class InvoiceController extends Controller
 
     protected function getInvoices($filters)
     {
-        $invoices = Invoice::orderByRaw('CAST(number as UNSIGNED) DESC')->filter($filters);
+        $invoices = Invoice::filter($filters);
 
         return $invoices;
     }
@@ -739,13 +759,13 @@ class InvoiceController extends Controller
         $response = [];
 
         $validator = \Validator::make($request->all(), [
-            'selected' => 'required|numeric'
+            'periodDate' => 'required|numeric'
         ]);
 
         if ($validator->fails())
             abort(500);
 
-        $selected = $request->selected;
+        $selected = $request->periodDate;
 
         switch ($selected) {
             case 1 :
@@ -765,6 +785,9 @@ class InvoiceController extends Controller
                 $response['max_date'] = Carbon::now()->endOfYear();
                 break;
             default:
+                $response['min_date'] = $invoice->min('invoice_date');
+                $response['max_date'] = $invoice->max('invoice_date');
+                break;
         }
 
         return \response()->json($response);

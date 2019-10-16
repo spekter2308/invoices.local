@@ -26,6 +26,7 @@ Vue.component('company-select', require('./components/CompanySelect.vue').defaul
 Vue.component('customer-select', require('./components/CustomerSelect.vue').default);
 Vue.component('invoice-notes', require('./components/InvoiceNotes.vue').default);
 Vue.component('invoice-form', require('./components/InvoiceForm.vue').default);
+Vue.component('invoice-index', require('./components/InvoiceIndex.vue').default);
 Vue.component('invoice-show', require('./components/InvoiceShow.vue').default);
 Vue.component('items-table', require('./components/ItemsTable.vue').default);
 Vue.component('datapicker', require('vuejs-datepicker').default);
@@ -35,6 +36,7 @@ Vue.component('edit-item', require('./components/EditSelectItem').default);
 Vue.component('payment-details', require('./components/PaymentDetails').default);
 Vue.component('customization-options', require('./components/CustomizationOptions').default);
 Vue.component('items-per-page', require('./components/ItemsPerPage').default);
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -49,11 +51,13 @@ import router from './routes'
 import store from './store'
 import BootstrapVue from 'bootstrap-vue'
 import VueI18n from 'vue-i18n'
+import VueMoment from 'vue-moment'
 
 Vue.use(Vuelidate)
 Vue.use(router)
 Vue.use(BootstrapVue)
 Vue.use(VueI18n)
+Vue.use(VueMoment)
 
 window.eventBus = new Vue()
 
@@ -144,11 +148,3 @@ const app = new Vue({
         }
     }
 });
-
-/*const i18n = new VueI18n({
-    locale: 'gr', // set locale
-    messages, // set locale messages
-})*/
-
-/*new Vue({ i18n }).$mount('#app')*/
-

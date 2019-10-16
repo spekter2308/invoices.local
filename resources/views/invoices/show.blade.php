@@ -69,7 +69,7 @@
                     <tbody>
                     @forelse($invoice->histories as $history)
                         <tr>
-                            <td>{{ $history->created_at }}</td>
+                            <td>{{ Carbon\Carbon::parse($history->created_at)->setTimezone('Europe/Kiev')->format('Y-m-d H:i:s') }}</td>
                             <td>{{ $history->user->name }}</td>
                             <td>{{ $history->changes  }}</td>
                         </tr>

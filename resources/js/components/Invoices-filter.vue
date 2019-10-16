@@ -70,13 +70,17 @@
         },
         beforeMount() {
             var from = this.$route.query.from,
-                to = this.$route.query.to;
+                 to = this.$route.query.to;
 
             if (from && to) {
                 this.from = from;
                 this.to = to;
             } else {
                 this.getDate();
+            }
+        },
+        computed: {
+            getUriParams() {
             }
         }
     }

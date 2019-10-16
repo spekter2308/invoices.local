@@ -41,12 +41,16 @@
                 <div class="col-md-12">
                     <div class="top-menu">
                         @include('layouts.nav')
+                        @include('access')
                     </div>
                 </div>
             </div>
         </div>
 
         <main class="py-4">
+            <template>
+                <router-view></router-view>
+            </template>
             @yield('content')
             <flash message="{{ session('flash') }}" show-success="{{ session('show-success') }}"></flash>
         </main>

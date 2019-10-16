@@ -1,35 +1,36 @@
 <template>
-    <div>
-        <b-dropdown drop text="" variant="primary" split-variant="outline-primary">
-            <b-dropdown-item v-for="page in pages" v-bind:key="page" :value="page" @click="changeCount(page)">{{ page }}</b-dropdown-item>
-        </b-dropdown>
-    </div>
+    <multiselect @close="updatePageCount" v-model="selectedPerPage" track-by="perPage" label="perPage" :options="options" :noOptions="selectedPerPage" :searchable="false" :allow-empty="false" :showLabels="false">
+        <template slot-scope="{ option }"><strong>{{ option.perPage }}</strong></template>
+    </multiselect>
 </template>
 
 <script>
     import axios from 'axios'
+    import Multiselect from 'vue-multiselect'
 
     export default {
-        data() {
+        components: {
+            Multiselect
+        },
+        data () {
             return {
-                pages: [10, 25, 50, 100],
+                selectedPerPage: { perPage: 100 },
+                options: [
+                    { perPage: 10 },
+                    { perPage: 25 },
+                    { perPage: 100 },
+                    { perPage: 200 },
+                    { perPage: 500 }
+                ]
             }
         },
         methods: {
-            changeCount(page) {
-                axios.get('/invoices',
-                    {
-                        params: {
-                            product: this.product
-                        }
-                    }
-                    ).then(response => console.log(response.data));
+            updatePageCount() {
+                this.$emit('clicked', this.selectedPerPage);
             }
-        },
-
+        }
     }
 </script>
 
-<style scoped>
 
-</style>
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
