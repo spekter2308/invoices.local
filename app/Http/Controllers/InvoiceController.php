@@ -726,7 +726,7 @@ class InvoiceController extends Controller
 
     protected function getInvoices($filters)
     {
-        $invoices = Invoice::orderByRaw('CAST(number as UNSIGNED) DESC')->filter($filters);
+        $invoices = Invoice::filter($filters);
 
         return $invoices;
     }

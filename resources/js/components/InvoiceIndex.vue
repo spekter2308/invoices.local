@@ -72,15 +72,15 @@
                             <th>
                                 <change-status></change-status>
                             </th>
-                            <th scope="col">
+                            <th class="click" scope="col" @click="getResultsBySort('number')">
                                 Invoices
                             </th>
-                            <th scope="col">Customer</th>
-                            <th scope="col">Company</th>
-                            <th scope="col">Date</th>
+                            <th class="click" scope="col" @click="getResultsBySort('customer')">Customer</th>
+                            <th class="click" scope="col" @click="getResultsBySort('company')">Company</th>
+                            <th class="click" scope="col" @click="getResultsBySort('invoice_date')">Date</th>
                             <th scope="col">Days</th>
-                            <th scope="col">Total</th>
-                            <th scope="col">Balance</th>
+                            <th class="click" scope="col" @click="getResultsBySort('subtotal')">Total</th>
+                            <th class="click" scope="col" @click="getResultsBySort('balance')">Balance</th>
                             <th scope="col">Status</th>
                             <th class="bg-white"></th>
                         </tr>
@@ -283,6 +283,11 @@
                 this.filters.status = status;
                 this.getResults();
             },
+            getResultsBySort(sortParam) {
+                event.preventDefault();
+                this.filters.sortby = sortParam;
+                this.getResults();
+            },
             filterDateShow() {
                 try {
                     this.spinnerVisible = true
@@ -333,5 +338,7 @@
 
 
 <style scoped>
-
+ .click:hover {
+     cursor: pointer;
+ }
 </style>

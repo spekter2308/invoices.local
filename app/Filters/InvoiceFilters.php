@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\Customer;
 use Illuminate\Http\Request;
 
 /**
@@ -10,7 +11,24 @@ use Illuminate\Http\Request;
  */
 class InvoiceFilters extends Filters
 {
-    protected $filters = ['byuser', 'status', 'bycompany'];
+    protected $filters = ['byuser', 'status', 'bycompany', 'sortby'];
+
+    /**
+     * Sort the query by a given param
+     *
+     * @param string $customerId
+     * @return mixed
+     */
+    protected function sortby($param)
+    {
+        if ($param == 'number') {
+            return $this->builder->orderByRaw('CAST(number as UNSIGNED) DESC');
+        }
+        if ($param == 'customer') {
+            return $this->builder->orderBy('name');
+
+        }
+    }
     /**
      * Filter the query by a given customer id
      *

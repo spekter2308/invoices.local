@@ -31,7 +31,8 @@ $factory->define(\App\Invoice::class, function (Faker $faker){
     $balance = $total - $amountPaid;
 
     return [
-        'number' => $faker->numberBetween(1, 100),
+        'number' => $faker->numberBetween(100, 10000000000),
+        'user_id' => 1,
         'customer_id' => function() {
             return factory(\App\Customer::class)->create()->id;
         },
@@ -42,10 +43,23 @@ $factory->define(\App\Invoice::class, function (Faker $faker){
         'subtotal' => $total,
         'total' => $total,
         'balance' => $balance,
-        'currency' => $faker->currencyCode(),
         'invoice_date' => $faker->dateTime(),
+        'invoice_notes' => $faker->sentence(rand(5,15)),
         'due_date' => $faker->dateTimeBetween('+2 days', '+2 month'),
         'status' => 'Partial'
+    ];
+});
+
+$factory->define(\App\InvoiceSettings::class, function (Faker $faker){
+    return [
+        'invoice_id' => function() {
+            return factory(\App\Invoice::class)->create()->id;
+        },
+        'currency' => '$',
+        'show_payment' => 0,
+        'date_format' => 'dd.MM.yyyy',
+        'language' => 'english',
+        'show_tax' => 0
     ];
 });
 
