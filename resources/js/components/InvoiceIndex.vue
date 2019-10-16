@@ -56,15 +56,24 @@
 
             <div class="card-body">
                 <div class="level">
-                    <h5 class="mr-3">Status:</h5>
-                    <a @click="getResultByStatus('All')" href="#" class="pd-1 border-right">All</a>
-                    <a @click="getResultByStatus('Late')" href="#" class="pd-1 pdl-1 border-right">Late</a>
-                    <a @click="getResultByStatus('Draft')" href="#" class="pd-1 pdl-1 border-right">Draft</a>
-                    <a @click="getResultByStatus('Sent')" href="#" class="pd-1 pdl-1 border-right">Sent</a>
-                    <a @click="getResultByStatus('Viewed')" href="#" class="pd-1 pdl-1 border-right">Viewed</a>
-                    <a @click="getResultByStatus('Paid')" href="#" class="pd-1 pdl-1 border-right">Paid</a>
-                    <a @click="getResultByStatus('Partial')" href="#" class="pd-1 pdl-1 border-right">Partial</a>
-                    <a @click="getResultByStatus('Archive')" href="#" class="pd-1 pdl-1 border-right">Archived</a>
+                    <div class="flex">
+                        <h5 class="mr-3">Status:</h5>
+                        <a @click="getResultByStatus('All')" href="#" class="pd-1 border-right">All</a>
+                        <a @click="getResultByStatus('Late')" href="#" class="pd-1 pdl-1 border-right">Late</a>
+                        <a @click="getResultByStatus('Draft')" href="#" class="pd-1 pdl-1 border-right">Draft</a>
+                        <a @click="getResultByStatus('Sent')" href="#" class="pd-1 pdl-1 border-right">Sent</a>
+                        <a @click="getResultByStatus('Viewed')" href="#" class="pd-1 pdl-1 border-right">Viewed</a>
+                        <a @click="getResultByStatus('Paid')" href="#" class="pd-1 pdl-1 border-right">Paid</a>
+                        <a @click="getResultByStatus('Partial')" href="#" class="pd-1 pdl-1 border-right">Partial</a>
+                        <a @click="getResultByStatus('Archive')" href="#" class="pd-1 pdl-1 border-right">Archived</a>
+                    </div>
+
+                    <autocomplete :search="search"
+                                  placeholder="Search"
+                                  aria-label="Search"
+                                  auto-select
+                                  @submit="searchSubmit"
+                    ></autocomplete>
                 </div>
 
                 <table class="table">
@@ -200,11 +209,12 @@
 </template>
 <script>
     import axios from 'axios'
+    import Autocomplete from '@trevoreyre/autocomplete-vue'
 
     export default {
         name: "InvoiceIndex",
         components: {
-
+            Autocomplete
         },
         data() {
             return {
@@ -219,7 +229,8 @@
                 itemsPerPage: 100,
                 orderBy: false,
                 sortedHead: '',
-                sortedHeadName: ''
+                sortedHeadName: '',
+                test: ''
             }
         },
         beforeMount() {
@@ -248,6 +259,20 @@
             this.getResults(page);
         },
         methods: {
+            search(input) {
+                return new Promise(resolve => {
+                    if (input.length < 1) {
+                        return resolve([])
+                    }
+                    axios.get('/api/invoices/search').then(response => response.data).then(data => {resolve(data.filter(param => {
+                            return param.toLowerCase().startsWith(input.toLowerCase())
+                        }))
+                    })
+                })
+            },
+            searchSubmit(result) {
+                alert(`You selected ${result}`)
+            },
             getItemsPerPage(variable) {
                 this.itemsPerPage = variable.perPage;
                 this.filters.per_page = this.itemsPerPage;

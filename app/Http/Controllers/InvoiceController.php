@@ -35,6 +35,11 @@ class InvoiceController extends Controller
         $this->middleware('auth', ['except' => ['showForCustomer', 'generatePdf']]);
     }
 
+    public function search(Request $request) {
+        $data = ['Hello', 'Hi', 'Hey', 'Hover'];
+        return \response()->json($data);
+    }
+
     public function index(Request $request, InvoiceFilters $filters)
     {
         $getFilters = [];
