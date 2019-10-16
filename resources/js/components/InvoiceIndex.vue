@@ -315,6 +315,9 @@
             },
             clearFilters() {
                 event.preventDefault();
+                if (this.sortedHead != '') {
+                    this.sortedHead.innerHTML = `${this.sortedHeadName}`;
+                }
                 this.filters = {};
                 this.getResults();
             },

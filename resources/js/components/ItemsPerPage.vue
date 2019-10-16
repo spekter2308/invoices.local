@@ -26,7 +26,6 @@
         },
         methods: {
             updatePageCount() {
-                console.log(this.selectedPerPage)
                 this.$emit('clicked', this.selectedPerPage);
             }
         }

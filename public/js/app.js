@@ -5695,6 +5695,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     clearFilters: function clearFilters() {
       event.preventDefault();
+
+      if (this.sortedHead != '') {
+        this.sortedHead.innerHTML = "".concat(this.sortedHeadName);
+      }
+
       this.filters = {};
       this.getResults();
     },
@@ -6221,7 +6226,6 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     updatePageCount: function updatePageCount() {
-      console.log(this.selectedPerPage);
       this.$emit('clicked', this.selectedPerPage);
     }
   }
