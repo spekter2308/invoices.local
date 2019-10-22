@@ -244,6 +244,33 @@
             if (this.getParameterByName('status')) {
                 this.filters.status = this.getParameterByName('status');
             }
+            if (this.getParameterByName('sortby') && this.getParameterByName('order')) {
+                this.filters.sortby = this.getParameterByName('sortby');
+                this.filters.order = this.getParameterByName('order');
+                this.orderBy = JSON.parse(this.getParameterByName('order'));
+                this.filters.order = this.orderBy;
+
+                this.sortedHead = this.$el.querySelector('.' + this.filters.sortby);
+                this.sortedHeadName = this.sortedHead.innerText;
+                if (this.orderBy && this.sortedHead != '') {
+                    this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-down" aria-hidden="true"></i>`;
+                } else {
+                    this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-up" aria-hidden="true"></i>`;
+                }
+            }
+            if (this.filters.sortby === undefined) {
+                this.filters.sortby = 'number';
+                this.orderBy = true;
+                this.filters.order = this.orderBy;
+
+                this.sortedHead = this.$el.querySelector('.number');
+                this.sortedHeadName = this.sortedHead.innerText;
+                if (this.orderBy && this.sortedHead != '') {
+                    this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-down" aria-hidden="true"></i>`;
+                } else {
+                    this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-up" aria-hidden="true"></i>`;
+                }
+            }
 
             this.getResults(page);
         },
