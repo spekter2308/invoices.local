@@ -233,6 +233,24 @@
                 this.getDate();
             }
         },
+        beforeRouteUpdate (to, from, next) {
+            this.sortedHead = this.$el.querySelector('.' + to.query.sortby);
+            this.sortedHeadName = this.sortedHead.innerText;
+            if (this.orderBy && this.sortedHeadName != '') {
+                this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-down" aria-hidden="true"></i>`;
+            } else {
+                this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-up" aria-hidden="true"></i>`;
+            }
+
+            axios.get('/api' + this.$route.fullPath)
+                .then(response => {
+                    //this.$router.push({ path: 'invoices', query: { page: page} })
+                    this.invoices = response.data.invoices;
+                    this.finance = response.data.finance;
+                    this.spinnerVisible = false
+                    next();
+                }).catch(error => {throw error});
+        },
         mounted() {
             var page = this.getParameterByName('page');
             if (this.getParameterByName('byuser')) {
@@ -258,6 +276,7 @@
                     this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-up" aria-hidden="true"></i>`;
                 }
             }
+
             if (this.filters.sortby === undefined) {
                 this.filters.sortby = 'number';
                 this.orderBy = true;
@@ -273,6 +292,13 @@
             }
 
             this.getResults(page);
+            axios.get('/api' + this.$route.fullPath)
+                .then(response => {
+                    //this.$router.push({ path: 'invoices', query: { page: page} })
+                    this.invoices = response.data.invoices;
+                    this.finance = response.data.finance;
+                    this.spinnerVisible = false
+                }).catch(error => {throw error});
         },
         methods: {
             getItemsPerPage(variable) {
@@ -357,13 +383,13 @@
                 //this.$router.push({path: 'invoices', params: Object.assign({}, this.filters), page: page });
 
                 //axios.get('/api/invoices?' + this.url + '&page=' + page)
-                axios.get('/api' + this.$route.fullPath)
+               /*axios.get('/api' + this.$route.fullPath)
                     .then(response => {
                         //this.$router.push({ path: 'invoices', query: { page: page} })
                         this.invoices = response.data.invoices;
                         this.finance = response.data.finance;
                         this.spinnerVisible = false
-                    }).catch(error => {throw error});
+                    }).catch(error => {throw error});*/
             },
         },
         watch: {
