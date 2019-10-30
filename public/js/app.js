@@ -5608,6 +5608,12 @@ __webpack_require__.r(__webpack_exports__);
   beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
     var _this = this;
 
+    this.sortedHead.innerHTML = "".concat(this.sortedHeadName);
+
+    if (to.query.order) {
+      this.orderBy = JSON.parse(to.query.order);
+    }
+
     this.sortedHead = this.$el.querySelector('.' + to.query.sortby);
     this.sortedHeadName = this.sortedHead.innerText;
 
@@ -5617,7 +5623,40 @@ __webpack_require__.r(__webpack_exports__);
       this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
     }
 
-    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api' + this.$route.fullPath).then(function (response) {
+    this.filters = {};
+
+    if (to.query.page) {
+      this.filters.page = to.query.page;
+    }
+
+    if (to.query.byuser) {
+      this.filters.byuser = to.query.byuser;
+    }
+
+    if (to.query.bycompany) {
+      this.filters.bycompany = to.query.bycompany;
+    }
+
+    if (to.query.status) {
+      this.filters.status = to.query.status;
+    }
+
+    if (to.query.sortby && to.query.order) {
+      this.filters.sortby = to.query.sortby;
+      this.filters.order = JSON.parse(to.query.order);
+    }
+
+    if (to.query.from) {
+      this.filters.from = to.query.from;
+      this.dateFrom = to.query.from;
+    }
+
+    if (to.query.to) {
+      this.filters.to = to.query.to;
+      this.dateTo = to.query.to;
+    }
+
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api' + to.fullPath).then(function (response) {
       //this.$router.push({ path: 'invoices', query: { page: page} })
       _this.invoices = response.data.invoices;
       _this.finance = response.data.finance;
@@ -5642,6 +5681,16 @@ __webpack_require__.r(__webpack_exports__);
 
     if (this.getParameterByName('status')) {
       this.filters.status = this.getParameterByName('status');
+    }
+
+    if (this.getParameterByName('from')) {
+      this.filters.from = this.getParameterByName('from');
+      this.dateFrom = this.getParameterByName('from');
+    }
+
+    if (this.getParameterByName('to')) {
+      this.filters.to = this.getParameterByName('to');
+      this.dateTo = this.getParameterByName('to');
     }
 
     if (this.getParameterByName('sortby') && this.getParameterByName('order')) {
@@ -5735,12 +5784,11 @@ __webpack_require__.r(__webpack_exports__);
       this.filters.order = this.orderBy;
       this.sortedHead = this.$el.querySelector(".".concat(sortParam));
       this.sortedHeadName = this.sortedHead.innerText;
-
-      if (this.orderBy && this.sortedHead != '') {
-        this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>");
+      /*if (this.orderBy && this.sortedHead != '') {
+          this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-down" aria-hidden="true"></i>`;
       } else {
-        this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
-      }
+          this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-up" aria-hidden="true"></i>`;
+      }*/
 
       this.getResults();
     },
@@ -106911,8 +106959,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
