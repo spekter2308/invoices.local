@@ -248,13 +248,17 @@
             }
         },
         beforeRouteUpdate (to, from, next) {
-            //this.sortedHead.innerHTML = `${this.sortedHeadName}`;
             if (to.query.order) {
                 this.orderBy = JSON.parse(to.query.order);
             }
+            if (this.sortedHead) {
+                this.sortedHead.innerHTML = `${this.sortedHeadName}`;
+            }
             this.sortedHead = this.$el.querySelector('.' + to.query.sortby);
-            this.sortedHeadName = this.sortedHead.innerText;
-            if (this.orderBy && this.sortedHeadName != '') {
+            if (this.sortedHead) {
+                this.sortedHeadName = this.sortedHead.innerText;
+            }
+            if (this.orderBy && this.sortedHeadName) {
                 this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-down" aria-hidden="true"></i>`;
             } else {
                 this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-up" aria-hidden="true"></i>`;

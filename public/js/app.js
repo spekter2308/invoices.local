@@ -6285,7 +6285,75 @@ __webpack_require__.r(__webpack_exports__);
       this.getDate();
     }
   },
+  beforeRouteUpdate: function beforeRouteUpdate(to, from, next) {
+    var _this = this;
+
+    if (to.query.order) {
+      this.orderBy = JSON.parse(to.query.order);
+    }
+
+    if (this.sortedHead) {
+      this.sortedHead.innerHTML = "".concat(this.sortedHeadName);
+    }
+
+    this.sortedHead = this.$el.querySelector('.' + to.query.sortby);
+
+    if (this.sortedHead) {
+      this.sortedHeadName = this.sortedHead.innerText;
+    }
+
+    if (this.orderBy && this.sortedHeadName) {
+      this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>");
+    } else {
+      this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
+    }
+
+    this.filters = {};
+
+    if (to.query.page) {
+      this.filters.page = to.query.page;
+    }
+
+    if (to.query.byuser) {
+      this.filters.byuser = to.query.byuser;
+    }
+
+    if (to.query.bycompany) {
+      this.filters.bycompany = to.query.bycompany;
+    }
+
+    if (to.query.status) {
+      this.filters.status = to.query.status;
+    }
+
+    if (to.query.sortby && to.query.order) {
+      this.filters.sortby = to.query.sortby;
+      this.filters.order = JSON.parse(to.query.order);
+    }
+
+    if (to.query.from) {
+      this.filters.from = to.query.from;
+      this.dateFrom = to.query.from;
+    }
+
+    if (to.query.to) {
+      this.filters.to = to.query.to;
+      this.dateTo = to.query.to;
+    }
+
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api' + to.fullPath).then(function (response) {
+      //this.$router.push({ path: 'invoices', query: { page: page} })
+      _this.invoices = response.data.invoices;
+      _this.finance = response.data.finance;
+      _this.spinnerVisible = false;
+      next();
+    })["catch"](function (error) {
+      throw error;
+    });
+  },
   mounted: function mounted() {
+    var _this2 = this;
+
     var page = this.getParameterByName('page');
 
     if (this.getParameterByName('byuser')) {
@@ -6300,7 +6368,54 @@ __webpack_require__.r(__webpack_exports__);
       this.filters.status = this.getParameterByName('status');
     }
 
+    if (this.getParameterByName('from')) {
+      this.filters.from = this.getParameterByName('from');
+      this.dateFrom = this.getParameterByName('from');
+    }
+
+    if (this.getParameterByName('to')) {
+      this.filters.to = this.getParameterByName('to');
+      this.dateTo = this.getParameterByName('to');
+    }
+
+    if (this.getParameterByName('sortby') && this.getParameterByName('order')) {
+      this.filters.sortby = this.getParameterByName('sortby');
+      this.filters.order = this.getParameterByName('order');
+      this.orderBy = JSON.parse(this.getParameterByName('order'));
+      this.filters.order = this.orderBy;
+      this.sortedHead = this.$el.querySelector('.' + this.filters.sortby);
+      this.sortedHeadName = this.sortedHead.innerText;
+
+      if (this.orderBy && this.sortedHead != '') {
+        this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>");
+      } else {
+        this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
+      }
+    }
+
+    if (this.filters.sortby === undefined) {
+      this.filters.sortby = 'number';
+      this.orderBy = true;
+      this.filters.order = this.orderBy;
+      this.sortedHead = this.$el.querySelector('.number');
+      this.sortedHeadName = this.sortedHead.innerText;
+
+      if (this.orderBy && this.sortedHead != '') {
+        this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>");
+      } else {
+        this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
+      }
+    }
+
     this.getResults(page);
+    axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api' + this.$route.fullPath).then(function (response) {
+      //this.$router.push({ path: 'invoices', query: { page: page} })
+      _this2.invoices = response.data.invoices;
+      _this2.finance = response.data.finance;
+      _this2.spinnerVisible = false;
+    })["catch"](function (error) {
+      throw error;
+    });
   },
   methods: {
     search: function search(input) {
@@ -6320,14 +6435,14 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     searchSubmit: function searchSubmit(result) {
-      var _this = this;
+      var _this3 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/invoices?result=' + result + '&status=All&page=1').then(function (response) {
         //this.$router.push({ path: 'invoices', query: { page: page} })
-        _this.filters = response.data.filters;
-        _this.invoices = response.data.invoices;
-        _this.finance = response.data.finance;
-        _this.spinnerVisible = false;
+        _this3.filters = response.data.filters;
+        _this3.invoices = response.data.invoices;
+        _this3.finance = response.data.finance;
+        _this3.spinnerVisible = false;
       })["catch"](function (error) {
         throw error;
       });
@@ -6338,13 +6453,13 @@ __webpack_require__.r(__webpack_exports__);
       this.getResults();
     },
     getDate: function getDate() {
-      var _this2 = this;
+      var _this4 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/invoices/get/date', {
         periodDate: this.periodDate
       }).then(function (response) {
-        _this2.dateFrom = response.data.min_date;
-        _this2.dateTo = response.data.max_date;
+        _this4.dateFrom = response.data.min_date;
+        _this4.dateTo = response.data.max_date;
       });
     },
     getParameterByName: function getParameterByName(name, url) {
@@ -6383,12 +6498,11 @@ __webpack_require__.r(__webpack_exports__);
       this.filters.order = this.orderBy;
       this.sortedHead = this.$el.querySelector(".".concat(sortParam));
       this.sortedHeadName = this.sortedHead.innerText;
-
-      if (this.orderBy && this.sortedHead != '') {
-        this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-down\" aria-hidden=\"true\"></i>");
+      /*if (this.orderBy && this.sortedHead != '') {
+          this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-down" aria-hidden="true"></i>`;
       } else {
-        this.sortedHead.innerHTML = "".concat(this.sortedHeadName, "  <i class=\"fa fa-caret-up\" aria-hidden=\"true\"></i>");
-      }
+          this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-up" aria-hidden="true"></i>`;
+      }*/
 
       this.getResults();
     },
@@ -6413,8 +6527,6 @@ __webpack_require__.r(__webpack_exports__);
       this.getResults();
     },
     getResults: function getResults() {
-      var _this3 = this;
-
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
 
       if (page == '' || page === null || page === undefined) {
@@ -6428,14 +6540,13 @@ __webpack_require__.r(__webpack_exports__);
       }); //this.$router.push({path: 'invoices', params: Object.assign({}, this.filters), page: page });
       //axios.get('/api/invoices?' + this.url + '&page=' + page)
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api' + this.$route.fullPath).then(function (response) {
-        //this.$router.push({ path: 'invoices', query: { page: page} })
-        _this3.invoices = response.data.invoices;
-        _this3.finance = response.data.finance;
-        _this3.spinnerVisible = false;
-      })["catch"](function (error) {
-        throw error;
-      });
+      /*axios.get('/api' + this.$route.fullPath)
+           .then(response => {
+               //this.$router.push({ path: 'invoices', query: { page: page} })
+               this.invoices = response.data.invoices;
+               this.finance = response.data.finance;
+               this.spinnerVisible = false
+           }).catch(error => {throw error});*/
     }
   },
   watch: {
