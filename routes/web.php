@@ -22,6 +22,7 @@ Auth::routes();
 //invoice part
 Route::get('invoices', function () { return view('layouts.app'); })->middleware('auth');
 Route::get('api/invoices', 'InvoiceController@index')->name('invoice-index');
+Route::get('api/invoices/search', 'InvoiceController@search');
 Route::post('invoices/setPageCount', 'InvoiceController@setPageCount');
 Route::get('invoices/create', 'InvoiceController@create');
 Route::get('invoices/duplicate/{invoice}', 'InvoiceController@duplicate');

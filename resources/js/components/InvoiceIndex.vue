@@ -56,15 +56,25 @@
 
             <div class="card-body">
                 <div class="level">
-                    <h5 class="mr-3">Status:</h5>
-                    <a @click="getResultByStatus('All')" href="#" class="pd-1 border-right">All</a>
-                    <a @click="getResultByStatus('Late')" href="#" class="pd-1 pdl-1 border-right">Late</a>
-                    <a @click="getResultByStatus('Draft')" href="#" class="pd-1 pdl-1 border-right">Draft</a>
-                    <a @click="getResultByStatus('Sent')" href="#" class="pd-1 pdl-1 border-right">Sent</a>
-                    <a @click="getResultByStatus('Viewed')" href="#" class="pd-1 pdl-1 border-right">Viewed</a>
-                    <a @click="getResultByStatus('Paid')" href="#" class="pd-1 pdl-1 border-right">Paid</a>
-                    <a @click="getResultByStatus('Partial')" href="#" class="pd-1 pdl-1 border-right">Partial</a>
-                    <a @click="getResultByStatus('Archive')" href="#" class="pd-1 pdl-1 border-right">Archived</a>
+                    <div class="flex">
+                        <h5 class="mr-3">Status:</h5>
+                        <a @click="getResultByStatus('All')" href="#" class="pd-1 border-right">All</a>
+                        <a @click="getResultByStatus('Late')" href="#" class="pd-1 pdl-1 border-right">Late</a>
+                        <a @click="getResultByStatus('Draft')" href="#" class="pd-1 pdl-1 border-right">Draft</a>
+                        <a @click="getResultByStatus('Sent')" href="#" class="pd-1 pdl-1 border-right">Sent</a>
+                        <a @click="getResultByStatus('Viewed')" href="#" class="pd-1 pdl-1 border-right">Viewed</a>
+                        <a @click="getResultByStatus('Paid')" href="#" class="pd-1 pdl-1 border-right">Paid</a>
+                        <a @click="getResultByStatus('Partial')" href="#" class="pd-1 pdl-1 border-right">Partial</a>
+                        <a @click="getResultByStatus('Archive')" href="#" class="pd-1 pdl-1 border-right">Archived</a>
+                    </div>
+
+                    <autocomplete :search="search"
+                                  placeholder="Search"
+                                  aria-label="Search"
+                                  auto-select
+
+                                  @submit="searchSubmit"
+                    ></autocomplete>
                 </div>
 
                 <table class="table">
@@ -200,11 +210,12 @@
 </template>
 <script>
     import axios from 'axios'
+    import Autocomplete from '@trevoreyre/autocomplete-vue'
 
     export default {
         name: "InvoiceIndex",
         components: {
-
+            Autocomplete
         },
         data() {
             return {
@@ -214,12 +225,15 @@
                 dateTo: null,
                 showFilter: false,
                 invoices: {},
-                filters: {},
+                filters: {
+                    status: 'All'
+                },
                 finance: {},
                 itemsPerPage: 100,
                 orderBy: false,
                 sortedHead: '',
-                sortedHeadName: ''
+                sortedHeadName: '',
+                results: []
             }
         },
         beforeMount() {
@@ -234,7 +248,7 @@
             }
         },
         beforeRouteUpdate (to, from, next) {
-            this.sortedHead.innerHTML = `${this.sortedHeadName}`;
+            //this.sortedHead.innerHTML = `${this.sortedHeadName}`;
             if (to.query.order) {
                 this.orderBy = JSON.parse(to.query.order);
             }
@@ -340,6 +354,29 @@
                 }).catch(error => {throw error});
         },
         methods: {
+            search(input) {
+                return new Promise(resolve => {
+                    if (input.length < 3) {
+                        return resolve([])
+                    }
+                    axios.get('/api/invoices/search?search=' + input).then(response => response.data).then(data => {resolve(data)
+
+                       /* .filter(param => {
+                            return param.toLowerCase().startsWith(input.toLowerCase())
+                        }))*/
+                    })
+                })
+            },
+            searchSubmit(result) {
+                axios.get('/api/invoices?result=' + result + '&status=All&page=1')
+                    .then(response => {
+                        //this.$router.push({ path: 'invoices', query: { page: page} })
+                        this.filters = response.data.filters;
+                        this.invoices = response.data.invoices;
+                        this.finance = response.data.finance;
+                        this.spinnerVisible = false
+                    }).catch(error => {throw error});
+            },
             getItemsPerPage(variable) {
                 this.itemsPerPage = variable.perPage;
                 this.filters.per_page = this.itemsPerPage;
