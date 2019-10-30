@@ -6247,6 +6247,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -6262,13 +6263,15 @@ __webpack_require__.r(__webpack_exports__);
       dateTo: null,
       showFilter: false,
       invoices: {},
-      filters: {},
+      filters: {
+        status: 'All'
+      },
       finance: {},
       itemsPerPage: 100,
       orderBy: false,
       sortedHead: '',
       sortedHeadName: '',
-      test: ''
+      results: []
     };
   },
   beforeMount: function beforeMount() {
@@ -6302,21 +6305,32 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     search: function search(input) {
       return new Promise(function (resolve) {
-        if (input.length < 1) {
+        if (input.length < 3) {
           return resolve([]);
         }
 
-        axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/invoices/search').then(function (response) {
+        axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/invoices/search?search=' + input).then(function (response) {
           return response.data;
         }).then(function (data) {
-          resolve(data.filter(function (param) {
-            return param.toLowerCase().startsWith(input.toLowerCase());
-          }));
+          resolve(data);
+          /* .filter(param => {
+               return param.toLowerCase().startsWith(input.toLowerCase())
+           }))*/
         });
       });
     },
     searchSubmit: function searchSubmit(result) {
-      alert("You selected ".concat(result));
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api/invoices?result=' + result + '&status=All&page=1').then(function (response) {
+        //this.$router.push({ path: 'invoices', query: { page: page} })
+        _this.filters = response.data.filters;
+        _this.invoices = response.data.invoices;
+        _this.finance = response.data.finance;
+        _this.spinnerVisible = false;
+      })["catch"](function (error) {
+        throw error;
+      });
     },
     getItemsPerPage: function getItemsPerPage(variable) {
       this.itemsPerPage = variable.perPage;
@@ -6324,13 +6338,13 @@ __webpack_require__.r(__webpack_exports__);
       this.getResults();
     },
     getDate: function getDate() {
-      var _this = this;
+      var _this2 = this;
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/invoices/get/date', {
         periodDate: this.periodDate
       }).then(function (response) {
-        _this.dateFrom = response.data.min_date;
-        _this.dateTo = response.data.max_date;
+        _this2.dateFrom = response.data.min_date;
+        _this2.dateTo = response.data.max_date;
       });
     },
     getParameterByName: function getParameterByName(name, url) {
@@ -6399,7 +6413,7 @@ __webpack_require__.r(__webpack_exports__);
       this.getResults();
     },
     getResults: function getResults() {
-      var _this2 = this;
+      var _this3 = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
 
@@ -6416,9 +6430,9 @@ __webpack_require__.r(__webpack_exports__);
 
       axios__WEBPACK_IMPORTED_MODULE_0___default.a.get('/api' + this.$route.fullPath).then(function (response) {
         //this.$router.push({ path: 'invoices', query: { page: page} })
-        _this2.invoices = response.data.invoices;
-        _this2.finance = response.data.finance;
-        _this2.spinnerVisible = false;
+        _this3.invoices = response.data.invoices;
+        _this3.finance = response.data.finance;
+        _this3.spinnerVisible = false;
       })["catch"](function (error) {
         throw error;
       });

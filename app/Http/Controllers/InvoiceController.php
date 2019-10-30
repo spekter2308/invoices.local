@@ -36,30 +36,92 @@ class InvoiceController extends Controller
     }
 
     public function search(Request $request) {
-        $data = ['Hello', 'Hi', 'Hey', 'Hover'];
-        return \response()->json($data);
+        $searchParam = $request->input('search');
+
+        $invoices = Invoice::query()
+            ->where('number', 'LIKE', "{$searchParam}%")
+            ->pluck('number')->toArray();
+
+        $customers = Customer::query()
+            ->where('name', 'LIKE', "%{$searchParam}%")
+            ->pluck('name')->toArray();
+
+        $companies = Company::query()
+            ->where('name', 'LIKE', "%{$searchParam}%")
+            ->orWhere('short_name', 'LIKE', "%{$searchParam}%")
+            ->pluck('name', 'short_name')->toArray();
+
+        $searched_companies = [];
+        foreach ($companies as $short_name => $name) {
+            $searched_companies[] = $short_name;
+            $searched_companies[] = $name;
+        }
+
+        $result = array_merge($invoices, $customers, $searched_companies);
+
+        return \response()->json($result);
+    }
+
+    public function getSearch($searchParam)
+    {
+        $invoices = Invoice::query()
+            ->where('number', 'LIKE', "{$searchParam}%")
+            ->pluck('id')->toArray();
+
+        $customers = Customer::query()
+            ->where('name', 'LIKE', "%{$searchParam}%")
+            ->pluck('id')->toArray();
+
+        $companies = Company::query()
+            ->where('name', 'LIKE', "%{$searchParam}%")
+            ->orWhere('short_name', 'LIKE', "%{$searchParam}%")
+            ->pluck('id', 'short_name')->toArray();
+
+        $result = [];
+        if (count($invoices)) {
+            $result['id'] = implode(',',$invoices);
+            return $result;
+        }
+        if (count($customers)) {
+            $result['customer_id'] = implode(',',$customers);
+            return $result;
+        }
+        if (count($companies)) {
+            $result['company_id'] = implode(',',$companies);
+            return $result;
+        }
     }
 
     public function index(Request $request, InvoiceFilters $filters)
     {
         $getFilters = [];
 
-        if ($request->query->count()) {
-            $invoices = $this->getInvoices($filters);
+        if ($request->input('result')) {
+            $searchResult = $this->getSearch($request->input('result'));
 
-            foreach ($request->query as $key => $filter) {
-                $getFilters[$key] = $filter;
+            foreach ($searchResult as $type_id => $ids) {
+                $invoices = Invoice::whereIn($type_id, explode(',',$ids));
             }
         } else {
-            $invoices = Invoice::orderByRaw('CAST(number as UNSIGNED) DESC')->where('status', '!=', 'Archive');
-        }
 
-        if ($request->has(['from', 'to'])) {
+            if ($request->query->count()) {
+                $invoices = $this->getInvoices($filters);
 
-            $from = Carbon::createFromTimeString($request->from)->setTimezone('Europe/Kiev')->format('Y-m-d H:i:s');
-            $to = Carbon::createFromTimeString($request->to)->setTimezone('Europe/Kiev')->format('Y-m-d H:i:s');
+                foreach ($request->query as $key => $filter) {
+                    $getFilters[$key] = $filter;
+                }
+            } else {
+                $invoices = Invoice::orderByRaw('CAST(number as UNSIGNED) DESC')->where('status', '!=', 'Archive');
+            }
 
-            $invoices = $invoices->where('invoice_date', '>=', $from)->where('invoice_date', '<=', $to);
+            if ($request->has(['from', 'to'])) {
+
+                $from = Carbon::createFromTimeString($request->from)->setTimezone('Europe/Kiev')->format('Y-m-d H:i:s');
+                $to = Carbon::createFromTimeString($request->to)->setTimezone('Europe/Kiev')->format('Y-m-d H:i:s');
+
+                $invoices = $invoices->where('invoice_date', '>=', $from)->where('invoice_date', '<=', $to);
+            }
+
         }
 
         $invoices_usd = $invoices->get()->where('settings.currency', '=', '$');

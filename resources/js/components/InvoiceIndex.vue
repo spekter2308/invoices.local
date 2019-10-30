@@ -72,6 +72,7 @@
                                   placeholder="Search"
                                   aria-label="Search"
                                   auto-select
+
                                   @submit="searchSubmit"
                     ></autocomplete>
                 </div>
@@ -224,13 +225,15 @@
                 dateTo: null,
                 showFilter: false,
                 invoices: {},
-                filters: {},
+                filters: {
+                    status: 'All'
+                },
                 finance: {},
                 itemsPerPage: 100,
                 orderBy: false,
                 sortedHead: '',
                 sortedHeadName: '',
-                test: ''
+                results: []
             }
         },
         beforeMount() {
@@ -261,17 +264,26 @@
         methods: {
             search(input) {
                 return new Promise(resolve => {
-                    if (input.length < 1) {
+                    if (input.length < 3) {
                         return resolve([])
                     }
-                    axios.get('/api/invoices/search').then(response => response.data).then(data => {resolve(data.filter(param => {
+                    axios.get('/api/invoices/search?search=' + input).then(response => response.data).then(data => {resolve(data)
+
+                       /* .filter(param => {
                             return param.toLowerCase().startsWith(input.toLowerCase())
-                        }))
+                        }))*/
                     })
                 })
             },
             searchSubmit(result) {
-                alert(`You selected ${result}`)
+                axios.get('/api/invoices?result=' + result + '&status=All&page=1')
+                    .then(response => {
+                        //this.$router.push({ path: 'invoices', query: { page: page} })
+                        this.filters = response.data.filters;
+                        this.invoices = response.data.invoices;
+                        this.finance = response.data.finance;
+                        this.spinnerVisible = false
+                    }).catch(error => {throw error});
             },
             getItemsPerPage(variable) {
                 this.itemsPerPage = variable.perPage;
