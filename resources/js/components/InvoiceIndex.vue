@@ -258,6 +258,10 @@
             if (this.sortedHead) {
                 this.sortedHeadName = this.sortedHead.innerText;
             }
+            if (this.sortedHead === null) {
+                this.sortedHead = this.$el.querySelector('.number');
+                this.sortedHeadName = this.sortedHead.innerText;
+            }
             if (this.orderBy && this.sortedHeadName) {
                 this.sortedHead.innerHTML = `${this.sortedHeadName}  <i class="fa fa-caret-down" aria-hidden="true"></i>`;
             } else {
