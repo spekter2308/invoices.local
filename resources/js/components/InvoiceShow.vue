@@ -116,12 +116,12 @@
                                 </div>
                                 <div class="item-unit-price">
                                     <div class="form-group-table">
-                                        {{ item.unitprice }}
+                                        {{ unitPrice(item.unitprice) }}
                                     </div>
                                 </div>
                                 <div class="item-quantity">
                                     <div class="form-group-table">
-                                        {{ item.quantity }}
+                                        {{ quantityRound(item.quantity) }}
                                     </div>
                                 </div>
                                 <div v-if="settings.show_tax" class="item-tax">
@@ -281,9 +281,14 @@
         methods: {
             itemsTotal(quan, unit_price) {
                 return parseFloat((quan * unit_price).toFixed(2));
+            },
+            unitPrice(price) {
+                return parseFloat(price.toFixed(2));
+            },
+            quantityRound(quan) {
+                return parseFloat(quan.toFixed(2));
             }
         }
-
     }
 </script>
 
