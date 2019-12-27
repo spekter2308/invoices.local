@@ -48,6 +48,9 @@
                     <button class="btn btn-outline-secondary" disabled>Mark as Paid</button>
                     <button class="btn btn-outline-secondary" disabled>Duplicate</button>
                @endif
+                    <invoice-notes
+                        :invoice-id="{{ $invoice->id }}"
+                    ></invoice-notes>
                     </div>
                     <button form="createInvoice" class="btn btn-primary send-btn" type="submit">Save</button>
                 </div>

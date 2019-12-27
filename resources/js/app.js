@@ -37,6 +37,7 @@ Vue.component('payment-details', require('./components/PaymentDetails').default)
 Vue.component('customization-options', require('./components/CustomizationOptions').default);
 Vue.component('items-per-page', require('./components/ItemsPerPage').default);
 Vue.component('pagination', require('laravel-vue-pagination'));
+Vue.component('invoice-notes', require('./components/AdditionalInvoiceNotes.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

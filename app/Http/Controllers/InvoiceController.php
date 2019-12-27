@@ -768,7 +768,7 @@ class InvoiceController extends Controller
         ]);
 
         $invoice->update([
-            'status' => 'Partial',
+            'status' => 'Draft',
             'balance' => $old_balance + $last_payment->amount,
             'amount_paid' => $invoice->amount_paid - $last_payment->amount,
         ]);
