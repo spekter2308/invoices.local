@@ -17,6 +17,8 @@
 </template>
 
 <script>
+    import axios from 'axios'
+
     export default {
         props: {
             invoiceId: {
@@ -34,8 +36,18 @@
                 this.isHidden = true;
             },
             saveNote() {
-                console.log(this.note, this.invoiceId)
-                this.isHidden = false;
+                if (this.note.match(/[a-zA-Z0-9]/i)) {
+                    const invoiceNote = {
+                        invoice_id: this.invoiceId,
+                        notes: this.note
+                    }
+                    axios.post('/notes/save', invoiceNote).then(response => {
+                        this.note = ''
+                        location.reload()
+                    }).catch(error => console.log(error))
+                }
+                this.note = ''
+                this.isHidden = false
             }
         }
     }

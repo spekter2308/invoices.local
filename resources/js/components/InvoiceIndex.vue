@@ -72,7 +72,6 @@
                                   placeholder="Search"
                                   aria-label="Search"
                                   auto-select
-
                                   @submit="searchSubmit"
                     ></autocomplete>
                 </div>
@@ -138,7 +137,10 @@
                                                 <li class="list-group-item"><i class="far fa-trash-alt"></i><a :href="'/invoices/destroy/' + invoice.id">Delete</a></li>
                                             </ul>
                                         </div>
-                                        <a :href="'/invoices/' + invoice.id">{{ invoice.number }}</a>
+                                        <a :href="'/invoices/' + invoice.id" :id="`popover-1-${invoice.id}`">{{ invoice.number }}</a>
+                                        <b-popover v-if="invoice.notes.length" :target="`popover-1-${invoice.id}`" triggers="hover" placement="top">
+                                            <p v-for="note in invoice.notes">{{ note.notes }}</p>
+                                        </b-popover>
                                     </div>
                                 </td>
                                 <td>

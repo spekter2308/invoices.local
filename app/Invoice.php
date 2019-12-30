@@ -13,7 +13,7 @@ class Invoice extends Model
 
     protected $guarded = [];
 
-    protected $with = ['customer', 'company', 'settings'];
+    protected $with = ['customer', 'company', 'settings', 'notes'];
 
     protected static function boot()
     {
@@ -23,6 +23,11 @@ class Invoice extends Model
             $invoice->settings->delete();
         });
 
+    }
+
+    public function notes()
+    {
+        return $this->hasMany(InvoiceAdditionalNotes::class);
     }
 
     public function items()

@@ -4843,6 +4843,8 @@ module.exports = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -4861,6 +4863,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     invoiceId: {
@@ -4878,7 +4881,22 @@ __webpack_require__.r(__webpack_exports__);
       this.isHidden = true;
     },
     saveNote: function saveNote() {
-      console.log(this.note, this.invoiceId);
+      var _this = this;
+
+      if (this.note.match(/[a-zA-Z0-9]/i)) {
+        var invoiceNote = {
+          invoice_id: this.invoiceId,
+          notes: this.note
+        };
+        axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/notes/save', invoiceNote).then(function (response) {
+          _this.note = '';
+          location.reload();
+        })["catch"](function (error) {
+          return console.log(error);
+        });
+      }
+
+      this.note = '';
       this.isHidden = false;
     }
   }
@@ -6090,6 +6108,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _trevoreyre_autocomplete_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @trevoreyre/autocomplete-vue */ "./node_modules/@trevoreyre/autocomplete-vue/dist/autocomplete.esm.js");
+//
+//
 //
 //
 //
@@ -78869,323 +78889,366 @@ var render = function() {
                               ]),
                               _vm._v(" "),
                               _c("td", { attrs: { scope: "row" } }, [
-                                _c("div", { staticClass: "dropdown" }, [
-                                  _c("button", {
-                                    staticClass:
-                                      "btn-select dropdown-toggle bg-white",
-                                    attrs: {
-                                      type: "button",
-                                      id: "dropdownMenuButton",
-                                      "data-toggle": "dropdown",
-                                      "aria-haspopup": "true",
-                                      "aria-expanded": "false"
-                                    }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    {
-                                      staticClass: "dropdown-menu",
+                                _c(
+                                  "div",
+                                  { staticClass: "dropdown" },
+                                  [
+                                    _c("button", {
+                                      staticClass:
+                                        "btn-select dropdown-toggle bg-white",
                                       attrs: {
-                                        "aria-labelledby": "dropdownMenuButton"
+                                        type: "button",
+                                        id: "dropdownMenuButton",
+                                        "data-toggle": "dropdown",
+                                        "aria-haspopup": "true",
+                                        "aria-expanded": "false"
                                       }
-                                    },
-                                    [
-                                      _c(
-                                        "ul",
-                                        {
-                                          staticClass:
-                                            "action-list list-group list-group-flush"
-                                        },
-                                        [
-                                          _c(
-                                            "li",
-                                            { staticClass: "list-group-item" },
-                                            [
-                                              _c("i", {
-                                                staticClass: "far fa-edit"
-                                              }),
-                                              _c(
-                                                "a",
-                                                {
-                                                  attrs: {
-                                                    href:
-                                                      "/invoices/" +
-                                                      invoice.id +
-                                                      "/edit"
-                                                  }
-                                                },
-                                                [_vm._v("Edit")]
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "li",
-                                            { staticClass: "list-group-item" },
-                                            [
-                                              _c("i", {
-                                                staticClass: "far fa-copy"
-                                              }),
-                                              _c(
-                                                "a",
-                                                {
-                                                  attrs: {
-                                                    href:
-                                                      "/invoices/duplicate/" +
-                                                      invoice.id
-                                                  }
-                                                },
-                                                [_vm._v("Duplicate")]
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "li",
-                                            { staticClass: "list-group-item" },
-                                            [
-                                              _c("i", {
-                                                staticClass:
-                                                  "far fa-paper-plane"
-                                              }),
-                                              _c(
-                                                "a",
-                                                {
-                                                  attrs: {
-                                                    href:
-                                                      "/invoice-mail/create/" +
-                                                      invoice.id
-                                                  }
-                                                },
-                                                [_vm._v("Send")]
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "li",
-                                            { staticClass: "list-group-item" },
-                                            [
-                                              _c("i", {
-                                                staticClass:
-                                                  "far fa-money-bill-alt"
-                                              }),
-                                              _c(
-                                                "a",
-                                                {
-                                                  attrs: {
-                                                    href:
-                                                      "/invoices/record-payment/" +
-                                                      invoice.id
-                                                  }
-                                                },
-                                                [_vm._v("RecordPayment")]
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "li",
-                                            { staticClass: "list-group-item" },
-                                            [
-                                              _c("i", {
-                                                staticClass: "far fa-file-pdf"
-                                              }),
-                                              _c(
-                                                "a",
-                                                {
-                                                  attrs: {
-                                                    href:
-                                                      "/invoices/pdf/" +
-                                                      invoice.id
-                                                  }
-                                                },
-                                                [_vm._v("Download")]
-                                              ),
-                                              _vm._v(" "),
-                                              _c(
-                                                "a",
-                                                {
-                                                  attrs: {
-                                                    target: "_blank",
-                                                    href:
-                                                      "/invoices/pdf/" +
-                                                      invoice.id +
-                                                      "/print"
-                                                  }
-                                                },
-                                                [_vm._v("Print PDF")]
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "li",
-                                            {
-                                              staticClass:
-                                                "list-group-item show-status-list"
-                                            },
-                                            [
-                                              _c("i", {
-                                                staticClass: "fas fa-sync-alt"
-                                              }),
-                                              _vm._m(0, true),
-                                              _vm._v(" "),
-                                              _c(
-                                                "ul",
-                                                {
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "div",
+                                      {
+                                        staticClass: "dropdown-menu",
+                                        attrs: {
+                                          "aria-labelledby":
+                                            "dropdownMenuButton"
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "ul",
+                                          {
+                                            staticClass:
+                                              "action-list list-group list-group-flush"
+                                          },
+                                          [
+                                            _c(
+                                              "li",
+                                              {
+                                                staticClass: "list-group-item"
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass: "far fa-edit"
+                                                }),
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    attrs: {
+                                                      href:
+                                                        "/invoices/" +
+                                                        invoice.id +
+                                                        "/edit"
+                                                    }
+                                                  },
+                                                  [_vm._v("Edit")]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "li",
+                                              {
+                                                staticClass: "list-group-item"
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass: "far fa-copy"
+                                                }),
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    attrs: {
+                                                      href:
+                                                        "/invoices/duplicate/" +
+                                                        invoice.id
+                                                    }
+                                                  },
+                                                  [_vm._v("Duplicate")]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "li",
+                                              {
+                                                staticClass: "list-group-item"
+                                              },
+                                              [
+                                                _c("i", {
                                                   staticClass:
-                                                    "list-status list-group list-group-flush"
-                                                },
-                                                [
-                                                  _c(
-                                                    "li",
-                                                    {
-                                                      staticClass:
-                                                        "list-group-item"
-                                                    },
-                                                    [
-                                                      _c(
-                                                        "a",
-                                                        {
-                                                          attrs: {
-                                                            href:
-                                                              "/invoices/mark-as-paid/" +
-                                                              invoice.id
-                                                          }
-                                                        },
-                                                        [_vm._v("Paid")]
-                                                      )
-                                                    ]
-                                                  ),
-                                                  _vm._v(" "),
-                                                  _c(
-                                                    "li",
-                                                    {
-                                                      staticClass:
-                                                        "list-group-item"
-                                                    },
-                                                    [
-                                                      _c(
-                                                        "a",
-                                                        {
-                                                          attrs: {
-                                                            href:
-                                                              "/invoices/unit-update/status/" +
-                                                              invoice.id +
-                                                              "?status=Draft"
-                                                          }
-                                                        },
-                                                        [_vm._v("Draft")]
-                                                      )
-                                                    ]
-                                                  ),
-                                                  _vm._v(" "),
-                                                  _c(
-                                                    "li",
-                                                    {
-                                                      staticClass:
-                                                        "list-group-item"
-                                                    },
-                                                    [
-                                                      _c(
-                                                        "a",
-                                                        {
-                                                          attrs: {
-                                                            href:
-                                                              "/invoices/unit-update/status/" +
-                                                              invoice.id +
-                                                              "?status=Partial"
-                                                          }
-                                                        },
-                                                        [_vm._v("Partial")]
-                                                      )
-                                                    ]
-                                                  ),
-                                                  _vm._v(" "),
-                                                  _c(
-                                                    "li",
-                                                    {
-                                                      staticClass:
-                                                        "list-group-item"
-                                                    },
-                                                    [
-                                                      _c(
-                                                        "a",
-                                                        {
-                                                          attrs: {
-                                                            href:
-                                                              "/invoices/unit-update/status/" +
-                                                              invoice.id +
-                                                              "?status=Sent"
-                                                          }
-                                                        },
-                                                        [_vm._v("Sent")]
-                                                      )
-                                                    ]
-                                                  )
-                                                ]
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "li",
-                                            { staticClass: "list-group-item" },
-                                            [
-                                              _c("i", {
+                                                    "far fa-paper-plane"
+                                                }),
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    attrs: {
+                                                      href:
+                                                        "/invoice-mail/create/" +
+                                                        invoice.id
+                                                    }
+                                                  },
+                                                  [_vm._v("Send")]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "li",
+                                              {
+                                                staticClass: "list-group-item"
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass:
+                                                    "far fa-money-bill-alt"
+                                                }),
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    attrs: {
+                                                      href:
+                                                        "/invoices/record-payment/" +
+                                                        invoice.id
+                                                    }
+                                                  },
+                                                  [_vm._v("RecordPayment")]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "li",
+                                              {
+                                                staticClass: "list-group-item"
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass: "far fa-file-pdf"
+                                                }),
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    attrs: {
+                                                      href:
+                                                        "/invoices/pdf/" +
+                                                        invoice.id
+                                                    }
+                                                  },
+                                                  [_vm._v("Download")]
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    attrs: {
+                                                      target: "_blank",
+                                                      href:
+                                                        "/invoices/pdf/" +
+                                                        invoice.id +
+                                                        "/print"
+                                                    }
+                                                  },
+                                                  [_vm._v("Print PDF")]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "li",
+                                              {
                                                 staticClass:
-                                                  "far fa-file-archive"
-                                              }),
-                                              _c(
-                                                "a",
-                                                {
-                                                  attrs: {
-                                                    href:
-                                                      "/invoices/unit-update/status/" +
-                                                      invoice.id +
-                                                      "?status=Archive"
-                                                  }
-                                                },
-                                                [_vm._v("Archive")]
-                                              )
-                                            ]
-                                          ),
-                                          _vm._v(" "),
-                                          _c(
-                                            "li",
-                                            { staticClass: "list-group-item" },
-                                            [
-                                              _c("i", {
-                                                staticClass: "far fa-trash-alt"
-                                              }),
-                                              _c(
-                                                "a",
-                                                {
-                                                  attrs: {
-                                                    href:
-                                                      "/invoices/destroy/" +
-                                                      invoice.id
-                                                  }
-                                                },
-                                                [_vm._v("Delete")]
-                                              )
-                                            ]
-                                          )
-                                        ]
-                                      )
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "a",
-                                    {
-                                      attrs: { href: "/invoices/" + invoice.id }
-                                    },
-                                    [_vm._v(_vm._s(invoice.number))]
-                                  )
-                                ])
+                                                  "list-group-item show-status-list"
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass: "fas fa-sync-alt"
+                                                }),
+                                                _vm._m(0, true),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "ul",
+                                                  {
+                                                    staticClass:
+                                                      "list-status list-group list-group-flush"
+                                                  },
+                                                  [
+                                                    _c(
+                                                      "li",
+                                                      {
+                                                        staticClass:
+                                                          "list-group-item"
+                                                      },
+                                                      [
+                                                        _c(
+                                                          "a",
+                                                          {
+                                                            attrs: {
+                                                              href:
+                                                                "/invoices/mark-as-paid/" +
+                                                                invoice.id
+                                                            }
+                                                          },
+                                                          [_vm._v("Paid")]
+                                                        )
+                                                      ]
+                                                    ),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "li",
+                                                      {
+                                                        staticClass:
+                                                          "list-group-item"
+                                                      },
+                                                      [
+                                                        _c(
+                                                          "a",
+                                                          {
+                                                            attrs: {
+                                                              href:
+                                                                "/invoices/unit-update/status/" +
+                                                                invoice.id +
+                                                                "?status=Draft"
+                                                            }
+                                                          },
+                                                          [_vm._v("Draft")]
+                                                        )
+                                                      ]
+                                                    ),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "li",
+                                                      {
+                                                        staticClass:
+                                                          "list-group-item"
+                                                      },
+                                                      [
+                                                        _c(
+                                                          "a",
+                                                          {
+                                                            attrs: {
+                                                              href:
+                                                                "/invoices/unit-update/status/" +
+                                                                invoice.id +
+                                                                "?status=Partial"
+                                                            }
+                                                          },
+                                                          [_vm._v("Partial")]
+                                                        )
+                                                      ]
+                                                    ),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "li",
+                                                      {
+                                                        staticClass:
+                                                          "list-group-item"
+                                                      },
+                                                      [
+                                                        _c(
+                                                          "a",
+                                                          {
+                                                            attrs: {
+                                                              href:
+                                                                "/invoices/unit-update/status/" +
+                                                                invoice.id +
+                                                                "?status=Sent"
+                                                            }
+                                                          },
+                                                          [_vm._v("Sent")]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "li",
+                                              {
+                                                staticClass: "list-group-item"
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass:
+                                                    "far fa-file-archive"
+                                                }),
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    attrs: {
+                                                      href:
+                                                        "/invoices/unit-update/status/" +
+                                                        invoice.id +
+                                                        "?status=Archive"
+                                                    }
+                                                  },
+                                                  [_vm._v("Archive")]
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "li",
+                                              {
+                                                staticClass: "list-group-item"
+                                              },
+                                              [
+                                                _c("i", {
+                                                  staticClass:
+                                                    "far fa-trash-alt"
+                                                }),
+                                                _c(
+                                                  "a",
+                                                  {
+                                                    attrs: {
+                                                      href:
+                                                        "/invoices/destroy/" +
+                                                        invoice.id
+                                                    }
+                                                  },
+                                                  [_vm._v("Delete")]
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "a",
+                                      {
+                                        attrs: {
+                                          href: "/invoices/" + invoice.id,
+                                          id: "popover-1-" + invoice.id
+                                        }
+                                      },
+                                      [_vm._v(_vm._s(invoice.number))]
+                                    ),
+                                    _vm._v(" "),
+                                    invoice.notes.length
+                                      ? _c(
+                                          "b-popover",
+                                          {
+                                            attrs: {
+                                              target: "popover-1-" + invoice.id,
+                                              triggers: "hover",
+                                              placement: "top"
+                                            }
+                                          },
+                                          _vm._l(invoice.notes, function(note) {
+                                            return _c("p", [
+                                              _vm._v(_vm._s(note.notes))
+                                            ])
+                                          }),
+                                          0
+                                        )
+                                      : _vm._e()
+                                  ],
+                                  1
+                                )
                               ]),
                               _vm._v(" "),
                               _c("td", [
@@ -107965,8 +108028,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Alex.Pla\OSPanel\domains\invoices.local\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
