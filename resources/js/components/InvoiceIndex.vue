@@ -72,7 +72,6 @@
                                   placeholder="Search"
                                   aria-label="Search"
                                   auto-select
-
                                   @submit="searchSubmit"
                     ></autocomplete>
                 </div>
@@ -138,7 +137,10 @@
                                                 <li class="list-group-item"><i class="far fa-trash-alt"></i><a :href="'/invoices/destroy/' + invoice.id">Delete</a></li>
                                             </ul>
                                         </div>
-                                        <a :href="'/invoices/' + invoice.id">{{ invoice.number }}</a>
+                                        <a :href="'/invoices/' + invoice.id" :id="`popover-1-${invoice.id}`">{{ invoice.number }}</a>
+                                        <b-popover v-if="invoice.notes.length" :target="`popover-1-${invoice.id}`" triggers="hover" placement="top">
+                                            <p v-for="note in invoice.notes">{{ note.notes }}</p>
+                                        </b-popover>
                                     </div>
                                 </td>
                                 <td>
@@ -273,6 +275,12 @@
             if(to.query.page) {
                 this.filters.page = to.query.page;
             }
+            if (to.query.per_page) {
+                this.filters.per_page = to.query.per_page;
+            }
+            if (to.query.result) {
+                this.filters.result = to.query.result;
+            }
             if (to.query.byuser) {
                 this.filters.byuser = to.query.byuser;
             }
@@ -306,6 +314,12 @@
         },
         mounted() {
             var page = this.getParameterByName('page');
+            if (this.getParameterByName('per_page')) {
+                this.filters.per_page = this.getParameterByName('per_page');
+            }
+            if (this.getParameterByName('result')) {
+                this.filters.result = this.getParameterByName('result');
+            }
             if (this.getParameterByName('byuser')) {
                 this.filters.byuser = this.getParameterByName('byuser');
             }
@@ -376,14 +390,12 @@
                 })
             },
             searchSubmit(result) {
-                axios.get('/api/invoices?result=' + result + '&status=All&page=1')
-                    .then(response => {
-                        //this.$router.push({ path: 'invoices', query: { page: page} })
-                        this.filters = response.data.filters;
-                        this.invoices = response.data.invoices;
-                        this.finance = response.data.finance;
-                        this.spinnerVisible = false
-                    }).catch(error => {throw error});
+                var page = 1;
+                this.filters.result = result;
+                delete this.filters.byuser;
+                delete this.filters.bycompany;
+
+                this.getResults(page);
             },
             getItemsPerPage(variable) {
                 this.itemsPerPage = variable.perPage;

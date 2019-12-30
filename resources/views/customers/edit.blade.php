@@ -89,6 +89,15 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label for="address" class="font-weight-bold">Notes</label>
+                                        <textarea type="text" name="notes"
+                                                  class="form-control {{ $errors->has ('notes') ? 'error' : '' }}"
+                                                  rows="6" placeholder="Customer notes...">
+                                            {{ old('notes') ?? $customer->notes }}
+                                        </textarea>
+                                    </div>
                                 
                                 </div>
                             </div>

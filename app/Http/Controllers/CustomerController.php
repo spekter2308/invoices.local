@@ -39,6 +39,7 @@ class CustomerController extends Controller
 
     public function store(Customer $customer)
     {
+        dd($this->validateRequest());
         $customer->create($this->validateRequest());
 
         return redirect('/customers/create')->with(['success' => 'Customer has been created']);
@@ -122,7 +123,8 @@ class CustomerController extends Controller
             'phone' => 'nullable|numeric',
             'first_name' => 'nullable|min:3|max:30',
             'last_name' => 'nullable|min:3|max:30',
-            'additional_phone' => 'nullable|numeric'
+            'additional_phone' => 'nullable|numeric',
+            'notes' => 'nullable'
         ]);
     }
 

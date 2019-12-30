@@ -96,16 +96,9 @@ class InvoiceController extends Controller
     {
         $getFilters = [];
 
-        if ($request->input('result')) {
-            $searchResult = $this->getSearch($request->input('result'));
-
-            foreach ($searchResult as $type_id => $ids) {
-                $invoices = Invoice::whereIn($type_id, explode(',',$ids));
-            }
-        } else {
-
             if ($request->query->count()) {
-                $invoices = $this->getInvoices($filters);
+
+                $invoices = $this->getInvoices($filters, $request);
 
                 foreach ($request->query as $key => $filter) {
                     $getFilters[$key] = $filter;
@@ -122,7 +115,7 @@ class InvoiceController extends Controller
                 $invoices = $invoices->where('invoice_date', '>=', $from)->where('invoice_date', '<=', $to);
             }
 
-        }
+
 
         $invoices_usd = $invoices->get()->where('settings.currency', '=', '$');
         $invoices_euro = $invoices->get()->where('settings.currency', '=', '€');
@@ -775,7 +768,7 @@ class InvoiceController extends Controller
         ]);
 
         $invoice->update([
-            'status' => 'Partial',
+            'status' => 'Draft',
             'balance' => $old_balance + $last_payment->amount,
             'amount_paid' => $invoice->amount_paid - $last_payment->amount,
         ]);
@@ -789,9 +782,16 @@ class InvoiceController extends Controller
         return redirect()->back();
     }
 
-    protected function getInvoices($filters)
+    protected function getInvoices($filters, $request)
     {
-        $invoices = Invoice::filter($filters);
+        if ($request->input('result')) {
+            $searchResult = $this->getSearch($request->input('result'));
+            foreach ($searchResult as $type_id => $ids) {
+                $invoices = Invoice::whereIn($type_id, explode(',',$ids))->filter($filters);
+            }
+        } else {
+            $invoices = Invoice::filter($filters);
+        }
 
         return $invoices;
     }

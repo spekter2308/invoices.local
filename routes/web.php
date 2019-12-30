@@ -44,6 +44,8 @@ Route::get('invoices/unit-update/status/{id}', 'InvoiceController@unitChangeInvo
 //Show invoice for customer
 Route::get('invoice/invoice-show', 'InvoiceController@showForCustomer');
 
+//Invoice notes part
+Route::post('notes/save', 'InvoiceAdditionalNotesController@saveNote');
 
 //Invoice items part
 Route::get('items/select-items', 'InvoiceItemController@selectItems');
