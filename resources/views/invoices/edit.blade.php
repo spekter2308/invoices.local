@@ -40,6 +40,9 @@
                                 <a href="/invoices/mark-as-unpaid/{{$invoice->id}}" class="btn btn-secondary">Mark as Unpaid</a>
                             @endif
                     <a href="/invoices/duplicate/{{ $invoice->id }}" class="btn btn-secondary">Duplicate</a>
+                    <invoices-notes
+                        :invoice-id="{{ $invoice->id }}"
+                    ></invoices-notes>
                @else
                     <button class="btn btn-outline-secondary" disabled>View</button>
                     <button class="btn btn-outline-secondary" disabled>Print</button>
@@ -48,9 +51,6 @@
                     <button class="btn btn-outline-secondary" disabled>Mark as Paid</button>
                     <button class="btn btn-outline-secondary" disabled>Duplicate</button>
                @endif
-                    <invoice-notes
-                        :invoice-id="{{ $invoice->id }}"
-                    ></invoice-notes>
                     </div>
                     <button form="createInvoice" class="btn btn-primary send-btn" type="submit">Save</button>
                 </div>

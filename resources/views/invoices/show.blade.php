@@ -33,9 +33,9 @@
                             @endif
                             <a href="{{route('record-payment', ['invoice' => $invoice->id])}}" class="btn btn-secondary">Record Payment</a>
                             <a href="/invoices/duplicate/{{ $invoice->id }}" class="btn btn-secondary">Duplicate</a>
-                            <invoice-notes
+                            <invoices-notes
                                     :invoice-id="{{ $invoice->id }}"
-                            ></invoice-notes>
+                            ></invoices-notes>
                         </div>
                     </div>
                @else
