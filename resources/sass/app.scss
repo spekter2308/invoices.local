@@ -1,0 +1,34 @@
+
+// Fonts
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+
+// Variables
+@import 'variables';
+
+// Bootstrap
+@import '~bootstrap/scss/bootstrap';
+@import '~bootstrap-vue/dist/bootstrap-vue.min.css';
+
+//Settings
+@import "settings";
+
+// Invoice create '/invoices/create
+@import "invoice_create";
+
+//Inputs
+@import "inputs";
+@import "buttons";
+
+// Customer all styles
+@import "customer";
+
+// Invoice index '/invoices
+@import "~@fortawesome/fontawesome-free/css/all.css";
+@import "invoice_action";
+
+//Invoice images part
+@import "invoice_logo";
+@import "paid";
+
+//style for search
+@import '~@trevoreyre/autocomplete-vue/dist/style.css';
