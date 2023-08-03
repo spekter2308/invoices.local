@@ -13,8 +13,8 @@ class AddActiveColumnToCompanyTable extends Migration
      */
     public function up()
     {
-        Schema::table('company', function (Blueprint $table) {
-            //
+        Schema::table('companies', function (Blueprint $table) {
+            $table->boolean("active")->default(1)->after("name")->nullable();
         });
     }
 
@@ -25,8 +25,8 @@ class AddActiveColumnToCompanyTable extends Migration
      */
     public function down()
     {
-        Schema::table('company', function (Blueprint $table) {
-            //
+        Schema::table('companies', function (Blueprint $table) {
+            $table->dropColumn("active");
         });
     }
 }

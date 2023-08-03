@@ -47,6 +47,20 @@ class CompanyController extends Controller
         ]);
     }
 
+    public function statusUpdate($id) {
+        $company = $this->company->find($id);
+        if(\Gate::denies('update', $company)){
+            return redirect()
+                ->back()
+                ->with(['flash' => 'Access denied. You cann\'t update company.']);
+        }
+
+        $company->active = !$company->active;
+        $company->save();
+
+        return redirect(route('company-list'))->with(['success' => 'Company status has been updated']);
+    }
+
     public function update($id)
     {
         $company = $this->company->find($id);

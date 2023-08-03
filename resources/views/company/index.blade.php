@@ -21,6 +21,7 @@
                     <table class="table">
                         <thead class="bg-primary text-white">
                         <tr>
+                            <th scope="col">Status</th>
                             <th scope="col">Company</th>
                             <th scope="col" style="white-space: nowrap">Short name</th>
                             <th scope="col">Address</th>
@@ -32,6 +33,9 @@
                         <tbody>
                         @foreach ($company as $item)
                             <tr>
+                                <td>
+                                    <a href="{{route('status-update', ['id' => $item->id])}}" class="btn {{ $item->active ? 'btn-primary' : 'btn-secondary' }}">{{$item->active ? 'Active' : 'Disabled'}}</a>
+                                </td>
                                 <td><a href="{{route('company-update', ['id' => $item->id])}}">{{ $item->name }}</a></td>
                                 <td>{{ $item->short_name }}</td>
                                 <td>{{ $item->address }}</td>

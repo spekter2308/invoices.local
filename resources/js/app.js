@@ -42,7 +42,7 @@ Vue.component('invoices-notes', require('./components/AdditionalInvoiceNotes.vue
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs. 
+ * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
 
@@ -81,7 +81,9 @@ const messages = {
             subtotal: 'Subtotal',
             total: 'Total',
             amount_paid: 'Amount Paid',
-            balance_due: 'Balance Due'
+            balance_due: 'Balance Due',
+            overpayment: 'Overpayment',
+            underpayment: 'Underpayment',
         }
     },
     gr: {
@@ -102,7 +104,9 @@ const messages = {
             subtotal: 'Zwischensumme',
             total: 'Summe',
             amount_paid: 'Betrag gezahlt',
-            balance_due: 'Fälliger Betrag'
+            balance_due: 'Fälliger Betrag',
+            overpayment: 'Überbezahlung',
+            underpayment: 'Unterbezahlung',
         }
     },
     sp: {
@@ -123,7 +127,9 @@ const messages = {
             subtotal: 'Subtotal',
             total: 'Total',
             amount_paid: 'Monto Pagado',
-            balance_due: 'Factura Total'
+            balance_due: 'Factura Total',
+            overpayment: 'Pago en excesov',
+            underpayment: 'Pago insuficiente',
         }
     }
 }
