@@ -175,6 +175,11 @@
                                 <h6 class="flex" >{{ $t("message.amount_paid")}}</h6>
                                 <span>{{  invoice.amount_paid + ' ' + invoice.settings.currency}}</span>
                             </div>
+                            <div class="border-top pb-2" v-if="overpayment != 0"></div>
+                            <div class="level" v-if="overpayment != 0">
+                                <h5 class="flex">{{ overpayment < 0 ? $t("message.overpayment") : $t("message.underpayment") }}</h5>
+                                <span>{{overpayment + ' ' + invoice.settings.currency}}</span>
+                            </div>
                             <div class="border-top pb-2"></div>
                             <div class="level">
                                 <h6 class="flex" >{{ $t("message.balance_due")}}</h6>
@@ -232,6 +237,12 @@
             }
         },
         computed: {
+            overpayment() {
+                if (!this.invoice?.overpayment) {
+                    return 0;
+                }
+                return parseFloat((this.invoice.overpayment).toFixed(2));
+            },
             replaceCompanyAddress() {
                 return this.invoice.company.address.replace(/\n/g, '<br>');
             },
@@ -270,11 +281,7 @@
                 }
             },
             balance() {
-                if (this.settings.show_tax) {
-                    return parseFloat(this.invoice.balance.toFixed(2));
-                } else {
-                    return parseFloat((this.invoice.subtotal - this.invoice.amount_paid).toFixed(2));
-                }
+                return parseFloat(this.invoice.balance.toFixed(2));
             },
 
         },

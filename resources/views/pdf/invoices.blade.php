@@ -54,11 +54,11 @@
         </div>
         <div style="clear: both; margin: 0pt; padding: 0pt;"></div>
     </div>
-    
+
     @if ($invoice->status == 'Paid')
         <div class="paid"></div>
     @endif
-    
+
     <div style="height: 140px;">
         <div align="left" style="float: left; width: 45%;">
             <br> {{ $invoice->customer->name }} <br>
@@ -97,7 +97,7 @@
             @else
                 <th align="right" style="width: 20%;">Amount</th>
             @endif
-            
+
         </tr>
     </table>
     <table style="padding: 10px 6px; width: 100%; border: 1px solid black; border-top: none; font-size: 12px;">
@@ -165,6 +165,20 @@
                                 {{ $invoice->settings->currency . ' ' . $invoice->amount_paid }}
                             </td>
                         </tr>
+                        @if ($invoice->overpayment != 0)
+                            <tr>
+                                <td align="left" style="padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
+                                    @if ($invoice->overpayment > 0)
+                                        Overpayment
+                                    @else
+                                        Underpayment
+                                    @endif
+                                </td>
+                                <td align="right" style="padding: 10px; padding-right: 10px">
+                                    {{ $invoice->settings->currency . ' ' . $invoice->overpayment }}
+                                </td>
+                            </tr>
+                        @endif
                         <tr>
                             <td align="left" style="padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
                                 Balance Due
@@ -200,6 +214,20 @@
                                 {{ $invoice->settings->currency . ' ' . $invoice->amount_paid }}
                             </td>
                         </tr>
+                        @if ($invoice->overpayment != 0)
+                            <tr>
+                                <td align="left" style="padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
+                                    @if ($invoice->overpayment > 0)
+                                        Overpayment
+                                    @else
+                                        Underpayment
+                                    @endif
+                                </td>
+                                <td align="right" style="padding: 10px; padding-right: 10px">
+                                    {{ $invoice->settings->currency . ' ' . $invoice->overpayment }}
+                                </td>
+                            </tr>
+                        @endif
                         <tr>
                             <td align="left" style="padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
                                 Balance Due
@@ -213,7 +241,7 @@
             </td>
         </tr>
     </table>
-    
+
 </div>
 
 </body>

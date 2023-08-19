@@ -236,6 +236,11 @@
                     <h5 class="flex" >{{ $t("message.amount_paid") }}</h5>
                     <span>{{amount_paid + ' ' + currency}}</span>
                 </div>
+                <div class="border-top pb-2" v-if="invoiceOverpayment != 0"></div>
+                <div class="level" v-if="invoiceOverpayment != 0">
+                    <h5 class="flex">{{ invoiceOverpayment < 0 ? $t("message.overpayment") : $t("message.underpayment") }}</h5>
+                    <span>{{invoiceOverpayment + ' ' + currency}}</span>
+                </div>
                 <div class="border-top pb-2"></div>
                 <div class="level">
                     <h5 class="flex" >{{ $t("message.balance_due") }}</h5>
@@ -317,6 +322,7 @@
         },
         data() {
             return {
+                amount_paid: 0,
                 spinnerVisible: false,
                 createdInvoiceId: NaN,
                 isTableInvalid: true,
@@ -421,6 +427,9 @@
                 }
             }
         },
+        created() {
+            this.amount_paid = this.currentInvoice?.amount_paid ?? 0;
+        },
         mounted() {
             this.sendButton = document.querySelector('.send-btn')
         },
@@ -463,6 +472,9 @@
                     if (!this.$v.$error && !this.isTableRowsInvalid) {
                         this.spinnerVisible = true
                         this.invoice.selectedNotes = this.notes;
+                        this.invoice.amountPaid = this.amount_paid;
+                        this.invoice.balance = this.balance;
+                        this.invoice.overpayment = this.overpayment;
                         this.invoice.selectedSettings = [this.defaultSettings];
                         if (this.mode === 'create') {
                             await axios.post('/invoices', this.invoice).then(response => {
@@ -545,18 +557,24 @@
                 return parseFloat(total.toFixed(2));
             },
             balance() {
-                if (this.mode === 'create') {
-                    return this.total;
+                if (this.currentInvoice?.balance) {
+                    return parseFloat((this.currentInvoice.balance).toFixed(2))
                 }
                 return parseFloat((this.total - this.amount_paid).toFixed(2));
             },
-            amount_paid(){
-                if (this.mode === 'create') {
-                    return 0;
+            overpayment() {
+                if (this.amount_paid > 0) {
+                    return parseFloat((this.total - this.amount_paid + this.invoiceOverpayment).toFixed(2));
                 }
-                return (this.invoicePaid === '0') ? 0 : this.invoicePaid;
+                return parseFloat(this.invoiceOverpayment.toFixed(2));
             },
-            invoiceNum(){
+            invoiceOverpayment() {
+                if (this.currentInvoice?.overpayment) {
+                    return parseFloat(this.currentInvoice.overpayment.toFixed(2));
+                }
+                return 0;
+            },
+            invoiceNum() {
                 return this.checkInArray(this.selectedNumber.prefix, this.selectedNumber.start,
                     this.selectedNumber.increment, this.selectedNumber.postfix, this.invoiceNumbers,
                     this.selectedNumber.increment);

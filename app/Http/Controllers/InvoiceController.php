@@ -158,152 +158,177 @@ class InvoiceController extends Controller
                 ->with(['flash' => 'Access denied. You cann\'t create invoice.']);
         }
 
-        if(session()->get('id')) {
-            $id = session()->get('id');
-            $invoice = Invoice::findOrFail($id);
+        try {
+            if(session()->get('id')) {
+                $id = session()->get('id');
+                $invoice = Invoice::findOrFail($id);
 
-            $settings = $invoice->settings;
+                $settings = $invoice->settings;
 
-            $invoiceCustomer = $invoice->customer;
-            $invoiceCompany = $invoice->company;
-            foreach ($invoice->items as $item) {
-                $items = [
-                    'item' => $item->item,
-                    'description' => $item->description,
-                    'quantity' => $item->quantity,
-                    'unitprice' => $item->unitprice,
-                    'itemtax' => $item->itemtax,
-                    'dirty' => $item->dirty,
-                    'correct' => $item->correct
-                ];
-                $invoiceItems[] = $items;
+                $invoiceCustomer = $invoice->customer;
+                $invoiceCompany = $invoice->company;
+                foreach ($invoice->items as $item) {
+                    $items = [
+                        'item' => $item->item,
+                        'description' => $item->description,
+                        'quantity' => $item->quantity,
+                        'unitprice' => $item->unitprice,
+                        'itemtax' => $item->itemtax,
+                        'dirty' => $item->dirty,
+                        'correct' => $item->correct
+                    ];
+                    $invoiceItems[] = $items;
+                }
+
+                $invoice->duplicateDateFrom = Carbon::now();
+                $diffInDays = Carbon::parse($invoice->invoice_date)->diffInDays(Carbon::parse($invoice->due_date));
+                $invoice->duplicateDateTo = Carbon::now()->addDays($diffInDays);
+
+                session()->forget('id');
+            } else {
+                $invoice = '{}';
+                $settings = '{}';
+                $invoiceCustomer = '{}';
+                $invoiceCompany = '{}';
+                $invoiceItems = [['item' => '', 'description' => '', 'quantity' => 1, 'unitprice' => 1, 'itemtax' => 0, 'dirty' =>
+                    false, 'correct' => false]];
             }
 
-            $invoice->duplicateDateFrom = Carbon::now();
-            $diffInDays = Carbon::parse($invoice->invoice_date)->diffInDays(Carbon::parse($invoice->due_date));
-            $invoice->duplicateDateTo = Carbon::now()->addDays($diffInDays);
+            //check for unique invoice number
+            $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
+            $counter = Counter::where(['user_id' => auth()->id()])->first();
+            $prefix = $counter->prefix;
+            $start = $counter->start;
+            $increment = $counter->increment;
+            $postfix = $counter->postfix;
 
-            session()->forget('id');
-        } else {
-            $invoice = '{}';
-            $settings = '{}';
-            $invoiceCustomer = '{}';
-            $invoiceCompany = '{}';
-            $invoiceItems = [['item' => '', 'description' => '', 'quantity' => 1, 'unitprice' => 1, 'itemtax' => 0, 'dirty' =>
-                false, 'correct' => false]];
+            $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
+
+            $customers = Customer::latest()->get();
+            $companies = Company::latest()->get();
+
+            return view('invoices.edit', [
+                'invoice' => $invoice,
+                'invoiceCustomer' => $invoiceCustomer,
+                'invoiceCompany' => $invoiceCompany,
+                'invoiceItems' => $invoiceItems,
+                'invoiceNumber' => $invoiceNumber,
+                'invoiceFormatNumber' => $counter,
+                'invoiceNumbers' => $invoiceNumbers,
+                'customers' => $customers,
+                'companies' => $companies,
+                'mode' => 'create',
+                'settings' => $settings
+            ]);
+        } catch (\Exception $exception) {
+            dd($exception);
         }
-
-        //check for unique invoice number
-        $invoiceNumbers = Invoice::all()->sortBy('number')->pluck('number')->toArray();
-        $counter = Counter::where(['user_id' => auth()->id()])->first();
-        $prefix = $counter->prefix;
-        $start = $counter->start;
-        $increment = $counter->increment;
-        $postfix = $counter->postfix;
-
-        $invoiceNumber = $this->checkInArray($prefix, $start, $increment, $postfix, $invoiceNumbers, $increment);
-
-        $customers = Customer::latest()->get();
-        $companies = Company::latest()->get();
-
-        return view('invoices.edit', [
-            'invoice' => $invoice,
-            'invoiceCustomer' => $invoiceCustomer,
-            'invoiceCompany' => $invoiceCompany,
-            'invoiceItems' => $invoiceItems,
-            'invoiceNumber' => $invoiceNumber,
-            'invoiceFormatNumber' => $counter,
-            'invoiceNumbers' => $invoiceNumbers,
-            'customers' => $customers,
-            'companies' => $companies,
-            'mode' => 'create',
-            'settings' => $settings
-        ]);
     }
 
     public function store(CreateInvoiceRequest $request)
     {
-        $data = $request->input();
+        try {
+            $data = $request->input();
 
-        //check for unique invoice number
-        $data['selectedInvoiceNumber'] = $this->checkInvoiceNumber($data['selectedInvoiceNumber']);
+            //check for unique invoice number
+            $data['selectedInvoiceNumber'] = $this->checkInvoiceNumber($data['selectedInvoiceNumber']);
 
-        $data['selectedDateFrom'] = Carbon::parse($data['selectedDateFrom']);
-        $data['selectedDateTo'] = Carbon::parse($data['selectedDateTo']);
+            $data['selectedDateFrom'] = Carbon::parse($data['selectedDateFrom']);
+            $data['selectedDateTo'] = Carbon::parse($data['selectedDateTo']);
 
-        if (is_array($data['selectedCustomer'])) {
-            $customer = (new Customer())->create([
-                'name' => $data['selectedCustomer']['name'],
-                'address' => $data['selectedCustomer']['address']
+            if (is_array($data['selectedCustomer'])) {
+                $customer = (new Customer())->create([
+                    'name' => $data['selectedCustomer']['name'],
+                    'address' => $data['selectedCustomer']['address']
+                ]);
+                $customerId = $customer->id;
+            } else {
+                $customerId = $data['selectedCustomer'];
+            }
+
+            $subtotal = collect($data['selectedItems'])->sum(function ($item) {
+                return $item['quantity'] * $item['unitprice'];
+            });
+
+            $total = collect($data['selectedItems'])->sum(function ($item) {
+                return $item['quantity'] * $item['unitprice'] + $item['quantity'] * $item['unitprice']*$item['itemtax']/100;
+            });
+
+            $balance = $total;
+            $overpayment = 0;
+            //test amount paid
+            if (isset($data['overpayment'])) {
+                if (isset($data['amountPaid']) && $data['amountPaid'] > 0) {
+                    $balance += $data['overpayment'];
+                }
+                $overpayment = $data['overpayment'] ?? 0;
+            }
+
+            $invoice = Invoice::create([
+                'number' => $data['selectedInvoiceNumber'],
+                'user_id' => auth()->id(),
+                'customer_id' => $customerId,
+                'company_id' => \request('selectedCompany'),
+                'invoice_date' => $data['selectedDateFrom'],
+                'due_date' => $data['selectedDateTo'],
+                'invoice_notes' => $data['selectedNotes'],
+                'amount_paid' => 0,
+                'subtotal' => $subtotal,
+                'total' => $total,
+                'balance' => $balance,
+                'overpayment' => $overpayment,
+                'status' => 'Draft'
             ]);
-            $customerId = $customer->id;
-        } else {
-            $customerId = $data['selectedCustomer'];
-        }
 
-        $subtotal = collect($data['selectedItems'])->sum(function ($item) {
-            return $item['quantity'] * $item['unitprice'];
-        });
+            $invoice = DB::transaction(function () use ($invoice, $request) {
+                $invoice->storeHasMany([
+                    'items' => $request->selectedItems
+                ]);
 
-        $total = collect($data['selectedItems'])->sum(function ($item) {
-            return $item['quantity'] * $item['unitprice'] + $item['quantity'] * $item['unitprice']*$item['itemtax']/100;
-        });
+                return $invoice;
+            });
 
-        $invoice = Invoice::create([
-            'number' => $data['selectedInvoiceNumber'],
-            'user_id' => auth()->id(),
-            'customer_id' => $customerId,
-            'company_id' => \request('selectedCompany'),
-            'invoice_date' => $data['selectedDateFrom'],
-            'due_date' => $data['selectedDateTo'],
-            'invoice_notes' => $data['selectedNotes'],
-            'amount_paid' => 0,
-            'subtotal' => $subtotal,
-            'total' => $total,
-            'balance' => $total,
-            'status' => 'Draft'
-        ]);
+            foreach ($data['selectedSettings'] as $setting) {
+                $settings = InvoiceSettings::create([
+                    'invoice_id' => $invoice->id,
+                    'currency' => $setting['currency'],
+                    'show_payment' => $setting['payment'],
+                    'date_format' => $setting['format'],
+                    'language' => $setting['language'],
+                    'show_tax' => $setting['tax']
+                ]);
+            }
 
-        $invoice = DB::transaction(function () use ($invoice, $request) {
-            $invoice->storeHasMany([
-                'items' => $request->selectedItems
-            ]);
+            $tax = $invoice->total - $invoice->subtotal;
+            $totalWithoutTax = $invoice->total - $tax;
+            if ($invoice->settings->show_tax) {
+                $changes = "Invoice created, amount $invoice->balance with tax ($tax)";
+            } else {
+                if ($invoice->overpayment) {
+                    $invoice->update([
+                        'balance' => $invoice->subtotal + $invoice->overpayment
+                    ]);
+                } else {
+                    $invoice->update([
+                        'balance' => $invoice->subtotal
+                    ]);
+                }
+                $changes = "Invoice created, amount $invoice->balance without tax";
+            }
 
-            return $invoice;
-        });
-
-        foreach ($data['selectedSettings'] as $setting) {
-            $settings = InvoiceSettings::create([
+            InvoiceHistory::create([
                 'invoice_id' => $invoice->id,
-                'currency' => $setting['currency'],
-                'show_payment' => $setting['payment'],
-                'date_format' => $setting['format'],
-                'language' => $setting['language'],
-                'show_tax' => $setting['tax']
+                'user_id' => auth()->id(),
+                'changes' => $changes
             ]);
+
+            return [
+                'invoice' => $invoice,
+                'settings' => $settings
+            ];
+        } catch (\Exception $exception) {
+            dd($exception);
         }
-
-        $tax = $invoice->total - $invoice->subtotal;
-        $totalWithoutTax = $invoice->total - $tax;
-        if ($invoice->settings->show_tax) {
-            $changes = "Invoice created, amount $invoice->balance with tax ($tax)";
-        } else {
-            $invoice->update([
-                'balance' => $invoice->subtotal
-            ]);
-            $changes = "Invoice created, amount $totalWithoutTax without tax";
-        }
-
-        InvoiceHistory::create([
-            'invoice_id' => $invoice->id,
-            'user_id' => auth()->id(),
-            'changes' => $changes
-        ]);
-
-        return [
-            'invoice' => $invoice,
-            'settings' => $settings
-        ];
 
     }
 
@@ -455,9 +480,9 @@ class InvoiceController extends Controller
             }
 
             if ($invoice->settings->show_tax) {
-                $balance = $total - $invoice->amount_paid;
+                $balance = $total - $invoice->amount_paid + ($invoice->overpayment ?? 0);
             } else {
-                $balance = $subtotal - $invoice->amount_paid;
+                $balance = $subtotal - $invoice->amount_paid + ($invoice->overpayment ?? 0);
             }
 
             $invoice->update([
@@ -487,16 +512,18 @@ class InvoiceController extends Controller
             $wasChanged = true;
             if ($invoice->settings->show_tax) {
                 if ($previous_show_tax == $invoice->settings->show_tax) {
-                    if ($old_total == $invoice->total)
+                    if ($old_total == $invoice->total) {
                         $wasChanged = false;
+                    }
                     $changes = "Total changed from $old_total to $invoice->total";
                 } else {
                     $changes = "Total changed from $old_total_without_tax to $invoice->total. Tax was included ($tax)";
                 }
             } else {
                 if ($previous_show_tax == $invoice->settings->show_tax) {
-                    if ($old_total_without_tax == $totalWithoutTax)
+                    if ($old_total_without_tax == $totalWithoutTax) {
                         $wasChanged = false;
+                    }
                     $changes = "Total changed from $old_total_without_tax to $totalWithoutTax";
                 } else {
                     $wasChanged = true;
@@ -677,6 +704,8 @@ class InvoiceController extends Controller
 
         $old_paid = $invoice->amount_paid;
         $old_balance = $invoice->balance;
+        $balance = $old_balance - $paymentData->amount;
+        $amaunt_paid = $paymentData->amount + $old_paid;
 
         if ($invoice->balance <= $paymentData->amount) {
             $status = 'Paid';
@@ -686,8 +715,8 @@ class InvoiceController extends Controller
 
         $invoice->update([
             'status' => $status,
-            'balance' => $old_balance - $paymentData->amount ,
-            'amount_paid' => $paymentData->amount + $old_paid,
+            'balance' => $balance,
+            'amount_paid' => $amaunt_paid,
         ]);
 
         InvoiceHistory::create([
@@ -718,10 +747,11 @@ class InvoiceController extends Controller
                 ->with(['flash' => 'Access denied. You cann\'t change statuses.']);
         }
 
+        $overpaid = $invoice->overpayment ?? 0;
         if ($invoice->settings->show_tax) {
-            $amount_payment = $invoice->total - $invoice->amount_paid;
+            $amount_payment = $invoice->total - $invoice->amount_paid + $overpaid;
         } else {
-            $amount_payment = $invoice->subtotal - $invoice->amount_paid;
+            $amount_payment = $invoice->subtotal - $invoice->amount_paid + $overpaid;
         }
 
         $paymentData = PaymentInvoice::create([
@@ -731,6 +761,7 @@ class InvoiceController extends Controller
             'receiving_account' => 'cash',
             'notes' => 'Marked as paid',
         ]);
+
 
         $old_paid = $invoice->amount_paid;
         $old_balance = $invoice->balance;
@@ -870,7 +901,7 @@ class InvoiceController extends Controller
         $invoice = Invoice::findOrFail($invoice);
 
         $tax = $invoice->total - $invoice->subtotal;
-        $balance = $invoice->subtotal - $invoice->amount_paid;
+        $balance = $invoice->balance;
 
         try {
             if ($print) {
