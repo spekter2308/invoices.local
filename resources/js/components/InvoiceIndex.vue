@@ -509,4 +509,8 @@
  .click:hover {
      cursor: pointer;
  }
+
+ .table tbody tr:first-child td {
+     border-top: none;
+ }
 </style>

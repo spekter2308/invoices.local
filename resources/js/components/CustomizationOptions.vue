@@ -26,7 +26,7 @@
                     <div class="date_language">
                         <label>Date Format</label>
                         <select v-model="settings.format">
-                            <option value="dd.MM.yyyy">DD.MM.YYYY</option>
+                            <option value="dd.MM.yyyy">DD.MM.YYYY</option>а
                             <option value="dd/MM/yyyy">DD/MM/YYYY</option>
                             <option value="MM/dd/yyyy">MM/DD/YYYY</option>
                             <option value="dd-MM-yyyy">DD-MM-YYYY</option>
@@ -119,5 +119,5 @@
         margin: 0;
         padding: 0;
     }
-    
+
 </style>

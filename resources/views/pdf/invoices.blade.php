@@ -169,9 +169,9 @@
                             <tr>
                                 <td align="left" style="padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
                                     @if ($invoice->overpayment > 0)
-                                        Overpayment
-                                    @else
                                         Underpayment
+                                    @else
+                                        Overpayment
                                     @endif
                                 </td>
                                 <td align="right" style="padding: 10px; padding-right: 10px">
@@ -218,9 +218,9 @@
                             <tr>
                                 <td align="left" style="padding: 10px; padding-left: 20px; font-weight: bold; white-space: nowrap;">
                                     @if ($invoice->overpayment > 0)
-                                        Overpayment
-                                    @else
                                         Underpayment
+                                    @else
+                                        Overpayment
                                     @endif
                                 </td>
                                 <td align="right" style="padding: 10px; padding-right: 10px">

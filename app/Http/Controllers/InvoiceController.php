@@ -236,6 +236,8 @@ class InvoiceController extends Controller
             $data['selectedDateFrom'] = Carbon::parse($data['selectedDateFrom']);
             $data['selectedDateTo'] = Carbon::parse($data['selectedDateTo']);
 
+            $withTax = $data['selectedSettings'][0]['tax'] ?? false;
+
             if (is_array($data['selectedCustomer'])) {
                 $customer = (new Customer())->create([
                     'name' => $data['selectedCustomer']['name'],
@@ -254,14 +256,23 @@ class InvoiceController extends Controller
                 return $item['quantity'] * $item['unitprice'] + $item['quantity'] * $item['unitprice']*$item['itemtax']/100;
             });
 
-            $balance = $total;
+            $balance = 0;
             $overpayment = 0;
+
+            if ($withTax) {
+                $balance = $total;
+            } else {
+                $balance = $subtotal;
+            }
+
             //test amount paid
             if (isset($data['overpayment'])) {
                 if (isset($data['amountPaid']) && $data['amountPaid'] > 0) {
                     $balance += $data['overpayment'];
+                    $overpayment = $data['overpayment'];
+                } else {
+                    $overpayment = 0;
                 }
-                $overpayment = $data['overpayment'] ?? 0;
             }
 
             $invoice = Invoice::create([
@@ -300,18 +311,17 @@ class InvoiceController extends Controller
             }
 
             $tax = $invoice->total - $invoice->subtotal;
-            $totalWithoutTax = $invoice->total - $tax;
             if ($invoice->settings->show_tax) {
                 $changes = "Invoice created, amount $invoice->balance with tax ($tax)";
             } else {
                 if ($invoice->overpayment) {
-                    $invoice->update([
+                    /*$invoice->update([
                         'balance' => $invoice->subtotal + $invoice->overpayment
-                    ]);
+                    ]);*/
                 } else {
-                    $invoice->update([
+                    /*$invoice->update([
                         'balance' => $invoice->subtotal
-                    ]);
+                    ]);*/
                 }
                 $changes = "Invoice created, amount $invoice->balance without tax";
             }

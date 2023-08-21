@@ -563,8 +563,9 @@
                 return parseFloat((this.total - this.amount_paid).toFixed(2));
             },
             overpayment() {
+                const total = this.defaultSettings.tax ? this.currentInvoice.total : this.currentInvoice.subtotal
                 if (this.amount_paid > 0) {
-                    return parseFloat((this.total - this.amount_paid + this.invoiceOverpayment).toFixed(2));
+                    return parseFloat((total - this.amount_paid + this.invoiceOverpayment).toFixed(2));
                 }
                 return parseFloat(this.invoiceOverpayment.toFixed(2));
             },
