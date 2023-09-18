@@ -30,7 +30,7 @@ class CreateInvoiceRequest extends FormRequest
             'selectedDateTo' => 'required|date',
             'selectedInvoiceNumber' => 'required|string',
             'selectedItems' => 'required|array|min:1',
-            'selectedNotes' => 'required|string|min:5',
+            'selectedNotes' => '',
             'selectedItems.*.item' => 'nullable',
             'selectedItems.*.description' => 'nullable',
             'selectedItems.*.quantity' => 'required|numeric|min:0.01',

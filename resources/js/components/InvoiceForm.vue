@@ -208,12 +208,6 @@
                                 v-model="notes"
                 >
                 </invoice-notes>
-                <template v-if="$v.notes.$error">
-                    <small class="error-control" v-if="!$v.notes.required"
-                    >Please type name</small>
-                    <small class="error-control" v-if="!$v.notes.minLength"
-                    >This field should have minimum 5 symbols</small>
-                </template>
             </div>
 
             <div class="invoice-box invoice-total-box">
@@ -357,8 +351,7 @@
                 }
             },
             notes: {
-                required,
-                minLength: minLength(5)
+
             },
             invoice: {
                 selectedCompany: {
@@ -481,7 +474,7 @@
                                 this.createdInvoiceId = response.data.invoice.id
                                 this.spinnerVisible = false
                             });
-                            location.href = '/invoices/' + this.createdInvoiceId;
+                            //location.href = '/invoices/' + this.createdInvoiceId;
                         }
                         else if(this.mode === 'edit') {
                             await axios.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(response => {
@@ -489,7 +482,7 @@
                                 this.spinnerVisible = false
                             });
                         }
-                        location.href = '/invoices/' + this.createdInvoiceId;
+                        //location.href = '/invoices/' + this.createdInvoiceId;
                     }
                 } catch(e) {
                     this.spinnerVisible = false

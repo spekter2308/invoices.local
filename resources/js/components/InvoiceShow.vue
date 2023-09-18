@@ -254,6 +254,7 @@
                 }
             },
             getNotes() {
+                if (!this.invoice?.invoice_notes) return '';
                 return this.invoice.invoice_notes.replace(/\n/g, '<br>');
             },
             getLocale() {
