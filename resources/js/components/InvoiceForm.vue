@@ -474,7 +474,7 @@
                                 this.createdInvoiceId = response.data.invoice.id
                                 this.spinnerVisible = false
                             });
-                            //location.href = '/invoices/' + this.createdInvoiceId;
+                            location.href = '/invoices/' + this.createdInvoiceId;
                         }
                         else if(this.mode === 'edit') {
                             await axios.patch('/invoices/' + this.currentInvoice.id, this.invoice).then(response => {
@@ -482,7 +482,7 @@
                                 this.spinnerVisible = false
                             });
                         }
-                        //location.href = '/invoices/' + this.createdInvoiceId;
+                        location.href = '/invoices/' + this.createdInvoiceId;
                     }
                 } catch(e) {
                     this.spinnerVisible = false

@@ -152,7 +152,7 @@
                                         <span v-else>{{ invoice.company.name}}</span>
                                     </a>
                                 </td>
-                                <td>{{ $moment(invoice.invoice_date).format("DD-MM-YYYY") }}</td>
+                                <td style="white-space: nowrap;">{{ $moment(invoice.invoice_date).format("DD-MM-YYYY") }}</td>
                                 <td v-if="invoice.status != 'Paid'">
                                     <span v-if="$moment.utc(invoice.due_date).diff($moment.utc(), 'days') >= 0" style="color: green">
                                         {{ Math.round(Math.abs($moment.utc(invoice.due_date).diff($moment.utc(), 'hours') / 24)) }}
