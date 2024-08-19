@@ -13,7 +13,7 @@
                 <ul class="navbar-nav mr-auto">
                     <div class="container">
                         <a class="navbar-brand" href="/invoices">
-                            <img src="/img/logo2.svg" alt="softgroup" style="width: 200px; height: 50px;">
+                            <img src="/img/logo.png" alt="softgroup" style="width: 140px; height: 60px; object-fit: contain">
                         </a>
                         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                             <span class="navbar-toggler-icon"></span>

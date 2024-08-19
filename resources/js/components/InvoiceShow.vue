@@ -146,8 +146,8 @@
                             </div>
                         </div>
                         <div class="invoice-table-row-notes">
-                            <div class="form-group">
-                                <span style="text-decoration: underline">NOTES</span>:
+                            <div class="form-group" style="display: flex; flex-direction: column; gap: 4px;">
+                                <span style="text-decoration: underline">NOTES:</span>
                                 <span v-html="getNotes"></span>
                             </div>
                         </div>
