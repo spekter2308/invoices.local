@@ -134,8 +134,8 @@
             </tr>
         @endif
             <tr>
-                <td colspan="{{ $invoice->settings->show_tax ? '6' : '5' }}" style="padding: 40px 5px 15px;">
-                    <span style="text-decoration: underline">NOTES</span>: {!! nl2br(str_replace(" ", " &nbsp;", $invoice->invoice_notes))  !!}
+                <td colspan="{{ $invoice->settings->show_tax ? '6' : '5' }}" style="padding: 40px 5px 15px; display: flex; flex-direction: column; gap: 10px;">
+                    <span style="text-decoration: underline">NOTES</span>: <br><span>{!! nl2br(str_replace(" ", " &nbsp;", $invoice->invoice_notes))  !!}</span>
                 </td>
             </tr>
     </table>
