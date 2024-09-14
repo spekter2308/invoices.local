@@ -15,7 +15,7 @@
         .logo {
             background-image: url('/upload/company/{{$invoice->company->logo_img}}');
             float: right;
-            height: 80px; width: 300px;
+            height: 80px; width: 80px;
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
