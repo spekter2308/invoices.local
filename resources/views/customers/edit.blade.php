@@ -11,12 +11,12 @@
     @else
         <form method="POST" action="/customers">
     @endif
-                    
+
                 @csrf
                 <div class="container">
                     <div class="row">
                     	<div class="col-md-7">
-                    		
+
                             <ul class="nav nav-tabs">
                                 <li class="nav-item">
                                     <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home"
@@ -24,13 +24,13 @@
                                 </li>
                             </ul>
                             <br>
-                            
+
                             @include('errors')
                             @include('success')
-                            
+
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-                                    
+
                                     <div class="form-group">
                                         <label for="name" class="font-weight-bold">Customer Name</label>
                                         <input type="text" name="name"
@@ -38,7 +38,7 @@
                                                placeholder="Customer name..."
                                                value="{{ old('name') ?? $customer->name }}">
                                     </div>
-    
+
                                     <div class="form-group">
                                         <label for="address" class="font-weight-bold">Address</label>
                                         <textarea type="text" name="address"
@@ -47,7 +47,7 @@
                                             {{ old('address') ?? $customer->address }}
                                         </textarea>
                                     </div>
-    
+
                                     <div class="form-group">
                                         <label for="name" class="font-weight-bold">Contacts</label>
                                         <input type="email" name="email"
@@ -55,24 +55,24 @@
                                                placeholder="E-mail address..."
                                                value="{{ old('email') ?? $customer->email }}">
                                     </div>
-    
+
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <input type="text" name="firstname"
-                                                       class="form-control {{ $errors->has ('firstname') ? 'error' : '' }}"
+                                                <input type="text" name="first_name"
+                                                       class="form-control {{ $errors->has ('first_name') ? 'error' : '' }}"
                                                        placeholder="First name"
-                                                       value="{{ old('firstname') ?? $customer->firstname }}">
+                                                       value="{{ old('first_name') ?? $customer->first_name }}">
                                             </div>
                                             <div class="col-md-6">
-                                                <input type="text" name="lastname"
-                                                       class="form-control {{ $errors->has ('lastname') ? 'error' : '' }}"
+                                                <input type="text" name="last_name"
+                                                       class="form-control {{ $errors->has ('last_name') ? 'error' : '' }}"
                                                        placeholder="Last name"
-                                                       value="{{ old('lastname') ?? $customer->lastname }}">
+                                                       value="{{ old('last_name') ?? $customer->last_name }}">
                                             </div>
                                         </div>
                                     </div>
-    
+
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-md-6">
@@ -98,12 +98,12 @@
                                             {{ old('notes') ?? $customer->notes }}
                                         </textarea>
                                     </div>
-                                
+
                                 </div>
                             </div>
-    
+
                         </div>
-           
+
 
                         <div class="col text-center" style="margin-top: 100px;">
                         <br>
@@ -111,13 +111,13 @@
                             <br>
 
                         @if($customer->exists)
-        
+
                                 <div class="form-group" style="margin: 10px auto; width: 60%;">
                                     <label for="name" class="font-weight-bold">Created at</label>
                                     <input type="text" name="created_at" class="form-control text-center"
                                            value="{{ $customer->created_at }}">
                                 </div>
-        
+
                                 <div class="form-group" style="margin: 10px auto; width: 60%;">
                                     <label for="name" class="font-weight-bold">Updated at</label>
                                     <input type="text" name="udpated_at" class="form-control text-center"
@@ -129,7 +129,7 @@
                 </div>
             </div>
                 </div>
-                   
+
             </form>
 
             <form method="POST" id="deleteCustomer" action="/customers/{{ $customer->id }}">
