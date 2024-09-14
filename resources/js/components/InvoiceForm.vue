@@ -536,35 +536,35 @@
             withTax() {
                     let tax = this.invoice.selectedItems.reduce((acc, curr) =>
                     acc+(curr.unitprice*curr.quantity*curr.itemtax/100), 0);
-                    return parseFloat(tax.toFixed(2));
+                    return parseFloat(tax).toFixed(2);
             },
             subtotal() {
                 let subtotal = this.invoice.selectedItems.reduce((acc, curr) => acc+curr.unitprice*curr.quantity, 0);
-                return parseFloat(subtotal.toFixed(2));
+                return parseFloat(subtotal).toFixed(2);
             },
             total() {
                 let total = (this.defaultSettings.tax) ?
                     this.invoice.selectedItems.reduce((acc, curr) =>
                     acc+(curr.unitprice*curr.quantity + curr.unitprice*curr.quantity*curr.itemtax/100), 0) :
                     this.subtotal;
-                return parseFloat(total.toFixed(2));
+                return parseFloat(total).toFixed(2);
             },
             balance() {
                 if (this.currentInvoice?.balance) {
-                    return parseFloat((this.currentInvoice.balance).toFixed(2))
+                    return parseFloat((this.currentInvoice.balance)).toFixed(2)
                 }
-                return parseFloat((this.total - this.amount_paid).toFixed(2));
+                return parseFloat((this.total - this.amount_paid)).toFixed(2);
             },
             overpayment() {
                 const total = this.defaultSettings.tax ? this.currentInvoice.total : this.currentInvoice.subtotal
                 if (this.amount_paid > 0) {
-                    return parseFloat((total - this.amount_paid + this.invoiceOverpayment).toFixed(2));
+                    return parseFloat((total - this.amount_paid + this.invoiceOverpayment)).toFixed(2);
                 }
-                return parseFloat(this.invoiceOverpayment.toFixed(2));
+                return parseFloat(this.invoiceOverpayment).toFixed(2);
             },
             invoiceOverpayment() {
-                if (this.currentInvoice?.overpayment) {
-                    return parseFloat(this.currentInvoice.overpayment.toFixed(2));
+                if (this.currentInvoice?.overpayment && this.currentInvoice.overpayment !== 0) {
+                    return parseFloat(this.currentInvoice.overpayment).toFixed(2);
                 }
                 return 0;
             },

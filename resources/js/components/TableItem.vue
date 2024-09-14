@@ -195,7 +195,7 @@
                     this.tableItem.quantity +
                     this.tableItem.unitprice * this.tableItem.quantity * this.tableItem.itemtax/100 :
                     this.tableItem.unitprice * this.tableItem.quantity;
-                return parseFloat(total.toFixed(2));
+                return parseFloat(total).toFixed(2);
             }
         },
         methods: {

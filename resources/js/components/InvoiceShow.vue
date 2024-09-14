@@ -241,7 +241,7 @@
                 if (!this.invoice?.overpayment) {
                     return 0;
                 }
-                return parseFloat((this.invoice.overpayment).toFixed(2));
+                return parseFloat(this.invoice.overpayment).toFixed(2);
             },
             replaceCompanyAddress() {
                 return this.invoice.company.address.replace(/\n/g, '<br>');
@@ -269,32 +269,38 @@
             withTax() {
                 let tax = this.items.reduce((acc, curr) =>
                     acc+(curr.unitprice*curr.quantity*curr.itemtax/100), 0);
-                return parseFloat(tax.toFixed(2));
+                return parseFloat(tax).toFixed(2);
             },
             subtotal() {
-                return parseFloat(this.invoice.subtotal.toFixed(2));
+                return parseFloat(this.invoice.subtotal).toFixed(2);
             },
             total() {
                 if (this.settings.show_tax) {
-                    return parseFloat(this.invoice.total.toFixed(2));
+                    return parseFloat(this.invoice.total).toFixed(2);
                 } else {
-                    return parseFloat(this.invoice.subtotal.toFixed(2));
+                    return parseFloat(this.invoice.subtotal).toFixed(2);
                 }
             },
             balance() {
-                return parseFloat(this.invoice.balance.toFixed(2));
+                return parseFloat(this.invoice.balance).toFixed(2);
             },
 
         },
         methods: {
             itemsTotal(quan, unit_price) {
-                return parseFloat((quan * unit_price).toFixed(2));
+                return parseFloat(quan * unit_price).toFixed(2);
             },
             unitPrice(price) {
-                return parseFloat(price.toFixed(10));
+                if (price % 1 === 0) {
+                    return Math.floor(price);
+                }
+                return parseFloat(price).toFixed(10);
             },
             quantityRound(quan) {
-                return parseFloat(quan.toFixed(10));
+                if (quan % 1 === 0) {
+                    return Math.floor(quan);
+                }
+                return parseFloat(quan).toFixed(10);
             }
         }
     }

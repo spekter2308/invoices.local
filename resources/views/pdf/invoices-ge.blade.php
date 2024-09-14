@@ -102,8 +102,20 @@
             <tr>
                 <td align="left" style="width: 10%;"> {{ $item->item }}</td>
                 <td align="left" style="width: 40%;">{{ $item->description }}</td>
-                <td align="center" style="width: 10%;" nowrap>{{ $item->unitprice }}</td>
-                <td align="center" style="width: 10%;">{{ $item->quantity }}</td>
+                <td align="center" style="width: 10%;" nowrap>
+                    @if(floor($item->unitprice) == $item->unitprice)
+                        {{ number_format($item->unitprice, 0) }}  {{-- Outputs 27 if 27.0000000000 --}}
+                    @else
+                        {{ rtrim(rtrim(number_format($item->unitprice, 10), '0'), '.') }} {{-- Outputs 27.0004 if 27.000400000 --}}
+                    @endif
+                </td>
+                <td align="center" style="width: 10%;">
+                    @if(floor($item->quantity) == $item->quantity)
+                        {{ number_format($item->quantity, 0) }}  {{-- Outputs 27 if 27.0000000000 --}}
+                    @else
+                        {{ rtrim(rtrim(number_format($item->quantity, 10), '0'), '.') }} {{-- Outputs 27.0004 if 27.000400000 --}}
+                    @endif
+                </td>
                 @if ($invoice->settings->show_tax)
                     <td align="center" style="width: 10%;">{{ $item->itemtax }}</td>
                     <td align="right" style="width: 10%;">{{ round($item->unitprice * $item->quantity + $item->unitprice * $item->quantity * $item->itemtax/100, 2) }}</td>
