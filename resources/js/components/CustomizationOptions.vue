@@ -26,9 +26,9 @@
                     <div class="date_language">
                         <label>Date Format</label>
                         <select v-model="settings.format">
+                            <option value="MM/dd/yyyy">MM/DD/YYYY</option>
                             <option value="dd.MM.yyyy">DD.MM.YYYY</option>а
                             <option value="dd/MM/yyyy">DD/MM/YYYY</option>
-                            <option value="MM/dd/yyyy">MM/DD/YYYY</option>
                             <option value="dd-MM-yyyy">DD-MM-YYYY</option>
                             <option value="yyyy-MM-dd">YYYY-MM-DD</option>
                         </select>
@@ -75,7 +75,7 @@
                 settings: {
                     payment: this.defaultOptions.show_payment ? true : false,
                     tax: this.defaultOptions.show_tax ? true : false,
-                    format: this.defaultOptions.date_format || "dd.MM.yyyy",
+                    format: this.defaultOptions.date_format || "MM/dd/yyyy",
                     language: this.defaultOptions.language || 'english',
                     currency: this.defaultOptions.currency || '$',
                 },
